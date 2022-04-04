@@ -1,0 +1,56 @@
+.tab_page_title {
+  max-width: 80%;
+  text-align: center;
+  margin: 12% 0px 4% 0px;
+  color: #000000;
+  font-weight: 600;
+  font-size: 1.75rem;
+}
+
+.tab_page_subtitle {
+  max-width: 40%;
+  text-align: center;
+  color: #525a6e;
+  font-size: 1rem;
+}
+
+.coming_soon {
+  max-width: max-content;
+  text-align: center;
+  text-transform: capitalize;
+  color: #fff;
+  background: #000000;
+  padding: 0.5rem;
+  border-radius: 2rem;
+  /* opacity: .2; */
+}
+
+.premium_modal .modal_wrapper {
+  max-width: 350px;
+  width: 330px;
+  height: 23.5rem;
+}
+
+@media only screen and (min-width: 1024px) {
+  .tab_page_title {
+    margin: 5% 0px 2% 0px;
+    font-size: 1.75rem;
+  }
+}
+
+@media only screen and (max-width: 1023px) {
+    .tab_page_subtitle {
+        max-width: 90%;
+      }
+}
+
+@media only screen and (max-width: 440px) {
+  .tab_page_title {
+  max-width: 90%;
+    margin: 9% 0px 5% 0px;
+    font-size: 1.4rem;
+  }
+  .tab_page_subtitle {
+    max-width: 90%;
+  }
+}

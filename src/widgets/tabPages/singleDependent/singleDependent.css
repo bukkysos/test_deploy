@@ -1,0 +1,69 @@
+.single_nav {
+  width: auto;
+  height: 3.5rem;
+  padding: 0px 1.5rem;
+  font-size: 0.85rem;
+  align-items: flex-end;
+  color: #000000;
+  margin-top: -10px;
+  background: #ffffff;
+  box-shadow: 0px 0px .7px #8d9091;
+}
+
+.single_nav_item {
+  cursor: pointer;
+}
+
+.single_nav_active {
+  padding: 0px 4px 11px;
+  box-shadow: inset 0px -4px 0px #27923e;
+}
+
+.profile {
+  margin-top: 12%;
+  background: #fff;
+  box-shadow: 0px 5.82826px 101.995px rgba(0, 0, 0, 0.03),
+    0px 0.729789px 92.5711px rgba(0, 0, 0, 0.015);
+  border-radius: 4px;
+  min-height: 21rem;
+}
+
+.profile_details {
+  min-height: inherit;
+}
+
+.profile_details_title {
+  font-size: 1rem;
+  font-weight: 600;
+  height: 3.5rem;
+  border-bottom: 0.2px solid #a2a7b42b;
+  margin-left: 1.7rem;
+}
+
+.overflow_table {
+  overflow-x: auto;
+}
+
+.profile_details_body {
+  margin-left: 1.7rem;
+  min-height: calc(100% - 3.5rem);
+}
+
+.profile_details_body p {
+  font-size: 0.8rem;
+  margin-bottom: 1.6rem;
+}
+
+.profile_update_address{
+  background: rgba(0, 98, 255, 0.1);
+  padding: .7rem;
+}
+
+.profile_update_address h5{
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.profile_update_address p{
+  font-size: 0.7rem;
+}

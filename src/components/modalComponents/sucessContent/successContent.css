@@ -1,0 +1,62 @@
+.success_icon {
+    width: 6rem;
+}
+
+.icon_check {
+    position: absolute;
+    top: 3.6rem;
+    left: 7.8rem;
+    width: 2rem;
+}
+
+.icon_error {
+    left: 9.3rem;
+    width: 2rem;
+    position: absolute;
+    top: 3.6rem;
+}
+
+.message {
+    width: max-content;
+    margin-top: 1.5rem;
+}
+
+.success {
+    color: #27923E;
+}
+
+.modal_error {
+    color: #E02020;
+}
+
+.error {
+    color: #E02020;
+}
+
+.success_info {
+    width: 15rem;
+}
+
+.error_info {
+    width: 18rem;
+}
+
+.description {
+    font-size: .9rem;
+    font-weight: 400;
+    text-align: center;
+    color: #525A6E;
+    margin-top: 1.6rem;
+    line-height: 1.7;
+}
+
+.description>span {
+    font-weight: 600;
+    color: #2a2f3cd6;
+
+}
+
+.success_button {
+    width: 13rem;
+    margin-top: 3rem;
+}

@@ -1,0 +1,33 @@
+.home_welcome {
+    max-width: 80%;
+    text-align: center;
+    margin: 12% 0px 4% 0px;
+    color: #000000;
+    font-weight: 600;
+}
+
+.home_subtitle {
+    max-width: 40%;
+    text-align: center;
+    color: #525A6E;
+    font-size: 1rem;
+}
+
+@media only screen and (min-width: 1024px) {
+    .home_welcome {
+    margin: 8% 0px 4% 0px;
+    }
+}
+
+@media only screen and (max-width: 440px) {
+    .card_wrapper {
+    padding: 0px 0rem ;
+    }
+    .home_welcome {
+        margin: 12% 0px 7% 0px;
+    }
+    .home_subtitle {
+        max-width: 90%;
+    }
+}
+

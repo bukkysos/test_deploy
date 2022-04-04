@@ -1,0 +1,5 @@
+<svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M45 75C61.5685 75 75 61.5685 75 45C75 28.4315 61.5685 15 45 15C28.4315 15 15 28.4315 15 45C15 61.5685 28.4315 75 45 75Z" stroke="current" stroke-width="3"/>
+<path d="M45 86C67.6437 86 86 67.6437 86 45C86 22.3563 67.6437 4 45 4C22.3563 4 4 22.3563 4 45C4 67.6437 22.3563 86 45 86Z" stroke="current" stroke-opacity="0.03" stroke-width="7"/>
+<path d="M45 79C63.7777 79 79 63.7777 79 45C79 26.2223 63.7777 11 45 11C26.2223 11 11 26.2223 11 45C11 63.7777 26.2223 79 45 79Z" stroke="current" stroke-opacity="0.1" stroke-width="7"/>
+</svg>

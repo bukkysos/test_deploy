@@ -1,0 +1,287 @@
+.center-loading {
+    text-align: center;
+    margin-top: 15%;
+  }
+  
+  #export-wrapper {
+    width: fit-content;
+    /*height: auto;*/
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+    position: relative;
+    padding-top: 40px;
+    overflow: auto !important;
+    z-index: 999999;
+    background: white;
+  }
+  .export-header {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+  }
+  
+  ._nimc-logo {
+    height: 140px;
+    width: auto;
+  }
+  .nimc-title {
+    font-size: 14px;
+    margin-bottom: -5px;
+    margin-top: -18px;
+  }
+  
+  .action-buttons .download-pdf-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-right: 6px;
+    margin-top: 6px;
+  }
+  .close-btn {
+    margin-left: 6px;
+    margin-top: 6px;
+  }
+  .print-btn {
+    margin-left: 10px;
+  }
+  
+  .info-area {
+    position: relative;
+    width: 980px;
+  }
+  
+  .userid-watermarks {
+    z-index: 3;
+    opacity: 0.5;
+  }
+  
+  .userid-watermarks p {
+    font-size: 75px;
+    opacity: 0.4;
+  }
+  .userid-watermarks p:first-child {
+    transform: rotate(-45deg);
+    margin-right: 180px;
+    margin-left: 90px;
+    margin-bottom: -40px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+  }
+  
+  .userid-watermarks p:last-child {
+    transform: rotate(-45deg);
+    margin-right: 70px;
+    margin-bottom: -40px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+  
+  .nin-id-wrapper {
+    position: relative;
+    font-family: "OCR B";
+    border: 1px solid #ccc;
+    margin-bottom: 8px;
+    padding: 5px;
+    width: 360px !important;
+    height: 226px !important;
+    background-color: #fff;
+    border-radius: 20px;
+    margin-left: 20px;
+    z-index: -1;
+  }
+  .nin-watermark p {
+    color: #ccc;
+    font-size: 9px;
+    font-family: "OCR B";
+    letter-spacing: 2px;
+  }
+  .nin-watermark p:first-child {
+    position: absolute;
+    padding: 10px;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    margin-top: 50px;
+    transform: rotate(-30deg);
+    opacity: 0.5;
+  }
+  .nin-watermark p:nth-child(2) {
+    position: absolute;
+    padding: 2px;
+    margin-bottom: 20px;
+    margin-left: 5px;
+    bottom: 0;
+    left: 0;
+    transform: rotate(-40deg);
+  }
+  .nin-watermark p:nth-child(3) {
+    position: absolute;
+    padding: 2px;
+    bottom: 0;
+    right: 0;
+    transform: rotate(40deg);
+    margin-bottom: 20px;
+    margin-right: 5px;
+  }
+  .nin-watermark p:last-child {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 40px;
+    margin-right: 1px;
+    padding: 10px;
+    -moz-transform: scaleX(-1); /* Gecko */
+    -o-transform: scaleX(-1); /* Opera */
+    -webkit-transform: scaleX(-1); /* Webkit */
+    transform: scaleX(-1); /* Standard */
+  
+    filter: FlipH; /* IE 6/7/8 */
+  }
+  
+  .coat-of-arms-photo {
+    width: 60px;
+    height: auto;
+    margin-left: 140px;
+  }
+  
+  .passport-photo {
+    height: 100px;
+    width: auto;
+  }
+  
+  .nin-names {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-left: 85px;
+    margin-top: 60px;
+  }
+  
+  .nin-names p {
+    font-family: "OCR B";
+    color: #000000;
+    font-weight: lighter;
+    line-height: 0px;
+    font-size: 15px;
+    margin-left: 5px;
+    margin-top: 20px;
+  }
+  .nin-names p.title {
+    margin-bottom: -4px;
+    font-size: 9px;
+    font-weight: lighter;
+    font-family: "Helvetica Neue Bold";
+  }
+  
+  .qrcode {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 70px;
+    margin-right: 8px;
+  }
+  .center-names {
+    font-family: "Helvetica Neue Bold";
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-left: 450px;
+    margin-top: 45px;
+  }
+  
+  .center-names p.title {
+    margin-bottom: -8px;
+    font-weight: light;
+    font-family: "Helvetica Neue Bold";
+    color: black;
+  }
+  .center-names p.name {
+    font-size: 20px;
+    color: black;
+    font-family: "Helvetica Neue Bold";
+  }
+  .stamp-area {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: -60px;
+    margin-right: -8px;
+  }
+  .stamp-title {
+    margin-left: 40px;
+  }
+  .stamp {
+    width: 250px;
+    height: 265px;
+    display: block;
+    margin-top: 1px;
+  }
+  
+  .extra-data {
+    margin-top: 30px;
+    text-align: center;
+  }
+  
+  .extra-data span {
+    display: inline-block;
+    margin-right: 25px;
+    text-align: center;
+  }
+  
+  .extra-data span p {
+    font-family: "OCR B";
+    color: #000000;
+    font-weight: bold;
+  }
+  
+  .extra-data p.title {
+    font-size: 9px;
+    font-family: "Helvetica Neue Bold";
+    font-weight: bold;
+    margin-bottom: -2px;
+  }
+  
+  .nin-area {
+    margin-top: 25px !important;
+    text-align: center;
+    margin-left: 15px;
+  }
+  .nin-area p {
+    font-size: 10px;
+    line-height: 0px;
+    color: black;
+  }
+  .nin-area p.nin-title {
+    font-family: "Helvetica Neue Bold";
+    font-weight: bold;
+  }
+  .nin-area p.nin-number {
+    font-weight: 100;
+    font-size: 28px;
+    font-family: "OCR B";
+    margin-top: 25px;
+    color: #000;
+    letter-spacing: 3px;
+  }
+  
+  .nin-transaction-table {
+    width: 980px !important;
+    min-width: 980px !important;
+    max-width: 980px !important;
+    margin-left: 10px;
+    margin-right: auto;
+    text-align: center;
+  }
+  
+  td.green {
+    color: green;
+  }
+  tr.info {
+    background-color: #fff;
+    height: 36px !important;
+  }

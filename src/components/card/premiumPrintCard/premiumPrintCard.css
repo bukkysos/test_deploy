@@ -1,0 +1,55 @@
+/* 425px */
+.print_premium_card > .display_card {
+width: 380px;
+}
+
+.payment_status_card {
+  width: 380px;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-around;
+    align-items: center;
+}
+
+.payment_status_card p {
+    margin: 0px
+}
+
+.premium_print_card_image {
+    width: 60%;
+    display: flex;
+    margin-top: .9rem;
+    height: auto;
+}
+
+.premium_print_card_image>img {
+    width: 100%;
+}
+
+.premium_print_card_description {
+    color: #666666;
+    font-size: .9rem;
+    margin-top: 1.7rem;
+    width: 80%;
+}
+
+.premium_print_card_credits {
+    width: max-content;
+    display: block;
+    padding: .5rem 1.5rem;
+    background: rgba(39, 146, 62, 0.1);
+    color: #27923E;
+    font-weight: bold;
+    border-radius: 2px;
+    font-size: .8rem;
+}
+
+.premium_print_card_button {
+    width: 70%;
+    margin-top: 0rem;
+}
+
+.check_payment_button {
+    width: 40%;
+    margin-top: 0rem;
+}

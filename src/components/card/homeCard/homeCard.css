@@ -1,0 +1,32 @@
+
+.card_icon {
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-content: center;
+    background: rgba(39, 146, 62, 0.1);
+    border-radius: 50%;
+}
+
+.print>svg {
+    stroke: #27923E;
+    margin: auto;
+}
+
+.icon>svg {
+    stroke: #27923E;
+    margin: auto;
+}
+
+
+.card_description {
+    color: #666666;
+    font-size: 1rem;
+    margin-top: 2rem;
+    width: 85%;
+}
+
+.card_button {
+    width: 87%;
+    margin-top: 3rem;
+}

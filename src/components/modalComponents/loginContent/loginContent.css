@@ -1,0 +1,30 @@
+.login_modal_title {
+    color: #000000;
+    font-weight: 600;
+    font-size: .9rem;
+}
+
+.login_modal_phone {
+    width: 70%;
+    height: auto;
+}
+
+.login_modal_phone>img {
+    width: 100%;
+}
+
+.login_modal_details {
+    height: 25%;
+    font-size: .84rem;
+    color: #525A6E;
+    width: 100%;
+}
+
+.login_modal_details>ul {
+    padding-left: 2rem;
+    margin: 0;
+}
+
+.login_modal_details>ul>li {
+    margin: 13% 0px;
+}

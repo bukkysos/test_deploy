@@ -1,0 +1,400 @@
+.preview_print_card_modal_close {
+  cursor: pointer;
+  margin-right: 2rem;
+}
+
+.preview_print_card_header {
+  height: 4rem;
+  position: relative;
+  color: #fff;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+  padding: 0px 3rem;
+  z-index: 99;
+  transition: all 0.3s ease-in;
+}
+
+.preview_print_card_header > div:first-child {
+  width: 24rem;
+  /* border: 1px solid red; */
+}
+
+.preview_print_card_header > div:nth-child(2) {
+  width: 5rem;
+}
+
+.preview_print_card_header > div:nth-child(3) {
+  width: 10rem;
+}
+
+.preview_print_card_header > div:nth-child(3) svg {
+  stroke: #ffffff;
+  cursor: pointer;
+}
+
+.page_input_wrapper {
+  width: 2rem;
+}
+
+.page_input,
+.page_input:focus {
+  height: 1.7rem;
+  width: 2rem;
+  position: static;
+  font-size: 0.9rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  padding: 0;
+  border: none;
+}
+
+.preview_print_card_header > div {
+  width: 8rem;
+}
+
+.preview_print_card_modal_wrapper {
+  transition: 1s all ease;
+}
+
+.preview_print_card_modal {
+  height: auto;
+  position: fixed;
+  top: 10rem;
+  background: #fff;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03);
+  border-radius: 4px;
+}
+.simple_preview_print_card_wrapper {
+  height: 100vh;
+  width: 60vh;
+}
+.simple_preview_print_card_modal {
+  width: 50%;
+  height: auto;
+  position: fixed;
+  top: auto;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03);
+  border-radius: 4px;
+}
+
+.simple_preview_print_card_modal img {
+  width: 100%;
+  height: auto;
+}
+
+.preview_print_card_modal > object {
+  width: 100%;
+}
+
+
+.simple_card_holder {
+  width: 100%;
+  height: 100%;
+}
+
+.simple_card_holder::after {
+  content: "";
+  background-image: url(../../assets//images/coatOfArms.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  opacity: 0.07;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+.simple_card_holder_bottom {
+  height: calc(100% - 20%);
+}
+
+.simple_card_holder_left {
+  width: 100%;
+  height: 94%;
+  padding-bottom: 2rem;
+}
+
+.simple_card_image img {
+  width: 100%;
+  height: 90%;
+}
+
+.card_holder_header {
+  font-size: 1.2rem;
+  font-weight: 700;
+  width: 100%;
+}
+
+.simple_card_holder_header {
+  font-size: 1rem;
+  font-weight: 700;
+  width: 100%;
+}
+
+.simple_card {
+  height: 100%;
+}
+
+.simple_card div {
+  height: inherit;
+}
+
+.card_logo {
+  width: 78%;
+}
+
+.simple_card_logo {
+  width: 70%;
+}
+
+.simple_card_detail h5 {
+  font-weight: 700;
+}
+
+.simple_card_detail p {
+  font-weight: 500;
+}
+
+.simple_card_detail p {
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.simple_card_detail h5 {
+  font-size: 1rem;
+  margin-bottom: 0.1rem;
+}
+
+.card_holder_left {
+  width: 30%;
+  border: 3px solid #b9b9b945;
+  padding-bottom: 2rem;
+}
+
+.card_holder_left::after {
+  content: "";
+  background-image: url(../../assets//images/coatOfArms.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  opacity: 0.07;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+.card_holder_left_header {
+  width: 14%;
+}
+
+.simple_card_holder_left_header {
+  width: 14%;
+}
+
+.card_holder_left_card_image {
+  width: 18%;
+  /* height: 4rem; */
+}
+
+.simple_card_holder_left_card_image {
+  width: 28%;
+}
+
+.simple_card_holder_left_card_image img {
+  width: 100%;
+  height: inherit;
+}
+
+.card_holder_left_card_image img {
+  width: 100%;
+  height: inherit;
+}
+
+.card_holder_left_card_detail {
+  width: 100%;
+}
+
+.card_holder_left_card_details h5 {
+  font-size: 0.4rem;
+  margin-bottom: 0.2rem;
+}
+
+.card_holder_left_card_details p {
+  font-size: 49.5%;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+}
+
+.card_holder_left_card_qr {
+  width: max-content;
+  height: inherit;
+  margin-top: 0.5rem;
+  padding: 0;
+}
+
+.card_holder_left_card_qr > svg {
+  margin: 0;
+  padding: 0;
+}
+
+.card_left_verification {
+  font-size: 0.5rem;
+  font-weight: 700;
+}
+
+.simple_card_left_verification {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.card_holder_middle_detail > h5,
+.card_holder_middle_detail > p {
+  font-weight: 700;
+}
+/* card_holder_left_card */
+
+.card_holder_middle_detail > h5 {
+  font-size: 0.9rem;
+}
+.card_holder_middle_detail > p {
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.card_holder table > tbody td {
+  font-size: 0.6rem;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.card_holder table > thead th {
+  font-size: 0.6rem;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.water_mark_wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.water_mark {
+  transform: rotate(-70deg);
+  width: 100%;
+  line-height: 2.5;
+  color: #2f2f2f;
+  margin: 4rem 0px 0px 0px;
+  height: inherit;
+  opacity: 0.2;
+}
+
+.water_mark_wrapper p {
+  font-size: 2.5rem;
+}
+
+.water_mark_wrapper p:nth-child(1) {
+  transform: rotate(34deg);
+  position: relative;
+  top: -5rem;
+  left: -3rem;
+  letter-spacing: 0.5rem;
+}
+
+.water_mark_wrapper p:nth-child(2) {
+  transform: rotate(34deg);
+  position: relative;
+  top: -0.5rem;
+  left: 1rem;
+  letter-spacing: 0.5rem;
+}
+
+.water_mark_wrapper p:nth-child(3) {
+  transform: rotate(34deg);
+  position: relative;
+  top: 4.5rem;
+  left: 6rem;
+  letter-spacing: 0.5rem;
+}
+
+.preview_print_card_zoom {
+  position: relative;
+  bottom: 0rem;
+  height: 5rem;
+  color: #ffffff;
+  border-radius: 4px;
+  max-width: 40rem;
+  margin: auto;
+}
+
+.zoom_input_wrapper > .form-group {
+  margin: 5px !important;
+}
+
+.preview_print_card_zoom > span {
+  cursor: pointer;
+}
+
+.preview_print_card_zoom svg {
+  stroke: #fff;
+}
+
+.inactive_zoom > svg {
+  stroke: #525a6e;
+}
+
+.zoom_input_wrapper {
+  height: 3.5rem;
+  border-right: 0.6px solid rgba(255, 255, 255, 0.2);
+  border-left: 0.6px solid rgba(255, 255, 255, 0.2);
+}
+
+.zoom_input,
+.zoom_input:focus {
+  width: 4rem;
+  height: 3rem;
+  position: static;
+  font-size: 0.9rem;
+  color: #fff;
+  border-radius: 4px;
+  text-align: center;
+  border: none;
+}
+
+.download_button {
+  padding: 12px 20px;
+  color: #131321;
+  background: #fff;
+  text-align: center;
+  width: inherit;
+}
+
+.download_button:hover {
+  color: #131321;
+}
+
+/* MQ Start */
+
+@media only screen and (min-width: 769) {
+  .download_button {
+    padding: 12px 20px;
+  }
+
+}
+
+@media only screen and (max-width: 768) {
+  .download_button {
+    padding: 12px 12px;
+  }
+}
+
+/* MQ End */

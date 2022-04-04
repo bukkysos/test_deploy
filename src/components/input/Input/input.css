@@ -1,0 +1,90 @@
+.login_label {
+  font-weight: 400;
+  font-size: 13px;
+  color: #525a6e;
+  margin-top: 2rem;
+}
+
+.form-group {
+  margin: 0;
+}
+
+.login_input {
+  margin-bottom: 0.2rem;
+  font-size: 13px;
+  color: #000000;
+  border-radius: 0.1rem;
+  outline: none !important;
+}
+
+.login_input:focus {
+  font-size: 13px;
+  font-weight: 400;
+  box-shadow: none;
+  outline-color: transparent;
+  outline-style: none;
+  outline-width: unset;
+  border: 1px solid #27923e !important;
+}
+
+input {
+  box-shadow: none;
+  outline-color: transparent;
+  outline-style: none;
+  outline-width: unset;
+  height: 3rem;
+}
+
+.error {
+  border: 1px solid #dc3545 !important;
+}
+
+.error:focus {
+  border: 1px solid #dc3545 !important;
+}
+.password_error {
+  position: relative;
+  top: -24px;
+}
+
+input:not(.search):focus {
+  box-shadow: none;
+  outline-color: transparent;
+  outline-style: none;
+  outline-width: unset;
+  border: 1px solid #27923e !important;
+}
+
+input::placeholder {
+  color: #a2a7b4;
+}
+
+input[type="password"] {
+  position: relative;
+  outline: none !important;
+}
+
+.login_otp {
+  font-size: 11px;
+  font-weight: 400;
+  color: #27923e;
+  text-decoration: underline;
+  cursor: pointer;
+  width: max-content;
+}
+
+.login_password_icon_wrapper {
+  position: relative;
+    left: 90%;
+    cursor: pointer;
+    z-index: 4;
+    transition: width .1s linear;
+}
+
+.icon_normal_position {
+  top: -2.5rem;
+}
+
+.error_text {
+  height: 1rem;
+}

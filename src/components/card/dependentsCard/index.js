@@ -4,6 +4,8 @@ import "./dependentsCard.css";
 import { RightChevron } from "../../../assets";
 import { useHistory } from "react-router-dom";
 import { EmptyDependentState } from "../../emptyStates";
+
+
 const DependentsCard = ({ dependents }) => {
   const history = useHistory();
 
@@ -12,15 +14,19 @@ const DependentsCard = ({ dependents }) => {
     return word.replace(firstWordPart, "******");
   };
 
+  console.log(dependents)
+  
+const validator = dependents[0]?.message;
+
   return (
     <>
       <Card>
-        {dependents?.length >= 1 ? (
+        { !validator ? (
           <p className="dependents_card_title mb-1">Select Dependent</p>
         ) : (
           <></>
         )}
-        {dependents?.length >= 1 ? (
+        {!validator ? (
           dependents?.map((dependent, index) => (
             <React.Fragment key={index}>
               <div
@@ -39,9 +45,9 @@ const DependentsCard = ({ dependents }) => {
                     />
                   </div>
                   <div className="dependent_info">
-                    <p className="dependent_name p-0 m-0">{`${dependent?.fn} ${dependent.mn} ${dependent.sn}`}</p>
+                    <p className="dependent_name p-0 m-0">{`${dependent?.fn ?? ""} ${dependent?.mn ?? ""} ${dependent?.sn ?? ""}`}</p>
                     <p className="dependent_number p-0 m-0">
-                      {truncateWithAsteriks(dependent.mainidnumber)}
+                      {dependent.mainidnumber && truncateWithAsteriks(dependent.mainidnumber)}
                     </p>
                   </div>
                 </div>
@@ -51,12 +57,12 @@ const DependentsCard = ({ dependents }) => {
               </div>
             </React.Fragment>
           ))
-        ) : dependents === undefined ? (
+        ) : validator ? (
           <>
             <EmptyDependentState />
           </>
         ) : (
-          <></>
+          <>Loading....</>
         )}
       </Card>
     </>

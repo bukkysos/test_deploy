@@ -28,10 +28,12 @@ const MyDependents = () => {
         },
       })
         .then((response) => {
+          console.log(response, "messsage")
           setResponseData(() => response.data.data);
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error, "error");
+          setResponseData([])
         });
     },
     [accessToken]

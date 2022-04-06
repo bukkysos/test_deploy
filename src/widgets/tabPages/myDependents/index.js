@@ -28,7 +28,6 @@ const MyDependents = () => {
         },
       })
         .then((response) => {
-          console.log(response, "messsage")
           setResponseData(() => response.data.data);
         })
         .catch((error) => {

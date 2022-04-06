@@ -14,8 +14,6 @@ const DependentsCard = ({ dependents }) => {
     return word.replace(firstWordPart, "******");
   };
 
-  console.log(dependents)
-  
 const validator = dependents[0]?.message;
 
   return (

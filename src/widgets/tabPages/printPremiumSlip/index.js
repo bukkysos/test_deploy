@@ -39,13 +39,14 @@ const PrintPremiumSlip = () => {
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
-      "https://login.remita.net/payment/v1/remita-pay-inline.bundle.js";
+    // "https://remitademo.net/payment/v1/remita-pay-inline.bundle.js"
+    "https://login.remita.net/payment/v1/remita-pay-inline.bundle.js";
     script.async = true;
     script.onload = () => console.log("Loaded...");
     document.body.appendChild(script);
   }, []);
 
-  let generateHash = ({ fn, mn, sn, nin } ) => {
+  let generateHash = ({ fn, mn, sn, nin }) => {
     let inflow = JSON.stringify({
       fn: fn,
       mn: mn,
@@ -62,7 +63,7 @@ const PrintPremiumSlip = () => {
   }
 
   const remitaPayload = {
-    user: jwt_data?.userid,   
+    user: jwt_data?.userid,
     amount: 1039.38,
     reference: "0000",
     payersName: `${jwt_data.fn} ${jwt_data.sn}`,
@@ -85,26 +86,26 @@ const PrintPremiumSlip = () => {
       .then((response) => {
         if (response.data.success) {
           localStorage.setItem("paymentResponse", JSON.stringify({
-              txRef: '',
-              service: 2,
-              status: true,
-              action: 'print',
-              h: jwt_data?.h,
-            }));
+            txRef: '',
+            service: 2,
+            status: true,
+            action: 'print',
+            h: jwt_data?.h,
+          }));
         } else {
           localStorage.setItem("paymentResponse", JSON.stringify({
-              txRef: '',
-              service: 3,
-              status: false,
-              action: 'pending'
-            }));
+            txRef: '',
+            service: 3,
+            status: false,
+            action: 'pending'
+          }));
         }
-        setCheckLoading(false); 
+        setCheckLoading(false);
         return history.push(`/payment-response`);
       })
       .catch((exception) => {
         setErrorHandler(true);
-       return setCheckLoading(false);
+        return setCheckLoading(false);
       });
   }
 
@@ -118,13 +119,13 @@ const PrintPremiumSlip = () => {
         Authorization: `Bearer ${accessToken}`,
       },
       data: {
-          userID: userID,
-          service: 2
-        },
+        userID: userID,
+        service: 2
+      },
     })
       .then((response) => {
-       // need to rethink what happens when response is false due payment 
-       //record previously existing
+        // need to rethink what happens when response is false due payment 
+        //record previously existing
       })
       .catch((exception) => {
         setErrorHandler(true);
@@ -174,10 +175,14 @@ const PrintPremiumSlip = () => {
       description,
       payersName
     );
+
+    console.log({ rrr }, {remitaPayload})
+
     const onError = (response) => {
       if (response) {
         setLoading(false)
       }
+      console.log({ response })
     };
 
     const onPaySuccess = (response) => {
@@ -226,13 +231,14 @@ const PrintPremiumSlip = () => {
           }
         })
         .catch((exception) => {
-           setErrorHandler(true)
-            setLoading(false);
+          setErrorHandler(true)
+          setLoading(false);
         });
     };
 
     const remitaPaymentEngine = window.RmPaymentEngine.init({
-      key: key,
+      // key: "REVNT05UR0lGVHw0MDgyNTIxNHwxZTI1NGNlNTVhMzkyYTgxYjYyNjQ2ZWIwNWU0YWE4ZTNjOTU0ZWFlODllZGEwMTUwMjYyMTk2ZmFmOGMzNWE5ZGVjYmU3Y2JkOGI5ZWI5YzFmZWMwYTI3MGI5MzA0N2FjZWEzZDhiZjUwNDY5YjVjOGY3M2NhYjQzMTg3NzI4Mg==",
+      key,
       firstName: `${jwt_data.fn}`,
       lastName: `${jwt_data.sn}`,
       narration: "Premium NIN slip",
@@ -254,6 +260,7 @@ const PrintPremiumSlip = () => {
       onError: function (response) {
         setErrorHandler(true)
         setLoading(false);
+        console.log(response, "inside response")
         return onError(response);
       },
       onClose: function () {
@@ -265,7 +272,7 @@ const PrintPremiumSlip = () => {
 
   const generatePaymentReference = (transactionId) => {
     return `NINSLIP-${transactionId}`;
- 
+
   };
 
   return (
@@ -302,7 +309,7 @@ const PrintPremiumSlip = () => {
           }
           showCloseButton={true}
           onclick={() => setErrorHandler(false)}
-        /> 
+        />
       }
     </>
   );

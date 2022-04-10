@@ -21,8 +21,9 @@ const generateRemitaRRR = async (amount, reference, user, description, payersNam
     merchantId + serviceTypeId + orderId + amt + apiKey
   );
 
-  const url = "https://login.remita.net/remita/exapp/api/v1/send/api/echannelsvc/merchant/api/paymentinit?callback=jsonp";
-    //"https://remitademo.net/remita/exapp/api/v1/send/api/echannelsvc/merchant/api/paymentinit?callback=jsonp"
+  const url = 
+  "https://login.remita.net/remita/exapp/api/v1/send/api/echannelsvc/merchant/api/paymentinit?callback=jsonp";
+    // "https://remitademo.net/remita/exapp/api/v1/send/api/echannelsvc/merchant/api/paymentinit?callback=jsonp"
 
     //
 
@@ -52,6 +53,7 @@ const generateRemitaRRR = async (amount, reference, user, description, payersNam
     const f = new Function("jsonp", `${req.data}`);
     f(function (ref) {
       RRR = ref.RRR;
+      console.log({RRR})
     });
     return RRR;
   } catch (err) {

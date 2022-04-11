@@ -65,9 +65,9 @@
         ]
     },
     "devDependencies": {
+        "eslint": "^7.11.0",
         "commitizen": "^4.2.4",
         "cz-conventional-changelog": "3.3.0",
-        "eslint": "^8.13.0",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-import": "^2.26.0",
         "eslint-plugin-prettier": "^4.0.0",

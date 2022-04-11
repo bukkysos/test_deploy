@@ -1,77 +1,77 @@
 .remita_modal_wrapper {
-  padding: 0px 1rem;
+    padding: 0px 1rem;
 }
 
 .remita_title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #000000;
-  margin-top: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #000000;
+    margin-top: 0.5rem;
 }
 
 .remita_desc {
-  font-size: 0.9rem;
-  margin: 0.8rem auto;
-  color: #525a6e;
-  line-height: 1.5;
+    font-size: 0.9rem;
+    margin: 0.8rem auto;
+    color: #525a6e;
+    line-height: 1.5;
 }
 
 .remita_select_input {
-  padding-top: 0.5rem;
-  height: 8rem;
+    padding-top: 0.5rem;
+    height: 8rem;
 }
 
 .remita_select_otp {
-  padding-top: 0.5rem;
-  height: 3rem;
+    padding-top: 0.5rem;
+    height: 3rem;
 }
 
 .remita_select_input > .select_dropdown_icon {
-  top: -2rem;
-  left: 94%;
+    top: -2rem;
+    left: 94%;
 }
 
 .remita_select_input > input {
-  padding-left: 0.5rem;
-  height: 2.6rem;
-  width: 100%;
-  color: #525a6e;
+    padding-left: 0.5rem;
+    height: 2.6rem;
+    width: 100%;
+    color: #525a6e;
 }
 
 .remita_select_input > input::placeholder {
-  font-size: 0.9rem;
+    font-size: 0.9rem;
 }
 
 .remita_select_input > .dropdown {
-  width: 100%;
-  top: -1rem;
-  overflow-y: scroll;
-  max-height: 10rem;
+    width: 100%;
+    top: -1rem;
+    overflow-y: scroll;
+    max-height: 10rem;
 }
 
 .filter_box {
-  width: 3rem !important;
-  height: 3.2rem;
-  border-radius: 4px;
-  font-size: 1.3rem;
-  font-weight: 400;
-  border: 1px solid #e0e0e0;
+    width: 3rem !important;
+    height: 3.2rem;
+    border-radius: 4px;
+    font-size: 1.3rem;
+    font-weight: 400;
+    border: 1px solid #e0e0e0;
 }
 
 .filter_box input {
-  width: inherit;
-  height: inherit;
-  text-align: center;
-  font-size: 1.3rem;
-  font-weight: 400;
-  border: 1px solid #efefef;
-  border-radius: 4px;
+    width: inherit;
+    height: inherit;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 400;
+    border: 1px solid #efefef;
+    border-radius: 4px;
 }
 
 .filter_box .error {
-  border: 1px solid red;
+    border: 1px solid red;
 }
 
 .filter_box_focus {
-  border: 1px solid #27923e;
+    border: 1px solid #27923e;
 }

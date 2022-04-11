@@ -1,241 +1,228 @@
-import React, { useCallback, useEffect, useState } from "react";
-import axios from "axios";
-import jwt_decode from "jwt-decode";
-import { useHistory } from "react-router";
-import { Button } from "../../../components";
-import { BASE_URL } from "../../../config";
-import { Table } from "../../../components/table";
-import { LoadingIcon } from "../../../assets";
-
-
+import React, { useCallback, useEffect, useState } from 'react';
+import axios from 'axios';
+import jwt_decode from 'jwt-decode';
+import { useHistory } from 'react-router';
+import { Button } from '../../../components';
+import { BASE_URL } from '../../../config';
+import { Table } from '../../../components/table';
+import { LoadingIcon } from '../../../assets';
 
 const ViewSubscribers = () => {
-	const [responseData, setResponseData] = useState([]);
-	const [loading, setLoading] = useState(true);
+    const [responseData, setResponseData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-	const [searchParam] = useState(["adminId", "staffId", "sn", "credits"]);
-	const [IsEmptyTable, setIsEmptyTable] = useState(false);
-	const [csv, setcsv] = useState("");
-	const [sortValues, setSortValues] = useState({});
-	const [display, setDisplay] = useState([]);
+    const [searchParam] = useState(['adminId', 'staffId', 'sn', 'credits']);
+    const [IsEmptyTable, setIsEmptyTable] = useState(false);
+    const [csv, setcsv] = useState('');
+    const [sortValues, setSortValues] = useState({});
+    const [display, setDisplay] = useState([]);
 
-	const accessToken = localStorage.getItem("accessToken");
-	const jwt_code = localStorage.getItem("data");
+    const accessToken = localStorage.getItem('accessToken');
+    const jwt_code = localStorage.getItem('data');
 
-	if (jwt_code && accessToken) {
-		var jwt_data = jwt_decode(jwt_code);
-	}
+    if (jwt_code && accessToken) {
+        var jwt_data = jwt_decode(jwt_code);
+    }
 
-	const history = useHistory();
-	
-	useEffect(() => {
-		axios({
-			method: "get",
-			url: `${BASE_URL}subscriptionHistory/mySubscribers?userID=${jwt_data?.userid}`,
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		})
-			.then((response) => {
-				filterRecurrentData(response.data.data);
-				setLoading(false);
-			})
-			.catch((error) => {
-				setIsEmptyTable(true);
-			});
-	}, [accessToken, jwt_data?.userid]);
+    const history = useHistory();
 
+    useEffect(() => {
+        axios({
+            method: 'get',
+            url: `${BASE_URL}subscriptionHistory/mySubscribers?userID=${jwt_data?.userid}`,
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
+            .then((response) => {
+                filterRecurrentData(response.data.data);
+                setLoading(false);
+            })
+            .catch(() => {
+                setIsEmptyTable(true);
+            });
+    }, [accessToken, jwt_data?.userid]);
 
-	const convertToCsv = useCallback((objArray) => {
-		// JSON to CSV Converter
-		var array = typeof objArray != "object" ? JSON.parse(objArray) : objArray;
-		var str = "";
+    const convertToCsv = useCallback((objArray) => {
+        // JSON to CSV Converter
+        var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+        var str = '';
 
-		for (var i = 0; i < array.length; i++) {
-			var line = "";
-			for (var index in array[i]) {
-				if (line !== "") line += ",";
+        for (var i = 0; i < array.length; i++) {
+            var line = '';
+            for (var index in array[i]) {
+                if (line !== '') line += ',';
 
-				line += array[i][index];
-			}
-			str += line + "\r\n";
-		}
+                line += array[i][index];
+            }
+            str += line + '\r\n';
+        }
 
-		const csvBlob = new Blob([str], { type: "text/csv;charset=utf-8;" });
-		let url;
+        const csvBlob = new Blob([str], { type: 'text/csv;charset=utf-8;' });
+        let url;
 
-		if (navigator.msSaveBlob) {
-			// IE 10+
-			navigator.msSaveBlob(csvBlob, "data");
-		} else {
-			url = URL.createObjectURL(csvBlob);
-		}
-		setcsv(url);
-	}, []);
+        if (navigator.msSaveBlob) {
+            // IE 10+
+            navigator.msSaveBlob(csvBlob, 'data');
+        } else {
+            url = URL.createObjectURL(csvBlob);
+        }
+        setcsv(url);
+    }, []);
 
-	useEffect(() => {
-		convertToCsv(JSON.stringify(responseData));
-	}, [convertToCsv, responseData]);
+    useEffect(() => {
+        convertToCsv(JSON.stringify(responseData));
+    }, [convertToCsv, responseData]);
 
-	useEffect(() => {
-		if (responseData.length === 0) {
-			setIsEmptyTable(true)
-		} else {
-			setIsEmptyTable(false)
-		}
-	}, [responseData])
+    useEffect(() => {
+        if (responseData.length === 0) {
+            setIsEmptyTable(true);
+        } else {
+            setIsEmptyTable(false);
+        }
+    }, [responseData]);
 
-	const filterRecurrentData = (data) => {
-		const result = [];
-		const map = new Map();
-		for (const item of data) {
-			if (!map.has(item.staffId)) {
-				map.set(item.staffId, true);
-				result.push(item);
-			}
-		}
-		setDisplay(result)
-		setResponseData(result);
-	};
+    const filterRecurrentData = (data) => {
+        const result = [];
+        const map = new Map();
+        for (const item of data) {
+            if (!map.has(item.staffId)) {
+                map.set(item.staffId, true);
+                result.push(item);
+            }
+        }
+        setDisplay(result);
+        setResponseData(result);
+    };
 
+    // Filter Data
+    const filterData = useCallback(
+        (searchFilter) => {
+            if (searchFilter === undefined || searchFilter === '' || searchFilter === null) {
+                return;
+            }
 
-	  // Filter Data
-	  const filterData = useCallback((searchFilter) => {
-		if (
-		  searchFilter === undefined ||
-		  searchFilter === "" ||
-		  searchFilter === null
-		) {
-		  return;
-		}
-	
-		if (searchFilter === "Highest") {
-		  const highestVal = Math.max.apply(
-			Math,
-			responseData.map(function (o) {
-			  return o.credits;
-			})
-		  );
-		  const highest = responseData.filter(
-			(item) => item.credits === highestVal
-		  );
-		  setDisplay(highest);
-		  if (highest.length === 0) {
-			setIsEmptyTable(true);
-		  } else {
-			setIsEmptyTable(false);
-		  }
-		} else if (searchFilter === "Lowest") {
-		  const lowestVal = Math.min.apply(
-			Math,
-			responseData.map(function (o) {
-			  return o.credits;
-			})
-		  );
-		  const lowest = responseData.filter((item) => item.credits === lowestVal);
-		  setDisplay(lowest);
-		  if (lowest.length === 0) {
-			setIsEmptyTable(true);
-		  } else {
-			setIsEmptyTable(false);
-		  }
-		} else {
-		  const filtered = responseData.filter((item, index) =>
-			searchParam.some((newItem) => {
-			  return (
-				item[newItem]
-				  .toString()
-				  .toLowerCase()
-				  .indexOf(searchFilter.toLowerCase()) > -1
-			  );
-			})
-		  );
-		  setDisplay(filtered);
-		  if (filtered.length === 0) {
-			setIsEmptyTable(true);
-		  } else {
-			setIsEmptyTable(false);
-		  }
-		}
-	  }, [responseData, searchParam]);
-	
+            if (searchFilter === 'Highest') {
+                const highestVal = Math.max.apply(
+                    Math,
+                    responseData.map(function (o) {
+                        return o.credits;
+                    })
+                );
+                const highest = responseData.filter((item) => item.credits === highestVal);
+                setDisplay(highest);
+                if (highest.length === 0) {
+                    setIsEmptyTable(true);
+                } else {
+                    setIsEmptyTable(false);
+                }
+            } else if (searchFilter === 'Lowest') {
+                const lowestVal = Math.min.apply(
+                    Math,
+                    responseData.map(function (o) {
+                        return o.credits;
+                    })
+                );
+                const lowest = responseData.filter((item) => item.credits === lowestVal);
+                setDisplay(lowest);
+                if (lowest.length === 0) {
+                    setIsEmptyTable(true);
+                } else {
+                    setIsEmptyTable(false);
+                }
+            } else {
+                const filtered = responseData.filter((item) =>
+                    searchParam.some((newItem) => {
+                        return (
+                            item[newItem]
+                                .toString()
+                                .toLowerCase()
+                                .indexOf(searchFilter.toLowerCase()) > -1
+                        );
+                    })
+                );
+                setDisplay(filtered);
+                if (filtered.length === 0) {
+                    setIsEmptyTable(true);
+                } else {
+                    setIsEmptyTable(false);
+                }
+            }
+        },
+        [responseData, searchParam]
+    );
 
-	const handleSort = useCallback((sortValues) => {
-		if (sortValues.headerItem === "Surname") {
-		  let reversedData = responseData.reverse()
-		  setDisplay(reversedData);
-		} else if (sortValues.headerItem === "Credits") {
-		  let creditState = sortValues.sortState ? "Highest" : "Lowest"
-		  filterData(creditState)
-		}
-	  }, [responseData, filterData])
+    const handleSort = useCallback(
+        (sortValues) => {
+            if (sortValues.headerItem === 'Surname') {
+                let reversedData = responseData.reverse();
+                setDisplay(reversedData);
+            } else if (sortValues.headerItem === 'Credits') {
+                let creditState = sortValues.sortState ? 'Highest' : 'Lowest';
+                filterData(creditState);
+            }
+        },
+        [responseData, filterData]
+    );
 
+    useEffect(() => {
+        handleSort(sortValues);
+    }, [sortValues, handleSort]);
 
-	useEffect(() => {
-		handleSort(sortValues);
-	}, [sortValues, handleSort]);
+    return (
+        <>
+            {/* <div className={`${modalState ? "blur" : ""}`}> */}
+            <h3 className="tab_page_title mx-auto">View Subscribers</h3>
+            <p className="mx-auto tab_page_subtitle mb-5">
+                The table below shows the records of all the users you have shared your credits
+                with.
+            </p>
 
-	return (
-		<>
-			{/* <div className={`${modalState ? "blur" : ""}`}> */}
-			<h3 className="tab_page_title mx-auto">View Subscribers</h3>
-			<p className="mx-auto tab_page_subtitle mb-5">
-				The table below shows the records of all the users you have shared your
-				credits with.
-			</p>
+            <div className="col-12" style={{ padding: '0px 2%' }}>
+                {loading ? (
+                    <div className="p-0 mx-auto loading_icon w-50 text-center">
+                        <LoadingIcon fill={'#27923E'} />
+                    </div>
+                ) : (
+                    <Table
+                        headerItems={['Surname', 'User ID', 'Credits', 'Action']}
+                        csvFile={csv}
+                        getFilterDropdown={(selectedItem) => filterData(selectedItem.selectedItem)}
+                        sortData={(data) => setSortValues(data)}
+                        isEmptyTable={IsEmptyTable}
+                        tableContents={display.map((tableRow, index) => (
+                            <React.Fragment key={index}>
+                                <tr>
+                                    <td className="mobile_sticky_table_side">{tableRow.sn}</td>
+                                    <td>{tableRow.staffId}</td>
+                                    <td>{tableRow.credits}</td>
 
-			<div className="col-12" style={{ padding: "0px 2%" }}>
-				{loading ? (
-					<div className="p-0 mx-auto loading_icon w-50 text-center">
-						<LoadingIcon fill={"#27923E"} />
-					</div>
-				) : (
-					<Table
-						headerItems={["Surname", "User ID", "Credits", "Action"]}
-
-						csvFile={csv}
-						getFilterDropdown={(selectedItem) =>
-							filterData(selectedItem.selectedItem)
-						}
-						sortData={(data) => setSortValues(data)}
-						isEmptyTable={IsEmptyTable}
-						tableContents={
-							display.map((tableRow, index) => (
-								<React.Fragment key={index}>
-									<tr>
-										<td className="mobile_sticky_table_side">
-											{tableRow.sn}
-										</td>
-										<td>{tableRow.staffId}</td>
-										<td>{tableRow.credits}</td>
-
-										<td className="send_credit_button">
-											<div className="send_credit_button">
-												<Button
-													buttonType="primary"
-													buttonText={"Gift Credit"}
-													exportBtn={true}
-													onButtonClick={() =>
-														history.push("/gift-credits", {
-															recipientID: tableRow.staffId,
-														})
-													}
-												/>
-											</div>
-										</td>
-									</tr>
-								</React.Fragment>
-							))
-						}
-						showBtn={true}
-						iconDisplay={true}
-						onInputChange={(val) => filterData(val.toLowerCase())}
-					/>
-				)}
-			</div>
-			{/* </div> */}
-		</>
-	);
+                                    <td className="send_credit_button">
+                                        <div className="send_credit_button">
+                                            <Button
+                                                buttonType="primary"
+                                                buttonText={'Gift Credit'}
+                                                exportBtn={true}
+                                                onButtonClick={() =>
+                                                    history.push('/gift-credits', {
+                                                        recipientID: tableRow.staffId
+                                                    })
+                                                }
+                                            />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </React.Fragment>
+                        ))}
+                        showBtn={true}
+                        iconDisplay={true}
+                        onInputChange={(val) => filterData(val.toLowerCase())}
+                    />
+                )}
+            </div>
+            {/* </div> */}
+        </>
+    );
 };
 
 export { ViewSubscribers };

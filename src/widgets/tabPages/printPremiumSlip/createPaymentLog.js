@@ -3,11 +3,11 @@ import { BASE_URL } from '../../../config';
 
 export const createPaymentLog = (
     paymentReference,
-    userID,
-    txRef,
+    // userID,
+    // txRef,
     rrr,
-    successCallack,
-    errorCallback
+    successCallack
+    // errorCallback
 ) => {
     setModal(true);
     axios({
@@ -43,7 +43,7 @@ export const createPaymentLog = (
                 setLoading(false);
             }
         })
-        .catch((exception) => {
+        .catch(() => {
             setErrorHandler(true);
             setLoading(false);
         });

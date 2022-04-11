@@ -1,10 +1,9 @@
 .display_card {
     width: 320px;
-    background: #FFFFFF;
+    background: #ffffff;
     box-shadow: 0px 0px 7.62438px rgba(45, 58, 58, 0.04);
     border-radius: 3.88551px;
 }
-
 
 @media only screen and (min-width: 426px) {
     .display_card {

@@ -1,4 +1,3 @@
-
 .card_icon {
     width: 3rem;
     height: 3rem;
@@ -8,16 +7,15 @@
     border-radius: 50%;
 }
 
-.print>svg {
-    stroke: #27923E;
+.print > svg {
+    stroke: #27923e;
     margin: auto;
 }
 
-.icon>svg {
-    stroke: #27923E;
+.icon > svg {
+    stroke: #27923e;
     margin: auto;
 }
-
 
 .card_description {
     color: #666666;

@@ -22,15 +22,15 @@
 }
 
 .success {
-    color: #27923E;
+    color: #27923e;
 }
 
 .modal_error {
-    color: #E02020;
+    color: #e02020;
 }
 
 .error {
-    color: #E02020;
+    color: #e02020;
 }
 
 .success_info {
@@ -42,18 +42,17 @@
 }
 
 .description {
-    font-size: .9rem;
+    font-size: 0.9rem;
     font-weight: 400;
     text-align: center;
-    color: #525A6E;
+    color: #525a6e;
     margin-top: 1.6rem;
     line-height: 1.7;
 }
 
-.description>span {
+.description > span {
     font-weight: 600;
     color: #2a2f3cd6;
-
 }
 
 .success_button {

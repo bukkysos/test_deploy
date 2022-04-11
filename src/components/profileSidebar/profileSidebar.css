@@ -1,88 +1,87 @@
 .profile_sidebar {
-  border-right: 0.2px solid #a2a7b42b;
+    border-right: 0.2px solid #a2a7b42b;
 }
 
 .profile_image {
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
-  margin: 2rem auto;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    margin: 2rem auto;
 }
 
 .profile_image > img {
-  width: inherit;
+    width: inherit;
 }
 
 .profile_link {
-  width: inherit;
-  padding: 0.7rem 0px;
-  cursor: pointer;
+    width: inherit;
+    padding: 0.7rem 0px;
+    cursor: pointer;
 }
 
 .profile_link_icon {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  display: flex;
-  background: rgba(39, 146, 62, 0.1);
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: flex;
+    background: rgba(39, 146, 62, 0.1);
 }
 
 .profile_link_icon > svg {
-  stroke: #27923e;
-  width: inherit;
-  margin: auto;
+    stroke: #27923e;
+    width: inherit;
+    margin: auto;
 }
 
 .profile_link_name {
-  font-size: 0.8rem;
-  width: 30rem;
-  margin: auto;
+    font-size: 0.8rem;
+    width: 30rem;
+    margin: auto;
 }
 
 .profile_link_pointer {
-  width: 45%;
-  text-align: end;
-  color: #525a6e;
-  padding-right: 0.9rem;
+    width: 45%;
+    text-align: end;
+    color: #525a6e;
+    padding-right: 0.9rem;
 }
 
 .profile_link_active {
-  background: #f4f8f9;
+    background: #f4f8f9;
 }
 
 @media only screen and (max-width: 767px) {
-  .profile {
-    margin-top: 12%;
-    background: #fff;
-    box-shadow: 0px 5.82826px 101.995px rgb(0 0 0 / 3%),
-      0px 0.729789px 92.5711px rgb(0 0 0 / 2%);
-    border-radius: 4px;
-    min-height: 21rem;
-    flex-direction: column;
-  }
-  .profile_sidebar {
-    width: 100% !important;
-  }
+    .profile {
+        margin-top: 12%;
+        background: #fff;
+        box-shadow: 0px 5.82826px 101.995px rgb(0 0 0 / 3%),
+            0px 0.729789px 92.5711px rgb(0 0 0 / 2%);
+        border-radius: 4px;
+        min-height: 21rem;
+        flex-direction: column;
+    }
+    .profile_sidebar {
+        width: 100% !important;
+    }
 
-  .profile_details_button > button {
-    margin-top: 3rem;
-    padding: 8px 4px !important;
-  }
+    .profile_details_button > button {
+        margin-top: 3rem;
+        padding: 8px 4px !important;
+    }
 
-  .show_closed {
-    -webkit-transform: rotate(90deg);
-      -moz-transform: rotate(90deg);
-      -ms-transform: rotate(90deg);
-      -o-transform: rotate(90deg);
-      transform: rotate(90deg);
-  }
-  
-  .show_open {
-    -webkit-transform: rotate(-90deg);
-      -moz-transform: rotate(-90deg);
-      -ms-transform: rotate(-90deg);
-      -o-transform: rotate(-90deg);
-      transform: rotate(-90deg);
-  }
+    .show_closed {
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .show_open {
+        -webkit-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+    }
 }
-

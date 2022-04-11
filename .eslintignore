@@ -1,0 +1,7 @@
+/node_modules
+/.netlify
+/build
+/public
+ecosystem.config.js
+server.js
+App.test.js

@@ -45,6 +45,7 @@
         "lint": "eslint ./",
         "format": "yarn prettier --write src/"
     },
+    
     "eslintConfig": {
         "extends": [
             "react-app",

@@ -41,6 +41,7 @@
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "deploy": "yarn build && netlify deploy",
+        "commit": "cz",
         "lint": "eslint ./",
         "format": "yarn prettier --write src/"
     },

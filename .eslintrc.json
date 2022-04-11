@@ -13,6 +13,7 @@
     },
     "plugins": ["react"],
     "rules": {
+        "react/react-in-jsx-scope": "off",
         "no-trailing-spaces": ["error"],
         "consistent-return": "error",
         "no-useless-return": "error",

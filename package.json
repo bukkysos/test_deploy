@@ -41,11 +41,11 @@
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "deploy": "yarn build && netlify deploy",
-        "commit": "cz",
+        "cm": "cz",
         "lint": "eslint ./",
-        "format": "yarn prettier --write src/"
+        "lint:fix": "eslint --fix",
+        "format": "prettier --write './**/*.{js,jsx}' --config ./.prettierrc.json"
     },
-    
     "eslintConfig": {
         "extends": [
             "react-app",
@@ -65,11 +65,19 @@
         ]
     },
     "devDependencies": {
+        "commitizen": "^4.2.4",
+        "cz-conventional-changelog": "3.3.0",
         "eslint": "^8.13.0",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-import": "^2.26.0",
         "eslint-plugin-prettier": "^4.0.0",
         "eslint-plugin-react": "^7.29.4",
-        "prettier": "2.6.2"
+        "husky": "^7.0.4",
+        "prettier": "^2.6.2"
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
     }
 }

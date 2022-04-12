@@ -11,7 +11,6 @@ const MyDependents = () => {
     const [headerIconDisplay, setHeaderIconDisplay] = useContext(NavContext);
     const [loading, setLoading] = useState(true);
     const [emptyState, setEmptyState] = useState(false);
-
     const accessToken = localStorage.getItem('accessToken');
     const jwt_code = localStorage.getItem('data');
 
@@ -43,6 +42,7 @@ const MyDependents = () => {
                     setLoading(false);
                     setResponseData([]);
                 });
+            return true;
         },
         [accessToken]
     );

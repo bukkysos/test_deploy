@@ -52,7 +52,3 @@ button > span:first-child {
 .btn_loading > svg {
     animation: rotation 1s infinite linear;
 }
-
-.loader {
-    animation: rotation 1s infinite linear;
-}

@@ -186,6 +186,7 @@ const LinkMobileNumber = () => {
                 setNumberLinked(false);
                 setBtnLoading(false);
             });
+        return true;
     };
 
     useEffect(() => {

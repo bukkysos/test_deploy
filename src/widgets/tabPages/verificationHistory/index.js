@@ -63,7 +63,7 @@ const VerificationHistory = () => {
                 setLoading(false);
                 setDisplay(() => response.data.data);
             })
-            .catch((error) => {
+            .catch(() => {
                 setIsEmptyTable(true);
             });
     }, [accessToken, jwt_data?.userid]);

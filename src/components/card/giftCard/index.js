@@ -47,7 +47,7 @@ const GiftCard = ({ getResponse, recipient = null }) => {
     const handleCreditChange = (inputValue) => {
         let inputVal = [...inputValue].filter((val) => val !== '.').join('');
         if (isNaN(inputVal)) {
-            return;
+            // return;
         } else {
             if (credits && parseInt(inputVal) > parseInt(credits)) {
                 setErrorType('unitError');
@@ -79,7 +79,7 @@ const GiftCard = ({ getResponse, recipient = null }) => {
             setUserIdError(true);
             setUserId('');
             setOwnIdError(true);
-            return;
+            // return;
         }
     };
 
@@ -122,7 +122,7 @@ const GiftCard = ({ getResponse, recipient = null }) => {
         if (userId.length < 11 || isNaN(units) === true || !userId.includes('-')) {
             setError(true);
             setBtnLoading(false);
-            return;
+            // return;
         } else {
             axios({
                 method: 'post',

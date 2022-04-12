@@ -20,7 +20,12 @@ import ResponsePage from './widgets/tabPages/responsePage';
 // import { OrderManagement, Login, ProductsUpload, VehicleLookup, Admin, MainLayout, OrderOverview } from './pages';
 
 const AppRoute = () => {
-    const MainRoute = ({ Component, home, ...rest }) => {
+    // eslint-disable-next-line
+    const MainRoute = ({
+        Component,
+        home,
+        // eslint-disable-next-line
+        ...rest }) => {
         return (
             <Route
                 {...rest}

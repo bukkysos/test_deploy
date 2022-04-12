@@ -172,7 +172,7 @@ const SingleDependent = () => {
                 setResponseData(() => response.data.data[index]);
             })
             .catch(() => {
-                return;
+                // return;
             });
     }, [index, jwt_data?.nin, accessToken]);
 
@@ -192,7 +192,7 @@ const SingleDependent = () => {
                         setDeviceInfo(response.data.data);
                     })
                     .catch(() => {
-                        return;
+                        // return;
                     });
             }
         }
@@ -310,6 +310,8 @@ const SingleDependent = () => {
                 setNumberLinked(false);
                 setBtnLoading(false);
             });
+
+        return true;
     };
 
     const initRemita = useCallback(

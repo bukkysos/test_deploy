@@ -169,7 +169,7 @@ const PrintStandardSlip = () => {
         const rrr = await generateRemitaRRR(amt, reference, user, description, payersName);
         const onError = (response) => {
             if (response) {
-                return;
+                // return;
             }
         };
 

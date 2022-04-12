@@ -178,7 +178,7 @@ const ViewProfile = () => {
                         setDeviceInfo(response.data.data);
                     })
                     .catch(() => {
-                        return;
+                        // return;
                     });
             }
         }
@@ -301,6 +301,7 @@ const ViewProfile = () => {
                 setNumberLinked(false);
                 setBtnLoading(false);
             });
+        return true;
     };
 
     const initRemita = useCallback(

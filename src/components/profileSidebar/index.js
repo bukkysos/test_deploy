@@ -97,6 +97,7 @@ const ProfileSidebar = ({
                                                 : ''
                                         }`}
                                     >
+                                        {/* eslint-disable-next-line */}
                                         {mobileDropdownData.hasOwnProperty('contentType') &&
                                         mobileDropdownData.contentType === null ? (
                                             <>

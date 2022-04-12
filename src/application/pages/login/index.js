@@ -13,6 +13,7 @@ import { Input, LoginContent, Modal, SuccessContent } from '../../../components'
 import { Button } from '../../../components/button';
 import axios from 'axios';
 import { BASE_URL } from '../../../config';
+import { decryptor } from '../../../config/utils/decryptor';
 
 const Login = () => {
     const [modal, setModal] = useState(false);
@@ -25,6 +26,7 @@ const Login = () => {
     const [otpError, setOTPError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [modalError, setModalError] = useState(false);
+    const [resData, setResData] = useState({});
 
     const sliderImages = [SliderImage_1, SliderImage_2, SliderImage_3];
 
@@ -55,9 +57,9 @@ const Login = () => {
 
     const handleOtpChange = (inputVal) => {
         if (isNaN(inputVal)) {
-            return;
+            // return;
         } else if (inputVal.length === 7) {
-            return;
+            // return;
         } else {
             setOTP(inputVal);
             setError(false);
@@ -69,7 +71,7 @@ const Login = () => {
         if (inputVal.length === 6 && !userId.includes('-')) {
             formatWithHyphen(inputVal);
         } else if (inputVal.length === 12) {
-            return;
+            // return;
         } else {
             setUserId(inputVal);
         }
@@ -112,7 +114,7 @@ const Login = () => {
         let loginUserOTP = domOTP || otp;
         if (loginUserId.length < 11 || loginUserOTP.length < 6 || error) {
             setError(true);
-            return;
+            // return;
         } else {
             axios({
                 method: 'post',
@@ -123,9 +125,11 @@ const Login = () => {
                 }
             })
                 .then((response) => {
+                    setResData(response.data.data);
                     localStorage.setItem('accessToken', response.data.accessToken);
                     localStorage.setItem('data', response.data.data);
                     history.push('/home');
+                    // console.log({ response }, decryptor(response.data.data), 'login');
                 })
                 .catch(() => {
                     setError(true);
@@ -134,6 +138,11 @@ const Login = () => {
                 });
         }
     };
+
+    useEffect(() => {
+        console.log(resData);
+        decryptor(resData);
+    }, [resData]);
 
     return (
         <>

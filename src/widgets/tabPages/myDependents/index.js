@@ -2,12 +2,15 @@ import axios from 'axios';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import jwt_decode from 'jwt-decode';
 import { NavContext } from '../../../appContext';
-import { DependentsCard } from '../../../components';
+import { Card, DependentsCard, EmptyDependentState } from '../../../components';
 import { BASE_URL } from '../../../config';
+import { LoadingIcon } from '../../../assets';
 
 const MyDependents = () => {
     const [responseData, setResponseData] = useState([]);
     const [headerIconDisplay, setHeaderIconDisplay] = useContext(NavContext);
+    const [loading, setLoading] = useState(true);
+    const [emptyState, setEmptyState] = useState(false);
 
     const accessToken = localStorage.getItem('accessToken');
     const jwt_code = localStorage.getItem('data');
@@ -28,10 +31,16 @@ const MyDependents = () => {
                 }
             })
                 .then((response) => {
-                    setResponseData(() => response.data.data);
+                    setLoading(false);
+                    if (response.data.data) {
+                        setResponseData(() => response.data.data);
+                    } else {
+                        setEmptyState(true);
+                    }
                 })
                 .catch((error) => {
                     console.error(error, 'error');
+                    setLoading(false);
                     setResponseData([]);
                 });
         },
@@ -44,7 +53,9 @@ const MyDependents = () => {
 
     useEffect(() => {
         fetchDependents(userNin);
-        // return () => fetchDependents("");
+        return () => {
+            setResponseData([]);
+        };
     }, [fetchDependents, userNin]);
 
     return (
@@ -57,7 +68,15 @@ const MyDependents = () => {
             </p>
 
             <div className="col-12 d-flex justify-content-center px-4 my_dependents">
-                <DependentsCard dependents={responseData} />
+                {loading ? (
+                    <LoadingIcon fill={'#000'} className="loader" />
+                ) : emptyState ? (
+                    <Card>
+                        <EmptyDependentState />
+                    </Card>
+                ) : (
+                    <DependentsCard dependents={responseData} />
+                )}
             </div>
         </>
     );

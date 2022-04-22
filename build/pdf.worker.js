@@ -25581,6 +25581,7 @@
                                     case _util.OPS.paintInlineImageXObjectGroup:
                                     case _util.OPS.paintImageMaskXObject:
                                         const arg = argsArray[i][0];
+
                                         if (!arg.cached) {
                                             transfers.push(arg.data.buffer);
                                         }

@@ -18,11 +18,9 @@
 (function (factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
-        define(['NIMC/FRONTEND/nimc_frontend_user_web/build/slick/jquery'], factory);
+        define(['NIMC/nimc_user_web_portal/public/slick/jquery'], factory);
     } else if (typeof exports !== 'undefined') {
-        module.exports = factory(
-            require('NIMC/FRONTEND/nimc_frontend_user_web/build/slick/jquery')
-        );
+        module.exports = factory(require('NIMC/nimc_user_web_portal/public/slick/jquery'));
     } else {
         factory(jQuery);
     }

@@ -13,8 +13,6 @@ import { Input, LoginContent, Modal, SuccessContent } from '../../../components'
 import { Button } from '../../../components/button';
 import axios from 'axios';
 import { BASE_URL } from '../../../config';
-import { decryptor } from '../../../config/utils/decryptor';
-
 const Login = () => {
     const [modal, setModal] = useState(false);
     const [userId, setUserId] = useState('');
@@ -26,7 +24,6 @@ const Login = () => {
     const [otpError, setOTPError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [modalError, setModalError] = useState(false);
-    const [resData, setResData] = useState({});
 
     const sliderImages = [SliderImage_1, SliderImage_2, SliderImage_3];
 
@@ -125,11 +122,9 @@ const Login = () => {
                 }
             })
                 .then((response) => {
-                    setResData(response.data.data);
                     localStorage.setItem('accessToken', response.data.accessToken);
                     localStorage.setItem('data', response.data.data);
                     history.push('/home');
-                    // console.log({ response }, decryptor(response.data.data), 'login');
                 })
                 .catch(() => {
                     setError(true);
@@ -138,11 +133,6 @@ const Login = () => {
                 });
         }
     };
-
-    useEffect(() => {
-        console.log(resData);
-        decryptor(resData);
-    }, [resData]);
 
     return (
         <>

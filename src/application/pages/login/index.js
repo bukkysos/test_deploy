@@ -13,6 +13,9 @@ import { Input, LoginContent, Modal, SuccessContent } from '../../../components'
 import { Button } from '../../../components/button';
 import axios from 'axios';
 import { BASE_URL } from '../../../config';
+import { fetchKey } from './utils';
+import { ciEncrypt } from '../../../config/utils/red';
+
 const Login = () => {
     const [modal, setModal] = useState(false);
     const [userId, setUserId] = useState('');
@@ -28,7 +31,8 @@ const Login = () => {
     const sliderImages = [SliderImage_1, SliderImage_2, SliderImage_3];
 
     const history = useHistory();
-    const jwt_code = localStorage?.getItem('data');
+    // const jwt_code = localStorage?.getItem('data');
+    const jwt_code = ciEncrypt.getItem('ciDK');
 
     useEffect(() => {
         if (window && window.$ && typeof window.$ === 'function') {
@@ -101,18 +105,20 @@ const Login = () => {
 
     useEffect(() => {}, [userId]);
 
+    // const handleLogin = () => {
+
+    // }
+
     const login = (e) => {
         e.preventDefault();
-        setLoading(true);
         let domUserID = e.target['userId'].value;
         let domOTP = e.target['loginOTP'].value;
-
         let loginUserId = domUserID || userId;
         let loginUserOTP = domOTP || otp;
         if (loginUserId.length < 11 || loginUserOTP.length < 6 || error) {
             setError(true);
-            // return;
         } else {
+            setLoading(true);
             axios({
                 method: 'post',
                 url: `${BASE_URL}user/login`,
@@ -122,16 +128,26 @@ const Login = () => {
                 }
             })
                 .then((response) => {
-                    localStorage.setItem('accessToken', response.data.accessToken);
-                    localStorage.setItem('data', response.data.data);
-                    history.push('/home');
+                    fetchKey(response.data.accessToken);
+                    console.log(response.data.accessToken, 'login response');
+                    if (!fetchKey(response.data.accessToken, response.data.data)) {
+                        setModalError(true);
+                    }
+                    setModalError(false);
+                    setTimeout(() => {
+                        setLoading(false);
+                        history.push('/home');
+                    }, 2000);
+                    // return true;
                 })
-                .catch(() => {
+                .catch((error) => {
+                    console.log({ error }, 'fetchkey');
                     setError(true);
                     setLoading(false);
                     setModalError(true);
                 });
         }
+        return true;
     };
 
     return (

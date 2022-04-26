@@ -4,6 +4,7 @@ import jwt_decode from 'jwt-decode';
 import { NavContext, SidebarContext } from '../../appContext';
 import { DownArrow, Power, BackIcon, Hamburger } from '../../assets';
 import './header.css';
+import { ciEncrypt } from '../../config/utils/red';
 
 const Header = () => {
     const [profileStatus, setProfileStatus] = useState(false);
@@ -23,8 +24,8 @@ const Header = () => {
     }, [jwt_data?.availablecredit]);
 
     const Logout = () => {
-        localStorage.removeItem('data');
-        localStorage.removeItem('accessToken');
+        ciEncrypt.removeItem('ciDK');
+        ciEncrypt.removeItem('ciDD');
         history.push('/');
     };
 

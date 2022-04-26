@@ -16,6 +16,7 @@ import {
     Logo
 } from '../../assets';
 import { MenuItem } from '../../components/menuItem';
+import { ciEncrypt } from '../../config/utils/red';
 import './sidebar.css';
 
 const Sidebar = () => {
@@ -80,7 +81,7 @@ const Sidebar = () => {
     const history = useHistory();
 
     useEffect(() => {
-        if (localStorage.getItem('data') === null || localStorage.getItem('accessToken') === null) {
+        if (ciEncrypt.getItem('ciDK') === null || ciEncrypt.getItem('ciDK') === undefined) {
             history.push('/');
         }
     }, [history]);

@@ -1,10 +1,4 @@
-import React, {
-    useCallback,
-    useContext,
-    // useContext,
-    useEffect,
-    useState
-} from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { LinkMobile, Profile, Purchase } from '../../../assets';
 import {
     Button,

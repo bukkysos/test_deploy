@@ -1,261 +1,261 @@
 .login_wrapper {
-  min-height: 100vh;
-  transition: filter 0.2s linear;
+    min-height: 100vh;
+    transition: filter 0.2s linear;
 }
 
 .login_left {
-  height: inherit;
-  width: 65%;
-  background: #f4f8f9;
+    height: inherit;
+    width: 65%;
+    background: #f4f8f9;
 }
 
 .login_left > .shape_left,
 .login_left > .shape_right {
-  position: absolute;
-  z-index: 2;
-  mix-blend-mode: overlay;
+    position: absolute;
+    z-index: 2;
+    mix-blend-mode: overlay;
 }
 
 .shape_left {
-  left: 0px;
-  top: -60px;
-  width: 7rem;
-  height: 15rem;
+    left: 0px;
+    top: -60px;
+    width: 7rem;
+    height: 15rem;
 }
 
 .shape_right {
-  right: 27%;
-  top: -5px;
-  width: 18rem;
-  height: 15rem;
+    right: 27%;
+    top: -5px;
+    width: 18rem;
+    height: 15rem;
 }
 
 .login_slider_wrapper {
-  width: auto;
-  height: 570px;
-  margin-top: 13%;
+    width: auto;
+    height: 570px;
+    margin-top: 13%;
 }
 
 .slider_image_wrapper {
-  width: auto;
-  height: inherit;
+    width: auto;
+    height: inherit;
 }
 
 .slider_image_wrapper > img {
-  width: 100%;
-  height: inherit;
-  object-fit: contain;
+    width: 100%;
+    height: inherit;
+    object-fit: contain;
 }
 
 .slick-list {
-  height: 100%;
+    height: 100%;
 }
 
 .slick-track {
-  height: inherit;
+    height: inherit;
 }
 
 .slick-slide {
-  padding: 1rem;
+    padding: 1rem;
 }
 
 .slick-slide > div {
-  height: inherit;
+    height: inherit;
 }
 
 .slick-dots {
-  position: absolute !important;
-  bottom: 9% !important;
-  display: flex !important;
-  justify-content: center;
-  list-style: none !important;
+    position: absolute !important;
+    bottom: 9% !important;
+    display: flex !important;
+    justify-content: center;
+    list-style: none !important;
 }
 
 .slick-dots li button:before {
-  content: "" !important;
+    content: '' !important;
 }
 
 .slick-dots > li {
-  width: 45px !important;
-  height: 9px !important;
-  border-radius: 2px !important;
-  background: #fff;
+    width: 45px !important;
+    height: 9px !important;
+    border-radius: 2px !important;
+    background: #fff;
 }
 
 .slick-dots > li.slick-active {
-  background: #27923e !important;
+    background: #27923e !important;
 }
 
 .login_right {
-  height: inherit;
-  width: 35%;
+    height: inherit;
+    width: 35%;
 }
 
 .login_right_cover {
-  width: auto;
-  height: 100%;
-  background: #ffffff;
-  position: relative;
-  z-index: 3;
+    width: auto;
+    height: 100%;
+    background: #ffffff;
+    position: relative;
+    z-index: 3;
 }
 
 .login_logo_wrapper {
-  width: 15rem;
-  height: 95px;
+    width: 15rem;
+    height: 95px;
 }
 
 .login_logo_wrapper > img {
-  width: inherit;
-  height: inherit;
+    width: inherit;
+    height: inherit;
 }
 
 .login_form > form > .login_button {
-  margin-top: 4rem;
+    margin-top: 4rem;
 }
 
 .login_right_terms {
-  position: relative;
-  top: 9rem;
-  font-size: 13px;
-  color: #797e89;
-  height: min-content;
+    position: relative;
+    top: 9rem;
+    font-size: 13px;
+    color: #797e89;
+    height: min-content;
 }
 
 @media only screen and (min-width: 250px) {
-  .login_left {
-    display: none;
-  }
-  .login_right {
-    width: auto;
-  }
-  .login_wrapper {
-    flex-direction: column;
-  }
-  .login_logo_wrapper {
-    width: 6.7rem;
-    height: 4.2rem;
-    margin-top: 4vh;
-  }
-  .login_logo_wrapper > img {
-    width: 100%;
-    height: inherit;
-  }
-  .login_form_wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: calc(80vh - 1rem);
-  }
-  .login_form_wrapper > h5 {
-    display: flex;
-    align-self: center;
-  }
-  .login_form > form .login_input {
-    height: 3rem;
-    text-transform: uppercase;
-  }
-  .login_form > form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-bottom: 10vh;
-  }
-  .login_otp {
-    font-size: 0.7rem;
-  }
-  .login_button {
-    margin-top: 0rem !important;
-  }
-  .login_button button {
-    padding: 15px 20px;
-  }
-  .login_right_terms {
-    position: absolute;
-    top: 67vh;
-    justify-content: center;
-  }
-  .login_right_terms a,
-  .login_right_terms p {
-    margin: 0px 10%;
-    cursor: pointer;
-    color: #a2a7b4;
-  }
+    .login_left {
+        display: none;
+    }
+    .login_right {
+        width: auto;
+    }
+    .login_wrapper {
+        flex-direction: column;
+    }
+    .login_logo_wrapper {
+        width: 6.7rem;
+        height: 4.2rem;
+        margin-top: 4vh;
+    }
+    .login_logo_wrapper > img {
+        width: 100%;
+        height: inherit;
+    }
+    .login_form_wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: calc(80vh - 1rem);
+    }
+    .login_form_wrapper > h5 {
+        display: flex;
+        align-self: center;
+    }
+    .login_form > form .login_input {
+        height: 3rem;
+        text-transform: uppercase;
+    }
+    .login_form > form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-bottom: 10vh;
+    }
+    .login_otp {
+        font-size: 0.7rem;
+    }
+    .login_button {
+        margin-top: 0rem !important;
+    }
+    .login_button button {
+        padding: 15px 20px;
+    }
+    .login_right_terms {
+        position: absolute;
+        top: 67vh;
+        justify-content: center;
+    }
+    .login_right_terms a,
+    .login_right_terms p {
+        margin: 0px 10%;
+        cursor: pointer;
+        color: #a2a7b4;
+    }
 }
 @media only screen and (min-width: 400px) {
-  .login_left {
-    display: none;
-  }
-  .login_right {
-    width: 100%;
-  }
-  .login_form_wrapper > h5 {
-    display: flex;
-    align-self: center;
-  }
-  .login_logo_wrapper {
-    justify-content: start;
-  }
+    .login_left {
+        display: none;
+    }
+    .login_right {
+        width: 100%;
+    }
+    .login_form_wrapper > h5 {
+        display: flex;
+        align-self: center;
+    }
+    .login_logo_wrapper {
+        justify-content: start;
+    }
 }
 
 @media only screen and (min-width: 768px) {
-  .login_left {
-    display: block;
-  }
-  .login_wrapper {
-    flex-direction: row;
-  }
-  .login_logo_wrapper {
-    width: inherit;
-    margin: 0px auto;
-    width: 6.7rem;
-  }
+    .login_left {
+        display: block;
+    }
+    .login_wrapper {
+        flex-direction: row;
+    }
+    .login_logo_wrapper {
+        width: inherit;
+        margin: 0px auto;
+        width: 6.7rem;
+    }
 
-  .login_form {
-    margin-top: 0rem !important;
-  }
+    .login_form {
+        margin-top: 0rem !important;
+    }
 
-  .login_right_terms {
-    position: relative;
-    top: 14vh;
-  }
-  .login_form_wrapper > h5 {
-    display: none;
-  }
-  /* .login_right_cover  */
+    .login_right_terms {
+        position: relative;
+        top: 14vh;
+    }
+    .login_form_wrapper > h5 {
+        display: none;
+    }
+    /* .login_right_cover  */
 }
 
 @media only screen and (min-width: 1440px) {
-  .login_right_terms {
-    top: 10rem;
-  }
-  .login_input {
-    height: 2.5rem;
-    text-transform: uppercase;
-  }
-  .login_slider_wrapper {
-    margin-top: 10%;
-  }
-  .slick-dots {
-    bottom: 3% !important;
-  }
-  .login_right_terms {
-    position: relative;
-    top: 14vh;
-  }
+    .login_right_terms {
+        top: 10rem;
+    }
+    .login_input {
+        height: 2.5rem;
+        text-transform: uppercase;
+    }
+    .login_slider_wrapper {
+        margin-top: 10%;
+    }
+    .slick-dots {
+        bottom: 3% !important;
+    }
+    .login_right_terms {
+        position: relative;
+        top: 14vh;
+    }
 }
 
 /*  */
 
 @media only screen and (min-width: 2560px) {
-  .login_right_terms {
-    top: 10rem;
-  }
-  .login_slider_wrapper {
-    margin-top: 10%;
-  }
-  .slick-dots {
-    bottom: 3% !important;
-  }
+    .login_right_terms {
+        top: 10rem;
+    }
+    .login_slider_wrapper {
+        margin-top: 10%;
+    }
+    .slick-dots {
+        bottom: 3% !important;
+    }
 }

@@ -1,210 +1,206 @@
 .dashboard_wrapper {
-  height: 100vh;
+    height: 100vh;
 }
 
 .dashboard_sidebar {
-  width: 20%;
-  min-height: 100%;
-  background-color: #edf0f4;
-  position: relative;
-  left: 0;
-  z-index: 99;
+    width: 20%;
+    min-height: 100%;
+    background-color: #edf0f4;
+    position: relative;
+    left: 0;
+    z-index: 99;
 }
 
 .dashboard_right_container {
-  width: 80%;
-  background-color: #f9f9f9;
+    width: 80%;
+    background-color: #f9f9f9;
 }
 
 nav {
-  background-color: #fdfdfdf0;
+    background-color: #fdfdfdf0;
 }
 
 .dashboard_support {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  background: #27923e;
-  box-shadow: 0px 71px 80px rgba(19, 19, 33, 0.02),
-    0px 15.8588px 18px rgba(19, 19, 33, 0.0417275),
-    0px 4.72157px 7px rgba(19, 19, 33, 0.07);
-  border-radius: 4px;
-  color: #ffffff;
-  font-size: 0.8rem;
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    background: #27923e;
+    box-shadow: 0px 71px 80px rgba(19, 19, 33, 0.02), 0px 15.8588px 18px rgba(19, 19, 33, 0.0417275),
+        0px 4.72157px 7px rgba(19, 19, 33, 0.07);
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 0.8rem;
 }
 
 .dashboard_support > p {
-  margin-left: 0.8rem;
+    margin-left: 0.8rem;
 }
 
 .sidebar_footer {
-  width: inherit;
+    width: inherit;
 }
 
 .show_sidebar {
-  display: flexbox !important;
+    display: flexbox !important;
 }
 
 .hide_sidebar {
-  display: none !important;
+    display: none !important;
 }
 
 .timeout_alert {
-  position: fixed;
-  top: 3.5rem;
-  left: 40%;
-  width: 90vw;
-  transform: translate(-40%, 0);
-  z-index: 9999999999999999;
+    position: fixed;
+    top: 3.5rem;
+    left: 40%;
+    width: 90vw;
+    transform: translate(-40%, 0);
+    z-index: 9999999999999999;
 }
 
 /* MQs Start */
 
-
 @media only screen and (max-width: 1440px) {
-  .dashboard_sidebar {
-    width: 20%;
-    min-height: 100%;
-    position: relative;
-    z-index: 1;
-  }
-  .dashboard_right_container {
-    width: 80%;
-  }
-  .sidebar_overflow_wrapper {
-    height: 77%;
-    overflow-y: scroll;
-  }
+    .dashboard_sidebar {
+        width: 20%;
+        min-height: 100%;
+        position: relative;
+        z-index: 1;
+    }
+    .dashboard_right_container {
+        width: 80%;
+    }
+    .sidebar_overflow_wrapper {
+        height: 77%;
+        overflow-y: scroll;
+    }
 }
 
 @media only screen and (min-width: 1025px) {
-  .dashboard_sidebar {
-    width: 21%;
-    min-height: 100%;
-    position: relative;
-    z-index: 1;
-
-  }
-  .dashboard_right_container {
-    width: 79%;
-  }
+    .dashboard_sidebar {
+        width: 21%;
+        min-height: 100%;
+        position: relative;
+        z-index: 1;
+    }
+    .dashboard_right_container {
+        width: 79%;
+    }
 }
 
 @media only screen and (max-width: 1024px) {
-  .dashboard_sidebar {
-    width: 30%;
-    min-height: 100%;
-    position: relative;
-    z-index: 1;
-  }
-  .dashboard_right_container {
-    width: 70%;
-  }
-  .sidebar_overflow_wrapper {
-    height: 71vh;
-    overflow-y: scroll;
-  }
+    .dashboard_sidebar {
+        width: 30%;
+        min-height: 100%;
+        position: relative;
+        z-index: 1;
+    }
+    .dashboard_right_container {
+        width: 70%;
+    }
+    .sidebar_overflow_wrapper {
+        height: 71vh;
+        overflow-y: scroll;
+    }
 }
 
-
 @media only screen and (max-width: 767px) {
-  .dashboard_sidebar_overlay {
-    z-index: 90;
-    position: absolute;
-    top: 0;
-    display: block;
-  }
+    .dashboard_sidebar_overlay {
+        z-index: 90;
+        position: absolute;
+        top: 0;
+        display: block;
+    }
 
-  .dashboard_sidebar {
-    width: 45vw;
-    min-height: 100vh;
-    position: fixed;
-    z-index: 99;
-    display: block;
-  }
-  .dashboard_right_container {
-    width: 100vw;
-    position: relative;
-  }
-  .sidebar_overflow_wrapper {
-    height: 71vh;
-    overflow-y: scroll;
-  }
+    .dashboard_sidebar {
+        width: 45vw;
+        min-height: 100vh;
+        position: fixed;
+        z-index: 99;
+        display: block;
+    }
+    .dashboard_right_container {
+        width: 100vw;
+        position: relative;
+    }
+    .sidebar_overflow_wrapper {
+        height: 71vh;
+        overflow-y: scroll;
+    }
 }
 
 @media only screen and (max-width: 684px) {
-  .dashboard_sidebar_overlay {
-    z-index: 90;
-    position: absolute;
-    top: 0;
-    display: block;
-  }
-  .dashboard_right_container {
-    width: 100%;
-    position: relative;
-  }
-  .sidebar_overflow_wrapper {
-    height: 71vh;
-    overflow-y: scroll;
-  }
+    .dashboard_sidebar_overlay {
+        z-index: 90;
+        position: absolute;
+        top: 0;
+        display: block;
+    }
+    .dashboard_right_container {
+        width: 100%;
+        position: relative;
+    }
+    .sidebar_overflow_wrapper {
+        height: 71vh;
+        overflow-y: scroll;
+    }
 }
 
 @media only screen and (max-width: 600px) {
-  .dashboard_sidebar {
-    width: 50%;
-    min-height: 100vh;
-    position: fixed;
-    z-index: 99;
-    display: block;
-  }
+    .dashboard_sidebar {
+        width: 50%;
+        min-height: 100vh;
+        position: fixed;
+        z-index: 99;
+        display: block;
+    }
 }
 
 @media only screen and (max-width: 443px) {
-  .dashboard_sidebar_overlay {
-    z-index: 90;
-    position: absolute;
-    top: 0;
-    display: block;
-  }
+    .dashboard_sidebar_overlay {
+        z-index: 90;
+        position: absolute;
+        top: 0;
+        display: block;
+    }
 
-  .dashboard_sidebar {
-    width: 65%;
-    min-height: 100vh;
-    position: fixed;
-    z-index: 99;
-    display: block;
-  }
-  .dashboard_right_container {
-    width: 100%;
-    position: relative;
-  }
-  .sidebar_overflow_wrapper {
-    height: 71vh;
-    overflow-y: scroll;
-  }
+    .dashboard_sidebar {
+        width: 65%;
+        min-height: 100vh;
+        position: fixed;
+        z-index: 99;
+        display: block;
+    }
+    .dashboard_right_container {
+        width: 100%;
+        position: relative;
+    }
+    .sidebar_overflow_wrapper {
+        height: 71vh;
+        overflow-y: scroll;
+    }
 }
 
 @media only screen and (max-width: 340px) {
-  .dashboard_sidebar_overlay {
-    z-index: 90;
-    position: absolute;
-    top: 0;
-    display: block;
-  }
+    .dashboard_sidebar_overlay {
+        z-index: 90;
+        position: absolute;
+        top: 0;
+        display: block;
+    }
 
-  .dashboard_sidebar {
-    width: 83%;
-    min-height: 100vh;
-    position: fixed;
-    z-index: 99;
-    display: block;
-  }
-  .dashboard_right_container {
-    width: 100%;
-    position: relative;
-  }
-  .sidebar_overflow_wrapper {
-    height: 68vh;
-    overflow-y: scroll;
-  }
+    .dashboard_sidebar {
+        width: 83%;
+        min-height: 100vh;
+        position: fixed;
+        z-index: 99;
+        display: block;
+    }
+    .dashboard_right_container {
+        width: 100%;
+        position: relative;
+    }
+    .sidebar_overflow_wrapper {
+        height: 68vh;
+        overflow-y: scroll;
+    }
 }

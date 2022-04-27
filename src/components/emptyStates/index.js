@@ -1,2 +1,2 @@
-export * from "./dependents"
-export * from "./table"
+export * from './dependents';
+export * from './table';

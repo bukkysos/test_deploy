@@ -1,63 +1,85 @@
 {
-  "name": "urbanid_nga_user_web_portal",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "axios": "^0.21.1",
-    "bwip-js": "^3.0.4",
-    "copy-webpack-plugin": "^9.0.0",
-    "cors": "^2.8.5",
-    "dom-to-image": "^2.6.0",
-    "dom-to-svg": "^0.12.2",
-    "end-user-activity-monitor": "^1.0.0",
-    "express": "^4.17.3",
-    "helmet": "^5.0.2",
-    "import": "^0.0.6",
-    "js-sha512": "^0.8.0",
-    "jssha": "^3.2.0",
-    "jwt-decode": "^3.1.2",
-    "netlify-cli": "^3.37.0",
-    "print-js": "^1.6.0",
-    "qrcode.react": "^1.0.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-lazyload": "^3.2.0",
-    "react-otp-input": "^2.3.1",
-    "react-pdf": "^5.3.0",
-    "react-qr-code": "^1.1.1",
-    "react-render-as-image": "^1.1.1",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
-    "reactstrap": "^8.9.0",
-    "web-vitals": "^1.0.1"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "yarn start:prod": "node server.js",
-    "build": "CI= react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "deploy": "yarn build && netlify deploy"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+    "name": "urbanid_nga_user_web_portal",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@testing-library/jest-dom": "^5.11.4",
+        "@testing-library/react": "^11.1.0",
+        "@testing-library/user-event": "^12.1.10",
+        "axios": "^0.21.1",
+        "bwip-js": "^3.0.4",
+        "copy-webpack-plugin": "^9.0.0",
+        "cors": "^2.8.5",
+        "dom-to-image": "^2.6.0",
+        "dom-to-svg": "^0.12.2",
+        "encrypt-storage": "^2.2.10",
+        "end-user-activity-monitor": "^1.0.0",
+        "express": "^4.17.3",
+        "helmet": "^5.0.2",
+        "import": "^0.0.6",
+        "js-sha512": "^0.8.0",
+        "jssha": "^3.2.0",
+        "jwt-decode": "^3.1.2",
+        "node-rsa": "^1.1.1",
+        "print-js": "^1.6.0",
+        "qrcode.react": "^1.0.1",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "react-lazyload": "^3.2.0",
+        "react-otp-input": "^2.3.1",
+        "react-pdf": "^5.3.0",
+        "react-qr-code": "^1.1.1",
+        "react-render-as-image": "^1.1.1",
+        "react-router-dom": "^5.2.0",
+        "react-scripts": "4.0.3",
+        "reactstrap": "^8.9.0",
+        "web-vitals": "^1.0.1"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "yarn start:prod": "node server.js",
+        "build": "set \"GENERATE_SOURCEMAP=false\" && CI= react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "deploy": "yarn build && netlify deploy",
+        "commit": "cz",
+        "lint": "eslint ./",
+        "lint:fix": "eslint --fix",
+        "format": "prettier --write './**/*.{js,jsx}' --config ./.prettierrc.json"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "commitizen": "^4.2.4",
+        "cz-conventional-changelog": "3.3.0",
+        "eslint": "^7.11.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-import": "^2.26.0",
+        "eslint-plugin-prettier": "^4.0.0",
+        "eslint-plugin-react": "^7.29.4",
+        "husky": "^7.0.4",
+        "netlify-cli": "^10.0.0",
+        "prettier": "^2.6.2"
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
+    }
 }

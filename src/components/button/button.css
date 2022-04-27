@@ -1,4 +1,6 @@
-.button, .button:disabled, .button[disabled]{
+.button,
+.button:disabled,
+.button[disabled] {
     width: 100%;
     background-color: #131321;
     color: #ffffff;
@@ -16,39 +18,37 @@
     color: #ffffff;
 }
 
-.primary:hover{
+.primary:hover {
     color: #ffffff;
-
 }
 
 .default {
-    background: #F4F8F9;
+    background: #f4f8f9;
     color: #000000;
 }
 
 .secondary {
     color: #ffffff;
-    background: #27923E;
+    background: #27923e;
 }
 
 .secondary:hover {
     color: #ffffff;
 }
 
-button>span>svg {
+button > span > svg {
     stroke: #000;
 }
 
-
-.response_button>span>svg {
+.response_button > span > svg {
     stroke: #ffffff;
 }
 
-button>span:first-child{
+button > span:first-child {
     margin-right: 0px;
     width: 70%;
 }
 
 .btn_loading > svg {
-        animation: rotation 1s infinite linear;
+    animation: rotation 1s infinite linear;
 }

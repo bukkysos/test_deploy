@@ -1,178 +1,176 @@
 .subsciption_plans {
-  padding: 1rem 3rem;
+    padding: 1rem 3rem;
 }
 
 .pay_as_you_go {
-  width: auto;
-  height: 3rem;
-  color: #525a6e;
-  background: #f4f8f9;
-  border-radius: 4px 0px 0px 0px;
+    width: auto;
+    height: 3rem;
+    color: #525a6e;
+    background: #f4f8f9;
+    border-radius: 4px 0px 0px 0px;
 }
 
 .pay_as_you_go > p {
-  font-size: 0.9rem;
-  font-weight: 700;
-  height: min-content;
+    font-size: 0.9rem;
+    font-weight: 700;
+    height: min-content;
 }
 
 .pay_as_you_go_content {
-  width: 7.3rem;
-  font-weight: 600;
-  height: min-content;
-  align-items: center;
+    width: 7.3rem;
+    font-weight: 600;
+    height: min-content;
+    align-items: center;
 }
 
 .pay_as_you_go_content > p {
-  font-size: 0.85rem;
+    font-size: 0.85rem;
 }
 
 .plan_radio_icon {
-  width: 0.9rem;
-  top: 10px;
+    width: 0.9rem;
+    top: 10px;
 }
 
 .individual_plan {
-  width: auto;
-  height: 3rem;
-  color: #525a6e;
-  background: #f4f8f9;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03);
-  border-radius: 4px 4px 0px 0px;
+    width: auto;
+    height: 3rem;
+    color: #525a6e;
+    background: #f4f8f9;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03);
+    border-radius: 4px 4px 0px 0px;
 }
 
 .individual_plan_content {
-  width: 7.3rem;
-  height: min-content;
-  font-size: 0.8rem;
-  font-weight: 600;
+    width: 7.3rem;
+    height: min-content;
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 
 .individual_plan > p {
-  font-size: 0.85rem;
-  font-weight: 700;
+    font-size: 0.85rem;
+    font-weight: 700;
 }
 
 .individual_plan_content > div :last-child {
-  font-size: 0.6rem;
-  background: #ffffff38;
-  text-align: center;
-  padding: 0.3rem;
-  width: 3.6rem;
-  border-radius: 21rem;
+    font-size: 0.6rem;
+    background: #ffffff38;
+    text-align: center;
+    padding: 0.3rem;
+    width: 3.6rem;
+    border-radius: 21rem;
 }
 
 .active_plan > div > .PAYG_radio_icon {
-  top: 18px;
+    top: 18px;
 }
 
 .active_plan {
-  background: #27923e;
-  color: #ffffff;
-  height: 4rem;
-}
-
-.purchase_subscription_table {
-  height: auto;
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.05),
-    5px 25px 35px rgba(0, 0, 0, 0.03);
-  border-radius: 7px 7px 5px 0px;
-}
-
-.purchase_subscription_table > table {
-  margin-bottom: 0 !important;
-}
-
-.purchase_subscription_table > .table > thead {
-  height: 3rem;
-  background: #242424;
-  color: #fff;
-  font-weight: 500;
-}
-
-.purchase_subscription_table > table > thead > tr > th {
-  border: none;
-  padding: 0.5rem;
-  vertical-align: middle;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.purchase_subscription_table > table > tbody > tr {
-  font-size: 0.9rem;
-  color: #525a6e;
-}
-
-.purchase_subscription_table > table > tbody td {
-  border-top: 0 !important;
-  border-right: 0.2px solid #a2a7b426;
-  padding: 9rem;
-  vertical-align: middle !important;
-  padding: 1rem 1.6rem 1rem 1rem!important;
-}
-
-.plan_button {
-  min-width: 23%;
-  margin-top: 2rem;
-}
-
-
-/* MQ Start */
-@media only screen and (min-width: 250px) {
-  
-  .individual_plan, .pay_as_you_go {
-    color: #fff;
-    background: #242424;
-  }
-
-  .plan_button {
-    margin-top: -4rem;
-  }
-  
-  .active_plan {
     background: #27923e;
     color: #ffffff;
     height: 4rem;
-  }
-  
-  .plans {
-    display: table-row;
-    width: 100%;
-  }
-  
-  .subsciption_plans {
-    display: flex;
-    flex-direction: column;
-    padding: 1rem 1rem;
-  }
+}
+
+.purchase_subscription_table {
+    height: auto;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.05), 5px 25px 35px rgba(0, 0, 0, 0.03);
+    border-radius: 7px 7px 5px 0px;
+}
+
+.purchase_subscription_table > table {
+    margin-bottom: 0 !important;
+}
+
+.purchase_subscription_table > .table > thead {
+    height: 3rem;
+    background: #242424;
+    color: #fff;
+    font-weight: 500;
+}
+
+.purchase_subscription_table > table > thead > tr > th {
+    border: none;
+    padding: 0.5rem;
+    vertical-align: middle;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.purchase_subscription_table > table > tbody > tr {
+    font-size: 0.9rem;
+    color: #525a6e;
+}
+
+.purchase_subscription_table > table > tbody td {
+    border-top: 0 !important;
+    border-right: 0.2px solid #a2a7b426;
+    padding: 9rem;
+    vertical-align: middle !important;
+    padding: 1rem 1.6rem 1rem 1rem !important;
+}
+
+.plan_button {
+    min-width: 23%;
+    margin-top: 2rem;
+}
+
+/* MQ Start */
+@media only screen and (min-width: 250px) {
+    .individual_plan,
+    .pay_as_you_go {
+        color: #fff;
+        background: #242424;
+    }
+
+    .plan_button {
+        margin-top: -4rem;
+    }
+
+    .active_plan {
+        background: #27923e;
+        color: #ffffff;
+        height: 4rem;
+    }
+
+    .plans {
+        display: table-row;
+        width: 100%;
+    }
+
+    .subsciption_plans {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem 1rem;
+    }
 }
 /* MQ Start */
 
 @media only screen and (min-width: 680px) {
-  .subsciption_plans {
-    padding: 1rem 3rem;
-  }
-  .individual_plan, .pay_as_you_go {
-    color: #525a6e;
-    background: #f4f8f9;
-    height: 4rem;
-    padding: 0px .7rem;
-  }
+    .subsciption_plans {
+        padding: 1rem 3rem;
+    }
+    .individual_plan,
+    .pay_as_you_go {
+        color: #525a6e;
+        background: #f4f8f9;
+        height: 4rem;
+        padding: 0px 0.7rem;
+    }
 
-  .plan_button {
-    margin-top: -2rem;
-  }
-    
-  .active_plan {
-    background: #27923e;
-    color: #ffffff;
-    height: 4rem;
-  }
+    .plan_button {
+        margin-top: -2rem;
+    }
 
+    .active_plan {
+        background: #27923e;
+        color: #ffffff;
+        height: 4rem;
+    }
 }
 
 @media only screen and (min-width: 1240px) {
-  .subsciption_plans {
-    padding: 1rem 5rem;
-  }
+    .subsciption_plans {
+        padding: 1rem 5rem;
+    }
 }

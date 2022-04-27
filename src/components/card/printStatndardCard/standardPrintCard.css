@@ -1,20 +1,20 @@
-.print_standard_slip> .display_card {
+.print_standard_slip > .display_card {
     width: 380px;
 }
 .standard_print_card_image {
     width: 60%;
     display: flex;
-    margin-top: .9rem;
+    margin-top: 0.9rem;
     height: auto;
 }
 
-.standard_print_card_image>img {
+.standard_print_card_image > img {
     width: 100%;
 }
 
 .standard_print_card_description {
     color: #666666;
-    font-size: .9rem;
+    font-size: 0.9rem;
     margin-top: 1.7rem;
     width: 80%;
 }
@@ -22,12 +22,12 @@
 .standard_print_card_credits {
     width: max-content;
     display: block;
-    padding: .5rem 1.5rem;
-    color: #27923E;
+    padding: 0.5rem 1.5rem;
+    color: #27923e;
     font-weight: bold;
     background: rgba(39, 146, 62, 0.1);
     border-radius: 2px;
-    font-size: .8rem;
+    font-size: 0.8rem;
 }
 
 .standard_print_card_button {

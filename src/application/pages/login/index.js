@@ -22,7 +22,7 @@ const Login = () => {
     const [otp, setOTP] = useState('');
     const [type, setType] = useState(false);
     const [error, setError] = useState(false);
-
+    const [errorMessage, setErrorMessage] = useState('');
     const [userIdError, setUserIdError] = useState(false);
     const [otpError, setOTPError] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -137,6 +137,7 @@ const Login = () => {
                 })
                 .catch((error) => {
                     console.log({ error }, 'fetchkey');
+                    setErrorMessage(error.message);
                     setError(true);
                     setLoading(false);
                     setModalError(true);
@@ -273,10 +274,7 @@ const Login = () => {
                     onclick={(modalState) => setModalError(modalState)}
                     content={
                         <>
-                            <SuccessContent
-                                responseType="error"
-                                responseTexts="Unable to login. Please try again."
-                            />
+                            <SuccessContent responseType="error" responseTexts={errorMessage} />
                         </>
                     }
                 />

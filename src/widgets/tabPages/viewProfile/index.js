@@ -5,20 +5,17 @@ import React, {
     useEffect,
     useState
 } from 'react';
-// import { AppContext } from "../../../appContext";
 import { LinkMobile, Profile, Purchase } from '../../../assets';
 import {
     Button,
     Input,
     Modal,
     PrintCardPreview,
-    // Modal,
     ProfileDetails,
     ProfileSidebar,
     RemitaModal,
     SelectInput,
     SuccessContent
-    // RemitaModal,
 } from '../../../components';
 import { BASE_URL } from '../../../config';
 import axios from 'axios';

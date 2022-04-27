@@ -5,7 +5,6 @@ import {
     NavContext
     // IdContext
 } from '../../../appContext';
-import jwt_decode from 'jwt-decode';
 import {
     Button,
     HomeCard,
@@ -24,13 +23,14 @@ import { BASE_URL } from '../../../config';
 import axios from 'axios';
 import { generateRemitaRRR } from '../../../application/paymentHandler';
 import OtpInput from 'react-otp-input';
+import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 
 const SingleDependent = () => {
     const [context, setContext] = useContext(AppContext);
     const [headerIconDisplay, setHeaderIconDisplay] = useContext(NavContext);
     const [modal, setModal] = useState(false);
     const [noticeModal, setNoticeModal] = useState(false);
-
+    const [data, setData] = useState({});
     const [primary, handlePrimaryButton] = useState('');
     const [responseData, setResponseData] = useState([]);
     const [normalInputVal, setNormalInputVal] = useState('');
@@ -59,12 +59,17 @@ const SingleDependent = () => {
 
     const { index } = history.location.state;
 
-    const accessToken = localStorage.getItem('accessToken');
-    const jwt_code = localStorage.getItem('data');
+    let ciDT = ciEncrypt.getItem('ciDT');
 
-    if (jwt_code && accessToken) {
-        var jwt_data = jwt_decode(jwt_code);
-    }
+    const handleKey = useCallback(async () => {
+        let ciDD = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(ciDD);
+        setData(userData);
+    }, [ciEncrypt]);
+
+    useEffect(() => {
+        handleKey();
+    }, [handleKey]);
 
     const states = [
         'Abia',
@@ -163,9 +168,9 @@ const SingleDependent = () => {
     useEffect(() => {
         axios({
             method: 'get',
-            url: `${BASE_URL}utility/myDependents?parentNin=${jwt_data?.nin}`,
+            url: `${BASE_URL}utility/myDependents?parentNin=${data?.nin}`,
             headers: {
-                Authorization: `Bearer ${accessToken}`
+                Authorization: `Bearer ${ciDT}`
             }
         })
             .then((response) => {
@@ -174,7 +179,7 @@ const SingleDependent = () => {
             .catch(() => {
                 // return;
             });
-    }, [index, jwt_data?.nin, accessToken]);
+    }, [index, data?.nin, ciDT]);
 
     useEffect(() => {
         if (tabIndex === 1) {
@@ -185,7 +190,7 @@ const SingleDependent = () => {
                     method: 'get',
                     url: `${BASE_URL}device/getMobileNumbers?userID=${id}`,
                     headers: {
-                        Authorization: `Bearer ${accessToken}`
+                        Authorization: `Bearer ${ciDT}`
                     }
                 })
                     .then((response) => {
@@ -196,7 +201,7 @@ const SingleDependent = () => {
                     });
             }
         }
-    }, [tabIndex, accessToken, id, deviceInfo]);
+    }, [tabIndex, ciDT, id, deviceInfo]);
 
     // Payment
     const [paymentError, setPaymentError] = useState('');
@@ -207,7 +212,7 @@ const SingleDependent = () => {
         payersName: `${responseData?.fn} ${responseData?.sn}`,
         plan: '',
         paid: false,
-        purchasedCredits: jwt_data?.availablecredit,
+        purchasedCredits: data?.availablecredit,
         key: process.env.REACT_APP_REMITA_PUBLIC_KEY
     };
 
@@ -257,11 +262,11 @@ const SingleDependent = () => {
             method: 'post',
             url: `${BASE_URL}utility/sendOTP`,
             data: {
-                userID: jwt_data?.userid,
+                userID: data?.userID,
                 mobile: normalInputVal
             },
             headers: {
-                Authorization: `Bearer ${accessToken}`
+                Authorization: `Bearer ${ciDT}`
             }
         })
             .then(() => {
@@ -289,13 +294,13 @@ const SingleDependent = () => {
             method: 'post',
             url: `${BASE_URL}utility/addMobileNumber`,
             data: {
-                userID: jwt_data?.userid,
+                userID: data?.userID,
                 mobile: normalInputVal,
                 otp: otpInputVal,
                 index: '4'
             },
             headers: {
-                Authorization: `Bearer ${accessToken}`
+                Authorization: `Bearer ${ciDT}`
             }
         })
             .then((response) => {
@@ -339,13 +344,13 @@ const SingleDependent = () => {
                     method: 'post',
                     url: `${BASE_URL}nimcSlip/paymentLog`,
                     data: {
-                        userID: jwt_data?.userid,
+                        userID: data?.userID,
                         txRef: paymentReference,
                         rrr: rrr,
                         service: cardType === 'Standard' ? 1 : 2
                     },
                     headers: {
-                        Authorization: `Bearer ${accessToken}`
+                        Authorization: `Bearer ${ciDT}`
                     }
                 })
                     .then((response) => {
@@ -377,8 +382,8 @@ const SingleDependent = () => {
 
             const remitaPaymentEngine = window.RmPaymentEngine.init({
                 key: key,
-                firstName: `${jwt_data.fn}`,
-                lastName: `${jwt_data.sn}`,
+                firstName: `${data.fn}`,
+                lastName: `${data.sn}`,
                 narration: `${cardType} NIN slip`,
                 amount: amt,
                 transactionId: '',
@@ -410,11 +415,11 @@ const SingleDependent = () => {
             remitaPaymentEngine.showPaymentWidget();
         },
         [
-            accessToken,
+            ciDT,
             key,
-            jwt_data.sn,
-            jwt_data.fn,
-            jwt_data.userid,
+            data.sn,
+            data.fn,
+            data.userID,
             responseData.ninHash,
             payersName,
             reference,
@@ -438,7 +443,7 @@ const SingleDependent = () => {
                         ? `${BASE_URL}nimcSlip/premium?userID=${responseData.userid}`
                         : `${BASE_URL}nimcSlip/standardNINSlip?userID=${responseData.userid}`,
                 headers: {
-                    Authorization: `Bearer ${accessToken}`
+                    Authorization: `Bearer ${ciDT}`
                 }
             })
                 .then((response) => {
@@ -462,7 +467,7 @@ const SingleDependent = () => {
                     setNinSlipError(true);
                 });
         },
-        [accessToken, initRemita, responseData.userid]
+        [ciDT, initRemita, responseData.userid]
     );
 
     useEffect(() => {
@@ -591,7 +596,7 @@ const SingleDependent = () => {
                             <div className={`${window.screen.width > 767 ? 'd-block' : 'd-none'}`}>
                                 <ProfileDetails
                                     data={profileData[tabIndex]}
-                                    userDetails={jwt_data}
+                                    userDetails={data}
                                     loading={profileBtnloading}
                                     showProfileModal={() => {
                                         setProfileModal(true);

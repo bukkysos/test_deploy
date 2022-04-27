@@ -1,15 +1,16 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
-import jwt_decode from 'jwt-decode';
 import { BASE_URL } from '../../../config';
 import { Button } from '../../button';
 import { Input } from '../../input';
 import { Card } from '../card';
 import './giftCard.css';
 import { useHistory } from 'react-router-dom';
+import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 
 const GiftCard = ({ getResponse, recipient = null }) => {
     const [userId, setUserId] = useState('');
+    const [data, setData] = useState({});
     const [units, setUnits] = useState('');
     const [btnLoading, setBtnLoading] = useState(false);
     const [error, setError] = useState(false);
@@ -30,12 +31,19 @@ const GiftCard = ({ getResponse, recipient = null }) => {
         getUserIdFromHistoryState();
     }, [getUserIdFromHistoryState]);
 
-    const accessToken = localStorage.getItem('accessToken');
-    const jwt_code = localStorage.getItem('data');
     const credits = localStorage.getItem('credits');
-    const jwt_data = jwt_decode(jwt_code);
 
-    console.log(credits);
+    let ciDT = ciEncrypt.getItem('ciDT');
+
+    const handleKey = useCallback(async () => {
+        let ciDD = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(ciDD);
+        setData(userData);
+    }, [ciEncrypt]);
+
+    useEffect(() => {
+        handleKey();
+    }, [handleKey]);
 
     useEffect(() => {
         if (error) {
@@ -75,7 +83,7 @@ const GiftCard = ({ getResponse, recipient = null }) => {
     };
 
     const checkSelfUserId = (id) => {
-        if (jwt_data.userid === id) {
+        if (data.userID === id) {
             setUserIdError(true);
             setUserId('');
             setOwnIdError(true);
@@ -94,7 +102,7 @@ const GiftCard = ({ getResponse, recipient = null }) => {
 
     const validateOnBlur = (inputType, data) => {
         if (!regex[inputType].test(data)) {
-            if (inputType === 'userid' && jwt_data.userid === data) {
+            if (inputType === 'userid' && data.userid === data) {
                 setUserIdError(true);
                 checkSelfUserId(data);
             } else if (inputType === 'credit') {
@@ -129,11 +137,11 @@ const GiftCard = ({ getResponse, recipient = null }) => {
                 url: `${BASE_URL}credit/assignCredits`,
                 data: {
                     userID: userId,
-                    adminUID: jwt_data.userid,
+                    adminUID: data.userID,
                     unit: units
                 },
                 headers: {
-                    Authorization: `Bearer ${accessToken}`
+                    Authorization: `Bearer ${ciDT}`
                 }
             })
                 .then((response) => {

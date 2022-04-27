@@ -1,10 +1,11 @@
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import jwt_decode from 'jwt-decode';
 import { BASE_URL } from '../../../config';
 import { LoadingIcon } from '../../../assets';
 import { AppContext } from '../../../appContext';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { PrintCardModal, Button, Modal, SuccessContent, Table } from '../../../components';
+import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
+// import { ciEncrypt, decrypt } from '../../../config/utils/red';
 
 // const searchParam = ["txid",  "level", "verifiedID"];
 const filterItems = {
@@ -22,7 +23,7 @@ const VerificationHistory = () => {
     const [pageLoading, setLoading] = useState(false);
     const [previewId, setPreviewId] = useState('');
     const [display, setDisplay] = useState([]);
-
+    const [data, setData] = useState('');
     const [error, setError] = useState(null);
     const [verificationData, setVerificationData] = useState([]);
     const [searchParam] = useState(['level', 'status', 'verifiedID']);
@@ -38,12 +39,17 @@ const VerificationHistory = () => {
         agentId: null
     });
 
-    const accessToken = localStorage.getItem('accessToken');
-    const jwt_code = localStorage.getItem('data');
+    let ciDT = ciEncrypt.getItem('ciDT');
 
-    if (jwt_code && accessToken) {
-        var jwt_data = jwt_decode(jwt_code);
-    }
+    const handleKey = useCallback(async () => {
+        let ciDD = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(ciDD);
+        setData(userData.userID);
+    }, [ciEncrypt]);
+
+    useEffect(() => {
+        handleKey();
+    }, [handleKey]);
 
     useEffect(() => {
         setContext(modalState);
@@ -53,9 +59,9 @@ const VerificationHistory = () => {
         setLoading(true);
         axios({
             method: 'get',
-            url: `${BASE_URL}verification/vh?userID=${jwt_data?.userid}`,
+            url: `${BASE_URL}verification/vh?userID=${data?.userID}`,
             headers: {
-                Authorization: `Bearer ${accessToken}`
+                Authorization: `Bearer ${ciDT}`
             }
         })
             .then((response) => {
@@ -66,7 +72,7 @@ const VerificationHistory = () => {
             .catch(() => {
                 setIsEmptyTable(true);
             });
-    }, [accessToken, jwt_data?.userid]);
+    }, [ciDT, data?.userID]);
 
     const convertToCsv = useCallback((objArray) => {
         // JSON to CSV Converter
@@ -145,7 +151,7 @@ const VerificationHistory = () => {
             method: 'get',
             url: `https://v1.ibib.io:7072/api/v1/verification/verificationSheet?txID=${transactionID}`,
             headers: {
-                Authorization: `Bearer ${accessToken}`
+                Authorization: `Bearer ${ciDT}`
             }
         })
             .then((response) => {

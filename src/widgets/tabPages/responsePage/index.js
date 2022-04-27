@@ -60,7 +60,7 @@ const ResponsePage = () => {
         setLoading(true);
         axios({
             method: 'get',
-            url: `${BASE_URL}nimcSlip/download?userID=${jwt_data.userid}`,
+            url: `${BASE_URL}nimcSlip/download?userID=${jwt_data.userID}`,
             headers: {
                 Authorization: `Bearer ${accessToken}`
             }

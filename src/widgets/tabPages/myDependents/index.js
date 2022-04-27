@@ -1,24 +1,31 @@
 import axios from 'axios';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import jwt_decode from 'jwt-decode';
 import { NavContext } from '../../../appContext';
 import { Card, DependentsCard, EmptyDependentState } from '../../../components';
 import { BASE_URL } from '../../../config';
 import { LoadingIcon } from '../../../assets';
+import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 
 const MyDependents = () => {
     const [responseData, setResponseData] = useState([]);
     const [headerIconDisplay, setHeaderIconDisplay] = useContext(NavContext);
+    const [data, setData] = useState({});
     const [loading, setLoading] = useState(true);
     const [emptyState, setEmptyState] = useState(false);
-    const accessToken = localStorage.getItem('accessToken');
-    const jwt_code = localStorage.getItem('data');
 
-    if (jwt_code && accessToken) {
-        var jwt_data = jwt_decode(jwt_code);
-    }
+    let ciDT = ciEncrypt.getItem('ciDT');
 
-    const userNin = jwt_data?.nin;
+    const handleKey = useCallback(async () => {
+        let ciDD = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(ciDD);
+        setData(userData);
+    }, [ciEncrypt]);
+
+    useEffect(() => {
+        handleKey();
+    }, [handleKey]);
+
+    const userNin = data?.nin;
 
     const fetchDependents = useCallback(
         (nin) => {
@@ -26,7 +33,7 @@ const MyDependents = () => {
                 method: 'get',
                 url: `${BASE_URL}utility/myDependents?parentNin=${nin}`,
                 headers: {
-                    Authorization: `Bearer ${accessToken}`
+                    Authorization: `Bearer ${ciDT}`
                 }
             })
                 .then((response) => {
@@ -44,7 +51,7 @@ const MyDependents = () => {
                 });
             return true;
         },
-        [accessToken]
+        [ciDT]
     );
 
     useEffect(() => {

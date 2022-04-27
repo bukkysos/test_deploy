@@ -1,37 +1,42 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
-import jwt_decode from 'jwt-decode';
 import { useHistory } from 'react-router';
 import { Button } from '../../../components';
 import { BASE_URL } from '../../../config';
 import { Table } from '../../../components/table';
 import { LoadingIcon } from '../../../assets';
+import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 
 const ViewSubscribers = () => {
     const [responseData, setResponseData] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const [data, setData] = useState({});
     const [searchParam] = useState(['adminId', 'staffId', 'sn', 'credits']);
     const [IsEmptyTable, setIsEmptyTable] = useState(false);
     const [csv, setcsv] = useState('');
     const [sortValues, setSortValues] = useState({});
     const [display, setDisplay] = useState([]);
 
-    const accessToken = localStorage.getItem('accessToken');
-    const jwt_code = localStorage.getItem('data');
-
-    if (jwt_code && accessToken) {
-        var jwt_data = jwt_decode(jwt_code);
-    }
-
     const history = useHistory();
+
+    let ciDT = ciEncrypt.getItem('ciDT');
+
+    const handleKey = useCallback(async () => {
+        let ciDD = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(ciDD);
+        setData(userData);
+    }, [ciEncrypt]);
+
+    useEffect(() => {
+        handleKey();
+    }, [handleKey]);
 
     useEffect(() => {
         axios({
             method: 'get',
-            url: `${BASE_URL}subscriptionHistory/mySubscribers?userID=${jwt_data?.userid}`,
+            url: `${BASE_URL}subscriptionHistory/mySubscribers?userID=${data?.userID}`,
             headers: {
-                Authorization: `Bearer ${accessToken}`
+                Authorization: `Bearer ${ciDT}`
             }
         })
             .then((response) => {
@@ -41,7 +46,7 @@ const ViewSubscribers = () => {
             .catch(() => {
                 setIsEmptyTable(true);
             });
-    }, [accessToken, jwt_data?.userid]);
+    }, [ciDT, data?.userid]);
 
     const convertToCsv = useCallback((objArray) => {
         // JSON to CSV Converter

@@ -1,31 +1,22 @@
-import React, {
-    useCallback,
-    useContext,
-    // useContext,
-    useEffect,
-    useState
-} from 'react';
-import jwt_decode from 'jwt-decode';
-// import { AppContext } from "../../../appContext";
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { LinkMobile, Profile, Purchase } from '../../../assets';
 import {
     Button,
     Input,
     Modal,
     PrintCardPreview,
-    // Modal,
     ProfileDetails,
     ProfileSidebar,
     RemitaModal,
     SelectInput,
     SuccessContent
-    // RemitaModal,
 } from '../../../components';
 import { BASE_URL } from '../../../config';
 import axios from 'axios';
 import { AppContext } from '../../../appContext';
 import { generateRemitaRRR } from '../../../application/paymentHandler';
 import OtpInput from 'react-otp-input';
+import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 
 const ViewProfile = () => {
     const [tabIndex, setTabIndex] = useState(0);
@@ -41,7 +32,7 @@ const ViewProfile = () => {
     const [cardType, setCardType] = useState('');
     const [ninSlipError, setNinSlipError] = useState(false);
     const [noticeModal, setNoticeModal] = useState(false);
-
+    const [data, setData] = useState({});
     const [selectedState, setSelectedSate] = useState('');
     const [btnloading, setBtnLoading] = useState(false);
     const [primary, handlePrimaryButton] = useState('');
@@ -49,12 +40,17 @@ const ViewProfile = () => {
     const [numberLinked, setNumberLinked] = useState(false);
     const [profileBtnloading, setProfileBtnLoading] = useState(false);
 
-    const accessToken = localStorage.getItem('accessToken');
-    const jwt_code = localStorage.getItem('data');
+    let ciDT = ciEncrypt.getItem('ciDT');
 
-    if (jwt_code && accessToken) {
-        var jwt_data = jwt_decode(jwt_code);
-    }
+    const handleKey = useCallback(async () => {
+        let ciDD = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(ciDD);
+        setData(userData);
+    }, [ciEncrypt]);
+
+    useEffect(() => {
+        handleKey();
+    }, [handleKey]);
 
     const states = [
         'Abia',
@@ -108,13 +104,13 @@ const ViewProfile = () => {
                 'NATIONALITY'
             ],
             rightData: [
-                jwt_data?.userid,
-                jwt_data?.fn,
-                jwt_data?.mn,
-                jwt_data?.sn,
-                jwt_data?.nin,
-                jwt_data?.gender || 'N/A',
-                jwt_data?.icao,
+                data?.userID,
+                data?.fn,
+                data?.mn,
+                data?.sn,
+                data?.nin,
+                data?.gender || 'N/A',
+                data?.icao,
                 'NGA'
             ],
             primaryButtonText: 'Request Profile Update',
@@ -124,7 +120,7 @@ const ViewProfile = () => {
 
         {
             leftData: ['AVAILABLE CREDITS', 'USED CREDITS'],
-            rightData: [jwt_data?.availablecredit, jwt_data?.usedcredit],
+            rightData: [data?.availablecredit, data?.usedcredit],
             primaryButtonText: 'Purchase Subscription',
             contentType: null,
             routeTo: '/purchase-plan'
@@ -169,9 +165,9 @@ const ViewProfile = () => {
             } else {
                 axios({
                     method: 'get',
-                    url: `${BASE_URL}device/getMobileNumbers?userID=${jwt_data?.userid}`,
+                    url: `${BASE_URL}device/getMobileNumbers?userID=${data?.userID}`,
                     headers: {
-                        Authorization: `Bearer ${accessToken}`
+                        Authorization: `Bearer ${ciDT}`
                     }
                 })
                     .then((response) => {
@@ -182,19 +178,19 @@ const ViewProfile = () => {
                     });
             }
         }
-    }, [tabIndex, accessToken, deviceInfo, jwt_data?.userid]);
+    }, [tabIndex, ciDT, deviceInfo, data?.userID]);
 
     // Payment
 
     const [paymentError, setPaymentError] = useState('');
 
     const remitaPayload = {
-        user: jwt_data?.userid,
+        user: data?.userID,
         reference: '0000',
-        payersName: `${jwt_data?.fn} ${jwt_data?.sn}`,
+        payersName: `${data?.fn} ${data?.sn}`,
         plan: '',
         paid: false,
-        purchasedCredits: jwt_data?.availablecredit,
+        purchasedCredits: data?.availablecredit,
         key: process.env.REACT_APP_REMITA_PUBLIC_KEY
     };
 
@@ -242,11 +238,11 @@ const ViewProfile = () => {
             method: 'post',
             url: `${BASE_URL}utility/sendOTP`,
             data: {
-                userID: jwt_data?.userid,
+                userID: data?.userID,
                 mobile: normalInputVal
             },
             headers: {
-                Authorization: `Bearer ${accessToken}`
+                Authorization: `Bearer ${ciDT}`
             }
         })
             .then((response) => {
@@ -277,13 +273,13 @@ const ViewProfile = () => {
             method: 'post',
             url: `${BASE_URL}utility/addMobileNumber`,
             data: {
-                userID: jwt_data?.userid,
+                userID: data?.userID,
                 mobile: normalInputVal,
                 otp: otpInputVal,
                 index: '4'
             },
             headers: {
-                Authorization: `Bearer ${accessToken}`
+                Authorization: `Bearer ${ciDT}`
             }
         })
             .then((response) => {
@@ -329,13 +325,13 @@ const ViewProfile = () => {
                     method: 'post',
                     url: `${BASE_URL}nimcSlip/paymentLog`,
                     data: {
-                        userID: jwt_data?.userid,
+                        userID: data?.userID,
                         txRef: paymentReference,
                         rrr: rrr,
                         service: cardType === 'Standard' ? 1 : 2
                     },
                     headers: {
-                        Authorization: `Bearer ${accessToken}`
+                        Authorization: `Bearer ${ciDT}`
                     }
                 })
                     .then((response) => {
@@ -355,8 +351,8 @@ const ViewProfile = () => {
 
             const remitaPaymentEngine = window.RmPaymentEngine.init({
                 key: key,
-                firstName: `${jwt_data.fn}`,
-                lastName: `${jwt_data.sn}`,
+                firstName: `${data.fn}`,
+                lastName: `${data.sn}`,
                 narration: `${cardType} NIN slip`,
                 amount: amt,
                 transactionId: '',
@@ -386,16 +382,16 @@ const ViewProfile = () => {
 
             remitaPaymentEngine.showPaymentWidget();
         },
-        [accessToken, key, jwt_data.sn, jwt_data.fn, payersName, reference, jwt_data.userid, user]
+        [ciDT, key, data.sn, data.fn, payersName, reference, data.userID, user]
     );
 
     const premiumNinSlip = useCallback(
         (cardType) => {
             axios({
                 method: 'get',
-                url: `${BASE_URL}nimcSlip/premium?userID=${jwt_data.userid}`,
+                url: `${BASE_URL}nimcSlip/premium?userID=${data.userID}`,
                 headers: {
-                    Authorization: `Bearer ${accessToken}`
+                    Authorization: `Bearer ${ciDT}`
                 }
             })
                 .then((response) => {
@@ -415,7 +411,7 @@ const ViewProfile = () => {
                     setProfileBtnLoading(false);
                 });
         },
-        [jwt_data.userid, initRemita, accessToken]
+        [data.userid, initRemita, ciDT]
     );
 
     useEffect(() => {
@@ -442,7 +438,7 @@ const ViewProfile = () => {
                 <ProfileSidebar
                     getTabIndex={(tab) => setTabIndex(tab)}
                     sidebarItems={sidebarItems}
-                    profileImage={`https://v1.ibib.io:7070/1/png/${jwt_data?.h}.png`}
+                    profileImage={`https://v1.ibib.io:7070/1/png/${data?.h}.png`}
                     mobileDropdownData={viewProfileData[tabIndex]}
                     loading={profileBtnloading}
                     showProfileModal={() => {
@@ -489,8 +485,8 @@ const ViewProfile = () => {
                         closeModal={() => showPrintModal(false)}
                         cardType="simple"
                         cardFace={'Premium'}
-                        h={jwt_data?.h}
-                        downloadLink={`https://slipserver1.nimc.gov.ng/ijebu?h=${jwt_data?.h}&p=1&type=pns`}
+                        h={data?.h}
+                        downloadLink={`https://slipserver1.nimc.gov.ng/ijebu?h=${data?.h}&p=1&type=pns`}
                     />
                 </>
             ) : (

@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import jwt_decode from 'jwt-decode';
 import { LoadingIcon } from '../../../assets';
 import axios from 'axios';
 import { Table } from '../../../components/table';
 import './subscriptionHistory.css';
 import { BASE_URL } from '../../../config';
+import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 
 const filterItems = {
     filterItem: ['Fund Method'],
@@ -15,6 +15,7 @@ const filterItems = {
 
 const SubscriptionHistory = () => {
     const [modalState, setModal] = useState(false);
+    const [data, setData] = useState({});
     const [responseData, setResponseData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [IsEmptyTable, setIsEmptyTable] = useState(false);
@@ -22,22 +23,26 @@ const SubscriptionHistory = () => {
     const [display, setDisplay] = useState([]);
 
     const [searchParam] = useState(['credits', 'subscriptionPlan', 'sid', 'credits']);
-
     const [csv, setcsv] = useState('');
 
-    const accessToken = localStorage.getItem('accessToken');
-    const jwt_code = localStorage.getItem('data');
+    let ciDT = ciEncrypt.getItem('ciDT');
 
-    if (jwt_code && accessToken) {
-        var jwt_data = jwt_decode(jwt_code);
-    }
+    const handleKey = useCallback(async () => {
+        let ciDD = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(ciDD);
+        setData(userData);
+    }, [ciEncrypt]);
+
+    useEffect(() => {
+        handleKey();
+    }, [handleKey]);
 
     useEffect(() => {
         axios({
             method: 'get',
-            url: `${BASE_URL}subscriptionHistory/transactions?userID=${jwt_data?.userid}`,
+            url: `${BASE_URL}subscriptionHistory/transactions?userID=${data?.userID}`,
             headers: {
-                Authorization: `Bearer ${accessToken}`
+                Authorization: `Bearer ${ciDT}`
             }
         })
             .then((response) => {
@@ -48,7 +53,7 @@ const SubscriptionHistory = () => {
             .catch(() => {
                 setIsEmptyTable(true);
             });
-    }, [accessToken, jwt_data?.userid]);
+    }, [ciDT, data?.userID]);
 
     const convertToCsv = useCallback((objArray) => {
         // JSON to CSV Converter

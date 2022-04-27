@@ -1,33 +1,40 @@
 import axios from 'axios';
 import jsSHA from 'jssha';
-import jwt_decode from 'jwt-decode';
 import { BASE_URL } from '../../../config';
 import { useHistory } from 'react-router-dom';
 import { AppContext } from '../../../appContext';
 import { hex_rmd160 } from '../../../config/hex-ripe';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { generateRemitaRRR } from '../../../application/paymentHandler';
 import { Modal, PrintStandardCard, StandardCardButton, SuccessContent } from '../../../components';
+import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 
 const PrintStandardSlip = () => {
     const [loading, setLoading] = useState(false);
+    const [data, setData] = useState({});
     const [modal, setModal] = useState(false);
     const [checkLoading, setCheckLoading] = useState(false);
     const [context, setContext] = useContext(AppContext);
     const [errorHandler, setErrorHandler] = useState(false);
 
     const history = useHistory();
-    const accessToken = localStorage.getItem('accessToken');
-    const jwt_code = localStorage.getItem('data');
 
-    if (jwt_code && accessToken) {
-        var jwt_data = jwt_decode(jwt_code);
-    }
+    let ciDT = ciEncrypt.getItem('ciDT');
+
+    const handleKey = useCallback(async () => {
+        let ciDD = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(ciDD);
+        setData(userData);
+    }, [ciEncrypt]);
 
     useEffect(() => {
-        generateHash(jwt_data);
+        handleKey();
+    }, [handleKey]);
+
+    useEffect(() => {
+        generateHash(data);
         setContext(modal);
-    }, [modal, setContext, jwt_data]);
+    }, [modal, setContext, data]);
 
     useEffect(() => {
         setContext(errorHandler);
@@ -58,13 +65,13 @@ const PrintStandardSlip = () => {
     };
 
     const remitaPayload = {
-        user: jwt_data.userid,
+        user: data.userID,
         amount: 416.88,
         reference: '0000',
-        payersName: `${jwt_data.fn} ${jwt_data.sn}`,
+        payersName: `${data.fn} ${data.sn}`,
         plan: '',
         paid: false,
-        purchasedCredits: jwt_data?.availablecredit,
+        purchasedCredits: data?.availablecredit,
         key: process.env.REACT_APP_REMITA_PUBLIC_KEY
     };
 
@@ -74,9 +81,9 @@ const PrintStandardSlip = () => {
         setCheckLoading(true);
         axios({
             method: 'get',
-            url: `${BASE_URL}nimcSlip/download?userID=${jwt_data.userid}`,
+            url: `${BASE_URL}nimcSlip/download?userID=${data.userID}`,
             headers: {
-                Authorization: `Bearer ${accessToken}`
+                Authorization: `Bearer ${ciDT}`
             }
         })
             .then((response) => {
@@ -88,7 +95,7 @@ const PrintStandardSlip = () => {
                             service: 1,
                             status: true,
                             action: 'print',
-                            h: jwt_data?.h
+                            h: data?.h
                         })
                     );
                 } else {
@@ -116,7 +123,7 @@ const PrintStandardSlip = () => {
             method: 'post',
             url: `${BASE_URL}nimcSlip/CN`,
             headers: {
-                Authorization: `Bearer ${accessToken}`
+                Authorization: `Bearer ${ciDT}`
             },
             data: {
                 userID: userID,
@@ -137,9 +144,9 @@ const PrintStandardSlip = () => {
         setLoading(true);
         axios({
             method: 'get',
-            url: `${BASE_URL}nimcSlip/standardNINSlip?userID=${jwt_data.userid}`,
+            url: `${BASE_URL}nimcSlip/standardNINSlip?userID=${data.userid}`,
             headers: {
-                Authorization: `Bearer ${accessToken}`
+                Authorization: `Bearer ${ciDT}`
             }
         })
             .then((response) => {
@@ -190,13 +197,13 @@ const PrintStandardSlip = () => {
                 method: 'post',
                 url: `${BASE_URL}nimcSlip/paymentLog`,
                 data: {
-                    userID: jwt_data.userid,
+                    userID: data.userID,
                     txRef: paymentReference,
                     rrr: rrr,
                     service: 1
                 },
                 headers: {
-                    Authorization: `Bearer ${accessToken}`
+                    Authorization: `Bearer ${ciDT}`
                 }
             })
                 .then((response) => {
@@ -207,7 +214,7 @@ const PrintStandardSlip = () => {
                             JSON.stringify({
                                 txRef: paymentReference,
                                 service: 1,
-                                h: jwt_data.h,
+                                h: data.h,
                                 status: true
                             })
                         );
@@ -226,7 +233,7 @@ const PrintStandardSlip = () => {
                         JSON.stringify({
                             txRef: paymentReference,
                             service: 1,
-                            h: jwt_data.h,
+                            h: data.h,
                             status: false
                         })
                     );
@@ -235,8 +242,8 @@ const PrintStandardSlip = () => {
 
         const remitaPaymentEngine = window.RmPaymentEngine.init({
             key: key,
-            firstName: `${jwt_data.fn}`,
-            lastName: `${jwt_data.sn}`,
+            firstName: `${data.fn}`,
+            lastName: `${data.sn}`,
             narration: 'Standard NIN slip',
             amount: amount,
             transactionId: '',

@@ -1,11 +1,11 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import jwt_decode from 'jwt-decode';
 import { AppContext } from '../../../appContext';
 import { Button, Input, Modal, RemitaModal, SuccessContent, Table } from '../../../components';
 import axios from 'axios';
 import { BASE_URL } from '../../../config';
 import OtpInput from 'react-otp-input';
 import { LoadingIcon } from '../../../assets';
+import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 
 const filterItems = {
     filterItem: ['Status'],
@@ -17,6 +17,7 @@ const filterItems = {
 const LinkMobileNumber = () => {
     const [modal, setModal] = useState(false);
     const [context, setContext] = useContext(AppContext);
+    const [data, setData] = useState({});
     const [primary, handlePrimaryButton] = useState('');
     const [responseData, setResponseData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -31,33 +32,43 @@ const LinkMobileNumber = () => {
     const [sortValues, setSortValues] = useState({});
     const [display, setDisplay] = useState([]);
 
-    const accessToken = localStorage.getItem('accessToken');
-    const jwt_code = localStorage.getItem('data');
-    if (jwt_code && accessToken) {
-        var jwt_data = jwt_decode(jwt_code);
-    }
+    let ciDT = ciEncrypt.getItem('ciDT');
+
+    const handleKey = useCallback(async () => {
+        let ciDD = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(ciDD);
+        // console.log({ userData });
+        setData(userData);
+    }, [ciEncrypt]);
+
+    useEffect(() => {
+        handleKey();
+    }, [handleKey]);
 
     useEffect(() => {
         setContext(modal);
     }, [modal, setContext]);
 
     useEffect(() => {
-        axios({
-            method: 'get',
-            url: `${BASE_URL}device/getMobileNumbers?userID=${jwt_data?.userid}`,
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        })
-            .then((response) => {
-                setResponseData(() => response.data.data);
-                setLoading(false);
-                setDisplay(() => response.data.data);
+        console.log(data.userid);
+        if (data.userid) {
+            axios({
+                method: 'get',
+                url: `${BASE_URL}device/getMobileNumbers?userID=${data.userid}`,
+                headers: {
+                    Authorization: `Bearer ${ciDT}`
+                }
             })
-            .catch(() => {
-                setIsEmptyTable(true);
-            });
-    }, [jwt_data?.userid, accessToken]);
+                .then((response) => {
+                    setResponseData(() => response.data.data);
+                    setLoading(false);
+                    setDisplay(() => response.data.data);
+                })
+                .catch(() => {
+                    setIsEmptyTable(true);
+                });
+        }
+    }, [data.userid, ciDT]);
 
     const convertToCsv = useCallback((objArray) => {
         // JSON to CSV Converter
@@ -127,11 +138,11 @@ const LinkMobileNumber = () => {
             method: 'post',
             url: `${BASE_URL}utility/sendOTP`,
             data: {
-                userID: jwt_data?.userid,
+                userID: data?.userID,
                 mobile: normalInputVal
             },
             headers: {
-                Authorization: `Bearer ${accessToken}`
+                Authorization: `Bearer ${ciDT}`
             }
         })
             .then((response) => {
@@ -162,13 +173,13 @@ const LinkMobileNumber = () => {
             method: 'post',
             url: `${BASE_URL}utility/addMobileNumber`,
             data: {
-                userID: jwt_data?.userid,
+                userID: data?.userID,
                 mobile: normalInputVal,
                 otp: otpInputVal,
                 index: '4'
             },
             headers: {
-                Authorization: `Bearer ${accessToken}`
+                Authorization: `Bearer ${ciDT}`
             }
         })
             .then((response) => {

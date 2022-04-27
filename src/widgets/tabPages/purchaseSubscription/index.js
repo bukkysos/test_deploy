@@ -1,33 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import jwt_decode from 'jwt-decode';
+import React, { useCallback, useEffect, useState } from 'react';
 import { RadioIcon } from '../../../assets';
 import { Button, Modal, SuccessContent } from '../../../components';
 import './purchaseSubscription.css';
 import axios from 'axios';
 import { BASE_URL } from '../../../config';
 import { generateRemitaRRR } from '../../../application/paymentHandler';
+import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 
 const PurchaseSubscription = () => {
     const [userPlan, setPlan] = useState('Individual');
+    const [data, setData] = useState({});
     const [loading, setLoading] = useState(false);
     const [modal, showModal] = useState(false);
-    const accessToken = localStorage.getItem('accessToken');
-    const jwt_code = localStorage.getItem('data');
-
     const [error, setError] = useState(false);
 
-    if (jwt_code && accessToken) {
-        var jwt_data = jwt_decode(jwt_code);
-    }
+    let ciDT = ciEncrypt.getItem('ciDT');
+
+    const handleKey = useCallback(async () => {
+        let ciDD = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(ciDD);
+        setData(userData);
+    }, [ciEncrypt]);
+
+    useEffect(() => {
+        handleKey();
+    }, [handleKey]);
 
     const remitaPayload = {
-        user: jwt_data?.userid,
+        user: data?.userID,
         amount: 5227.26,
         reference: '0000',
-        payersName: `${jwt_data?.fn} ${jwt_data?.sn}`,
+        payersName: `${data?.fn} ${data?.sn}`,
         plan: '',
         paid: false,
-        purchasedCredits: jwt_data?.availablecredit,
+        purchasedCredits: data?.availablecredit,
         key: process.env.REACT_APP_REMITA_PUBLIC_KEY
     };
 
@@ -62,8 +68,8 @@ const PurchaseSubscription = () => {
 
         const remitaPaymentEngine = window.RmPaymentEngine.init({
             key: key,
-            firstName: `${jwt_data.fn}`,
-            lastName: `${jwt_data.sn}`,
+            firstName: `${data.fn}`,
+            lastName: `${data.sn}`,
             narration: 'Purchase Plan',
             amount: amount,
             transactionId: '',
@@ -100,9 +106,9 @@ const PurchaseSubscription = () => {
     const purchaseSubscription = async (paymentReference) => {
         await axios({
             method: 'post',
-            url: `${BASE_URL}credit/buySubscription?userID=${jwt_data?.userid}&txRef=${paymentReference}&servicePlan=Individual`,
+            url: `${BASE_URL}credit/buySubscription?userID=${data?.userid}&txRef=${paymentReference}&servicePlan=Individual`,
             headers: {
-                Authorization: `Bearer ${accessToken}`
+                Authorization: `Bearer ${ciDT}`
             }
         })
             .then(() => {

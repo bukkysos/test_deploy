@@ -44,8 +44,7 @@ const VerificationHistory = () => {
     const handleKey = useCallback(async () => {
         let ciDD = await ciEncrypt.getItem('ciDD');
         let userData = await decryptAndDecode(ciDD);
-        setData(userData.userId);
-        // }
+        setData(userData.userID);
     }, [ciEncrypt]);
 
     useEffect(() => {
@@ -60,7 +59,7 @@ const VerificationHistory = () => {
         setLoading(true);
         axios({
             method: 'get',
-            url: `${BASE_URL}verification/vh?userID=${data?.userid}`,
+            url: `${BASE_URL}verification/vh?userID=${data?.userID}`,
             headers: {
                 Authorization: `Bearer ${ciDT}`
             }
@@ -73,7 +72,7 @@ const VerificationHistory = () => {
             .catch(() => {
                 setIsEmptyTable(true);
             });
-    }, [ciDT, data?.userid]);
+    }, [ciDT, data?.userID]);
 
     const convertToCsv = useCallback((objArray) => {
         // JSON to CSV Converter

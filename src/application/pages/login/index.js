@@ -105,10 +105,6 @@ const Login = () => {
 
     useEffect(() => {}, [userId]);
 
-    // const handleLogin = () => {
-
-    // }
-
     const login = (e) => {
         e.preventDefault();
         let domUserID = e.target['userId'].value;
@@ -128,7 +124,6 @@ const Login = () => {
                 }
             })
                 .then((response) => {
-                    fetchKey(response.data.accessToken);
                     console.log(response.data.accessToken, 'login response');
                     if (!fetchKey(response.data.accessToken, response.data.data)) {
                         setModalError(true);

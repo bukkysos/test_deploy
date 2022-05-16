@@ -124,7 +124,6 @@ const Login = () => {
                 }
             })
                 .then((response) => {
-                    console.log(response.data.accessToken, 'login response');
                     if (!fetchKey(response.data.accessToken, response.data.data)) {
                         setModalError(true);
                     }
@@ -133,38 +132,12 @@ const Login = () => {
                         setLoading(false);
                         history.push('/home');
                     }, 2000);
-                    // return true;
                 })
                 .catch((error) => {
                     console.log({ error }, 'fetchkey');
-
-                    setLoading(true);
-                    axios({
-                        method: 'post',
-                        url: `/api/user/login`,
-                        data: {
-                            userID: String(loginUserId),
-                            otp: String(loginUserOTP)
-                        }
-                    })
-                        .then((response) => {
-                            console.log(response.data.accessToken, 'login response');
-                            if (!fetchKey(response.data.accessToken, response.data.data)) {
-                                setModalError(true);
-                            }
-                            setModalError(false);
-                            setTimeout(() => {
-                                setLoading(false);
-                                history.push('/home');
-                            }, 2000);
-                            // return true;
-                        })
-                        .catch((error) => {
-                            setErrorMessage(error.message);
-                            setError(true);
-                            setLoading(false);
-                            setModalError(true);
-                        });
+                    setErrorMessage(error.response.data.message.toUpperCase());
+                    setModalError(true);
+                    setLoading(false);
                 });
         }
         return true;

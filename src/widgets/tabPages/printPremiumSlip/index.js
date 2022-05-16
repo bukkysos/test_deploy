@@ -164,12 +164,14 @@ const PrintPremiumSlip = () => {
                     setModal(false);
                     setErrorHandler(true);
                     setLoading(false);
+                    console.log({ response });
                 }
             })
-            .catch(() => {
+            .catch((error) => {
                 setModal(false);
                 setErrorHandler(true);
                 setLoading(false);
+                console.log({ error });
             });
     };
 

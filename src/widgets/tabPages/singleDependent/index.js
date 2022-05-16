@@ -6,9 +6,7 @@ import {
     // IdContext
 } from '../../../appContext';
 import {
-    Button,
     HomeCard,
-    Input,
     Modal,
     PrintCardPreview,
     ProfileDetails,
@@ -17,12 +15,11 @@ import {
     SelectInput,
     SuccessContent
 } from '../../../components';
-import { LinkMobile, Print } from '../../../assets';
+import { Print } from '../../../assets';
 import './singleDependent.css';
 import { BASE_URL } from '../../../config';
 import axios from 'axios';
 import { generateRemitaRRR } from '../../../application/paymentHandler';
-import OtpInput from 'react-otp-input';
 import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 
 const SingleDependent = () => {
@@ -31,26 +28,19 @@ const SingleDependent = () => {
     const [modal, setModal] = useState(false);
     const [noticeModal, setNoticeModal] = useState(false);
     const [data, setData] = useState({});
-    const [primary, handlePrimaryButton] = useState('');
+    const [nin, setNin] = useState('');
     const [responseData, setResponseData] = useState([]);
-    const [normalInputVal, setNormalInputVal] = useState('');
-    const [otpInputVal, setOTPInputVal] = useState('');
-    const [numberLinked, setNumberLinked] = useState(false);
-    const [error, setError] = useState(false);
+    const [error] = useState(false);
     const [ninSlipError, setNinSlipError] = useState(false);
-    const [errorText, setErrorText] = useState('');
     const [verificationError, setVerificationError] = useState(null);
     const [single_nav, setSingle_nav] = useState('quick_action');
     const [tabIndex, setTabIndex] = useState(0);
     const [deviceInfo, setDeviceInfo] = useState([]);
     const [printModal, showPrintModal] = useState(false);
     const [cardType, setCardType] = useState('');
-    const [btnloading, setBtnLoading] = useState(false);
     const [profileBtnloading, setProfileBtnLoading] = useState(false);
-
     const [premiumLoading, setPremiumLoading] = useState(false);
     const [standardLoading, setStandardLoading] = useState(false);
-    const [addNumberLoading, setAddNumberLoading] = useState(false);
     const [profileModal, setProfileModal] = useState(false);
     const [selectedState, setSelectedSate] = useState('');
     const { id } = useParams();
@@ -64,6 +54,7 @@ const SingleDependent = () => {
     const handleKey = useCallback(async () => {
         let ciDD = await ciEncrypt.getItem('ciDD');
         let userData = await decryptAndDecode(ciDD);
+        setNin(userData.nin);
         setData(userData);
     }, [ciEncrypt]);
 
@@ -166,19 +157,23 @@ const SingleDependent = () => {
     }, [printModal, setContext]);
 
     useEffect(() => {
-        axios({
-            method: 'get',
-            url: `${BASE_URL}utility/myDependents?parentNin=${data?.nin}`,
-            headers: {
-                Authorization: `Bearer ${ciDT}`
-            }
-        })
-            .then((response) => {
-                setResponseData(() => response.data.data[index]);
+        if (nin) {
+            axios({
+                method: 'get',
+                url: `${BASE_URL}utility/myDependents?parentNin=${nin}`,
+                headers: {
+                    Authorization: `Bearer ${ciDT}`
+                }
             })
-            .catch(() => {
-                // return;
-            });
+                .then((response) => {
+                    decryptAndDecode(response.data.data).then((data) => {
+                        setResponseData(() => data[index]);
+                    });
+                })
+                .catch(() => {
+                    // return;
+                });
+        }
     }, [index, data?.nin, ciDT]);
 
     useEffect(() => {
@@ -225,99 +220,9 @@ const SingleDependent = () => {
         script.onload = () => document.body.appendChild(script);
     }, []);
 
-    const validPhonePattern = /^0\d{10}$/;
-
-    const validatePhoneNumberOnChange = (numberVal) => {
-        if (isNaN(numberVal)) {
-            return;
-        } else if (normalInputVal.length === 12) {
-            return;
-        }
-        setNormalInputVal(numberVal);
-    };
-
-    const validateOnBlur = () => {
-        if (!validPhonePattern.test(normalInputVal)) {
-            setError(true);
-        }
-    };
-
     // Hit this endpoint with phone number to get OTP
-    const sendOTP = () => {
-        if (
-            normalInputVal === '' ||
-            normalInputVal.length < 11 ||
-            normalInputVal.length > 11 ||
-            isNaN(parseInt(normalInputVal))
-        ) {
-            setError(true);
-            setErrorText('Invalid Number');
-            return;
-        }
-        setAddNumberLoading(true);
-        setBtnLoading(true);
-        setError(false);
-
-        axios({
-            method: 'post',
-            url: `${BASE_URL}utility/sendOTP`,
-            data: {
-                userID: data?.userID,
-                mobile: normalInputVal
-            },
-            headers: {
-                Authorization: `Bearer ${ciDT}`
-            }
-        })
-            .then(() => {
-                setBtnLoading(false);
-                handlePrimaryButton('change');
-                setAddNumberLoading(false);
-            })
-            .catch(() => {
-                setBtnLoading(false);
-                setAddNumberLoading(false);
-            });
-    };
 
     // Hit this endpoint with OTP to add number
-    const addNumber = () => {
-        setBtnLoading(true);
-
-        if (otpInputVal === '' || otpInputVal.length !== 6) {
-            setError(true);
-            setErrorText('Ensure OTP is entered correctly');
-            return setBtnLoading(false);
-        }
-
-        axios({
-            method: 'post',
-            url: `${BASE_URL}utility/addMobileNumber`,
-            data: {
-                userID: data?.userID,
-                mobile: normalInputVal,
-                otp: otpInputVal,
-                index: '4'
-            },
-            headers: {
-                Authorization: `Bearer ${ciDT}`
-            }
-        })
-            .then((response) => {
-                if (response.data.success) {
-                    setBtnLoading(false);
-                    setError(false);
-                    setNumberLinked(true);
-                    handlePrimaryButton('finished');
-                }
-            })
-            .catch(() => {
-                setNumberLinked(false);
-                setBtnLoading(false);
-            });
-
-        return true;
-    };
 
     const initRemita = useCallback(
         async (cardType) => {
@@ -466,6 +371,7 @@ const SingleDependent = () => {
                     setStandardLoading(false);
                     setNinSlipError(true);
                 });
+            return true;
         },
         [ciDT, initRemita, responseData.userid]
     );
@@ -549,19 +455,6 @@ const SingleDependent = () => {
                                     setCardType('Standard');
                                 }}
                             />
-                            <HomeCard
-                                icon={<LinkMobile />}
-                                description={'Link a mobile number to the dependent’s profile.'}
-                                buttonText={'Add Mobile Number'}
-                                loading={addNumberLoading}
-                                disabled={addNumberLoading}
-                                iconType={'print'}
-                                to={null}
-                                onclick={() => {
-                                    setModal(true);
-                                    setAddNumberLoading(true);
-                                }}
-                            />
                         </div>
                     </div>
                 </>
@@ -627,168 +520,6 @@ const SingleDependent = () => {
                 <></>
             )}
 
-            {/* Link Number Modal Start */}
-
-            {modal && primary === '' ? (
-                <Modal
-                    onclick={(modal) => {
-                        setModal(modal);
-                        setAddNumberLoading(false);
-                    }}
-                    content={
-                        <RemitaModal
-                            responseType={'error'}
-                            title={'Add Mobile Number'}
-                            description={
-                                'Please endeavour to input a valid phone number in the field below.'
-                            }
-                            children={
-                                <>
-                                    <div className={`remita_select_input`}>
-                                        <Input
-                                            placeholder={'08000000000'}
-                                            label={'Phone Number'}
-                                            value={normalInputVal}
-                                            onblur={() => validateOnBlur()}
-                                            onchange={(val) => validatePhoneNumberOnChange(val)}
-                                            name="remita_select"
-                                            mxlength={11}
-                                            error={error}
-                                            errorText={errorText}
-                                        />
-                                    </div>
-                                    <div className="remita_buttons d-flex justify-content-between">
-                                        <div className="col-4 p-0">
-                                            <Button
-                                                onButtonClick={() => {
-                                                    setModal(false);
-                                                    handlePrimaryButton('');
-                                                    setNormalInputVal('');
-                                                    setBtnLoading(false);
-                                                    setAddNumberLoading(false);
-                                                    setProfileBtnLoading(false);
-                                                }}
-                                                buttonType={'default'}
-                                                buttonText={`Cancel`}
-                                            />
-                                        </div>
-                                        <div className="col-7 p-0">
-                                            <Button
-                                                onButtonClick={() => sendOTP()}
-                                                buttonType={'primary'}
-                                                buttonText={'Next'}
-                                                loading={btnloading}
-                                            />
-                                        </div>
-                                    </div>
-                                </>
-                            }
-                        />
-                    }
-                    showCloseButton={false}
-                />
-            ) : modal && primary === 'change' ? (
-                <Modal
-                    onclick={(modal) => {
-                        setModal(modal);
-                        setAddNumberLoading(false);
-                        setProfileBtnLoading(false);
-                    }}
-                    content={
-                        <RemitaModal
-                            responseType={'error'}
-                            title={'Verify Number'}
-                            description={
-                                'We just sent a six(6) digits one time password to the phone number.'
-                            }
-                            children={
-                                <>
-                                    <div className={`remita_select_otp my-5`}>
-                                        <OtpInput
-                                            value={otpInputVal}
-                                            onChange={(val) => {
-                                                setOTPInputVal(val);
-                                                setError(false);
-                                            }}
-                                            numInputs={6}
-                                            isInputNum={true}
-                                            containerStyle={
-                                                'd-flex justify-content-between col-12 p-0 m-0'
-                                            }
-                                            inputStyle={`filter_box ${error ? 'error' : ''}`}
-                                            focusStyle={`filter_box_focus ${error ? 'error' : ''}`}
-                                            hasErrored={true}
-                                            separator={' '}
-                                        />
-                                    </div>
-                                    <div className="remita_buttons d-flex justify-content-between">
-                                        <div className="col-4 p-0">
-                                            <Button
-                                                onButtonClick={() => {
-                                                    setModal(false);
-                                                    handlePrimaryButton('');
-                                                    setOTPInputVal('');
-                                                    setNormalInputVal('');
-                                                    setBtnLoading(false);
-                                                    setProfileBtnLoading(false);
-                                                    setAddNumberLoading(false);
-                                                }}
-                                                buttonType={'default'}
-                                                buttonText={'Cancel'}
-                                            />
-                                        </div>
-                                        <div className="col-7 p-0">
-                                            <Button
-                                                onButtonClick={() => addNumber()}
-                                                buttonType={'primary'}
-                                                buttonText={'Confirm'}
-                                                loading={btnloading}
-                                            />
-                                        </div>
-                                    </div>
-                                </>
-                            }
-                        />
-                    }
-                    showCloseButton={false}
-                />
-            ) : modal && primary === 'finished' ? (
-                <>
-                    <Modal
-                        onclick={(modal) => {
-                            setModal(modal);
-                            setAddNumberLoading(false);
-                            setProfileBtnLoading(false);
-                            setNinSlipError(false);
-                        }}
-                        content={
-                            <SuccessContent
-                                responseType={numberLinked ? 'success' : 'error'}
-                                responseTexts={
-                                    <>
-                                        {numberLinked ? (
-                                            <p>Number linked successfully</p>
-                                        ) : (
-                                            <p>Number not linked. Try again!</p>
-                                        )}
-                                    </>
-                                }
-                                onclick={(modal) => {
-                                    setModal(modal);
-                                    setAddNumberLoading(false);
-                                    setProfileBtnLoading(false);
-                                    setNinSlipError(false);
-                                }}
-                            />
-                        }
-                        showCloseButton={true}
-                    />
-                </>
-            ) : (
-                <></>
-            )}
-            {/* Link Number Modal End */}
-
             {noticeModal ? (
                 <Modal
                     content={
@@ -810,15 +541,13 @@ const SingleDependent = () => {
                             responseType={'error'}
                             responseTexts={
                                 <>
-                                    <p>
-                                        {!ninSlipError
-                                            ? paymentError
-                                            : 'An Error occured! Please try again!'}
-                                    </p>
+                                    {!ninSlipError
+                                        ? paymentError
+                                        : 'An Error occured! Please try again!'}
                                 </>
                             }
-                            onclick={(modal) => {
-                                setModal(modal);
+                            onclick={() => {
+                                setModal(false);
                                 setStandardLoading(false);
                                 setPremiumLoading(false);
                                 setProfileBtnLoading(false);
@@ -881,7 +610,6 @@ const SingleDependent = () => {
                                                 setSelectedSate(item.selected);
                                             }}
                                             error={error}
-                                            errorText={errorText}
                                         />
                                     </div>
 

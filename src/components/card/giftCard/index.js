@@ -39,11 +39,12 @@ const GiftCard = ({ getResponse, recipient = null }) => {
         let ciDD = await ciEncrypt.getItem('ciDD');
         let userData = await decryptAndDecode(ciDD);
         setData(userData);
+        console.log(userData, 'ddddd');
     }, [ciEncrypt]);
 
     useEffect(() => {
         handleKey();
-    }, [handleKey]);
+    }, []);
 
     useEffect(() => {
         if (error) {
@@ -126,7 +127,6 @@ const GiftCard = ({ getResponse, recipient = null }) => {
 
     const handleGiftCard = () => {
         setBtnLoading(true);
-
         if (userId.length < 11 || isNaN(units) === true || !userId.includes('-')) {
             setError(true);
             setBtnLoading(false);
@@ -137,7 +137,7 @@ const GiftCard = ({ getResponse, recipient = null }) => {
                 url: `${BASE_URL}credit/assignCredits`,
                 data: {
                     userID: userId,
-                    adminUID: data.userID,
+                    adminUID: data.userid,
                     unit: units
                 },
                 headers: {

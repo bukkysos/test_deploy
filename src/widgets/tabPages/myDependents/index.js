@@ -9,7 +9,7 @@ import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 const MyDependents = () => {
     const [responseData, setResponseData] = useState([]);
     const [headerIconDisplay, setHeaderIconDisplay] = useContext(NavContext);
-    const [data, setData] = useState({});
+    const [nin, setNin] = useState(null);
     const [loading, setLoading] = useState(true);
     const [emptyState, setEmptyState] = useState(false);
 
@@ -18,17 +18,22 @@ const MyDependents = () => {
     const handleKey = useCallback(async () => {
         let ciDD = await ciEncrypt.getItem('ciDD');
         let userData = await decryptAndDecode(ciDD);
-        setData(userData);
+        setNin(userData.nin);
     }, [ciEncrypt]);
+
+    const decryptData = async (data) => {
+        let userData = await decryptAndDecode(data);
+        return userData;
+    };
 
     useEffect(() => {
         handleKey();
     }, [handleKey]);
 
-    const userNin = data?.nin;
+    const userNin = nin;
 
     const fetchDependents = useCallback(
-        (nin) => {
+        async (nin) => {
             axios({
                 method: 'get',
                 url: `${BASE_URL}utility/myDependents?parentNin=${nin}`,
@@ -38,14 +43,17 @@ const MyDependents = () => {
             })
                 .then((response) => {
                     setLoading(false);
-                    if (response.data.data) {
-                        setResponseData(() => response.data.data);
+                    if (response.data.data.length) {
+                        setEmptyState(false);
+                        decryptData(response.data.data).then((data) => {
+                            setResponseData(() => data);
+                        });
                     } else {
                         setEmptyState(true);
                     }
                 })
-                .catch((error) => {
-                    console.error(error, 'error');
+                .catch(() => {
+                    // console.error(error, 'error');
                     setLoading(false);
                     setResponseData([]);
                 });

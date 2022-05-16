@@ -23,7 +23,7 @@ const VerificationHistory = () => {
     const [pageLoading, setLoading] = useState(false);
     const [previewId, setPreviewId] = useState('');
     const [display, setDisplay] = useState([]);
-    const [data, setData] = useState('');
+    const [data, setData] = useState({});
     const [error, setError] = useState(null);
     const [verificationData, setVerificationData] = useState([]);
     const [searchParam] = useState(['level', 'status', 'verifiedID']);
@@ -44,7 +44,10 @@ const VerificationHistory = () => {
     const handleKey = useCallback(async () => {
         let ciDD = await ciEncrypt.getItem('ciDD');
         let userData = await decryptAndDecode(ciDD);
-        setData(userData.userID);
+        if (userData.userid) {
+            setData(userData);
+            console.log(userData);
+        }
     }, [ciEncrypt]);
 
     useEffect(() => {
@@ -56,23 +59,26 @@ const VerificationHistory = () => {
     }, [modalState, setContext]);
 
     useEffect(() => {
-        setLoading(true);
-        axios({
-            method: 'get',
-            url: `${BASE_URL}verification/vh?userID=${data?.userID}`,
-            headers: {
-                Authorization: `Bearer ${ciDT}`
-            }
-        })
-            .then((response) => {
-                setResponseData(() => response.data.data);
-                setLoading(false);
-                setDisplay(() => response.data.data);
+        if (data.userid) {
+            console.log(data.userid);
+            setLoading(true);
+            axios({
+                method: 'get',
+                url: `${BASE_URL}verification/vh?userID=${data.userid}`,
+                headers: {
+                    Authorization: `Bearer ${ciDT}`
+                }
             })
-            .catch(() => {
-                setIsEmptyTable(true);
-            });
-    }, [ciDT, data?.userID]);
+                .then((response) => {
+                    setResponseData(() => response.data.data);
+                    setLoading(false);
+                    setDisplay(() => response.data.data);
+                })
+                .catch(() => {
+                    setIsEmptyTable(true);
+                });
+        }
+    }, [ciDT, data.userid]);
 
     const convertToCsv = useCallback((objArray) => {
         // JSON to CSV Converter

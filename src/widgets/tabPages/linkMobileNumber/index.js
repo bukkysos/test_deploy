@@ -1,6 +1,13 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../../appContext';
-import { Button, Input, Modal, RemitaModal, SuccessContent, Table } from '../../../components';
+import {
+    Button,
+    Modal,
+    RemitaModal,
+    NumberInput,
+    SuccessContent,
+    Table
+} from '../../../components';
 import axios from 'axios';
 import { BASE_URL } from '../../../config';
 import OtpInput from 'react-otp-input';
@@ -22,7 +29,7 @@ const LinkMobileNumber = () => {
     const [responseData, setResponseData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [btnloading, setBtnLoading] = useState(false);
-    const [normalInputVal, setNormalInputVal] = useState('');
+    const [normalInputVal, setNormalInputVal] = useState('234');
     const [otpInputVal, setOTPInputVal] = useState('');
     const [error, setError] = useState(false);
     const [errorText, setErrorText] = useState('');
@@ -33,11 +40,9 @@ const LinkMobileNumber = () => {
     const [display, setDisplay] = useState([]);
 
     let ciDT = ciEncrypt.getItem('ciDT');
-
     const handleKey = useCallback(async () => {
         let ciDD = await ciEncrypt.getItem('ciDD');
         let userData = await decryptAndDecode(ciDD);
-        // console.log({ userData });
         setData(userData);
     }, [ciEncrypt]);
 
@@ -50,7 +55,6 @@ const LinkMobileNumber = () => {
     }, [modal, setContext]);
 
     useEffect(() => {
-        console.log(data.userid);
         if (data.userid) {
             axios({
                 method: 'get',
@@ -60,9 +64,11 @@ const LinkMobileNumber = () => {
                 }
             })
                 .then((response) => {
-                    setResponseData(() => response.data.data);
+                    if (response.data.data) {
+                        setResponseData(() => response.data.data);
+                        setDisplay(() => response.data.data);
+                    }
                     setLoading(false);
-                    setDisplay(() => response.data.data);
                 })
                 .catch(() => {
                     setIsEmptyTable(true);
@@ -102,11 +108,26 @@ const LinkMobileNumber = () => {
     }, [convertToCsv, responseData]);
 
     const validPhonePattern = /^0\d{10}$/;
+    const formats = ['2347', '2348', '2349'];
+    const format2 = ['23470', '23471', '23480', '23481', '23490', '23491'];
 
     const validatePhoneNumberOnChange = (numberVal) => {
         if (isNaN(numberVal)) {
             return;
-        } else if (normalInputVal.length === 12) {
+        } else if (normalInputVal.length === 13) {
+            setNormalInputVal(normalInputVal);
+        } else if (normalInputVal.length === 3 && !formats.includes(numberVal)) {
+            setNormalInputVal(normalInputVal);
+            return;
+        } else if (
+            normalInputVal.length === 4 &&
+            numberVal.length === 5 &&
+            !format2.includes(numberVal)
+        ) {
+            setNormalInputVal(normalInputVal);
+            return;
+        } else if (normalInputVal.length === 4 && numberVal.length === 3) {
+            setNormalInputVal(numberVal);
             return;
         }
         setNormalInputVal(numberVal);
@@ -138,7 +159,7 @@ const LinkMobileNumber = () => {
             method: 'post',
             url: `${BASE_URL}utility/sendOTP`,
             data: {
-                userID: data?.userID,
+                userID: data?.userid,
                 mobile: normalInputVal
             },
             headers: {
@@ -173,10 +194,9 @@ const LinkMobileNumber = () => {
             method: 'post',
             url: `${BASE_URL}utility/addMobileNumber`,
             data: {
-                userID: data?.userID,
+                userID: data?.userid,
                 mobile: normalInputVal,
-                otp: otpInputVal,
-                index: '4'
+                otp: otpInputVal
             },
             headers: {
                 Authorization: `Bearer ${ciDT}`
@@ -217,8 +237,10 @@ const LinkMobileNumber = () => {
             const filtered = responseData.filter((item) =>
                 ['MSISDN', 'deviceID', 'deviceStatus', 'idNumber'].some((newItem) => {
                     return (
-                        item[newItem].toString().toLowerCase().indexOf(searchFilter.toLowerCase()) >
-                        -1
+                        item[newItem]
+                            ?.toString()
+                            ?.toLowerCase()
+                            ?.indexOf(searchFilter?.toLowerCase()) ?? '' > -1
                     );
                 })
             );
@@ -234,6 +256,7 @@ const LinkMobileNumber = () => {
 
     const handleSort = useCallback(
         (sortValues) => {
+            console.log({ sortValues });
             if (sortValues.headerItem === 'ID Number' || sortValues.headerItem === 'Status') {
                 let reversedData = responseData.reverse();
                 setDisplay(reversedData);
@@ -272,16 +295,18 @@ const LinkMobileNumber = () => {
                             csvFile={csv}
                             isEmptyTable={IsEmptyTable}
                             sortData={(data) => setSortValues(data)}
+                            // sortData={() => {}}
                             getFilterDropdown={(selectedItem) =>
                                 filterData(selectedItem.selectedItem)
                             }
+                            // getFilterDropdown={() => {}}
                             tableContents={display.map((tableRow, index) => (
                                 <React.Fragment key={index}>
                                     <tr>
                                         <td className={`mobile_sticky_table_side`}>
                                             {tableRow.idNumber === '' ? 'NA' : tableRow.idNumber}
                                         </td>
-                                        <td>{tableRow.MSISDN === '' ? 'NA' : tableRow.MSISDN}</td>
+                                        <td>{tableRow.MSISDN === '' ? 'NA' : tableRow.msisdn}</td>
                                         <td>
                                             {tableRow.deviceStatus === ''
                                                 ? 'NA'
@@ -294,7 +319,8 @@ const LinkMobileNumber = () => {
                                 </React.Fragment>
                             ))}
                             showModal={(modal) => setModal(modal)}
-                            onInputChange={(val) => filterData(val.toLowerCase())}
+                            // onInputChange={(val) => filterData(val.toLowerCase())}
+                            onInputChange={() => {}}
                         />
                     </div>
                 )}
@@ -312,14 +338,14 @@ const LinkMobileNumber = () => {
                             children={
                                 <>
                                     <div className={`remita_select_input`}>
-                                        <Input
+                                        <NumberInput
                                             placeholder={'08000000000'}
                                             label={'Phone Number'}
                                             value={normalInputVal}
                                             onblur={() => validateOnBlur()}
                                             onchange={(val) => validatePhoneNumberOnChange(val)}
                                             name="remita_select"
-                                            mxlength={11}
+                                            mxlength={13}
                                             error={error}
                                             errorText={errorText}
                                         />
@@ -422,6 +448,7 @@ const LinkMobileNumber = () => {
                             setNormalInputVal('');
                             setOTPInputVal('');
                             setBtnLoading(false);
+                            history.go(0);
                         }}
                         content={
                             <SuccessContent

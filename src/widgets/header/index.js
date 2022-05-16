@@ -1,26 +1,32 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useCallback, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import jwt_decode from 'jwt-decode';
 import { NavContext, SidebarContext } from '../../appContext';
 import { DownArrow, Power, BackIcon, Hamburger } from '../../assets';
 import './header.css';
-import { ciEncrypt } from '../../config/utils/red';
+import { ciEncrypt, decryptAndDecode } from '../../config/utils/red';
 
 const Header = () => {
     const [profileStatus, setProfileStatus] = useState(false);
     const [headerIconDisplay] = useContext(NavContext);
     const [sidebarState, setSidebarState] = useContext(SidebarContext);
+    const [jwt_data, setJWTData] = useState({});
 
     const history = useHistory();
-    const credits = localStorage.getItem('credits');
+    // const credits = localStorage.getItem('credits');
 
-    const jwt_code = localStorage?.getItem('data');
-    if (jwt_code) {
-        var jwt_data = jwt_decode(jwt_code);
-    }
+    // const jwt_code = localStorage?.getItem('data');
+    // if (jwt_code) {
+    //     var jwt_data = jwt_decode(jwt_code);
+    // }
+    const handleKey = useCallback(async () => {
+        let ciDD = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(ciDD);
+        setJWTData(userData);
+    }, [ciEncrypt]);
 
     useEffect(() => {
         localStorage.setItem('credits', jwt_data?.availablecredit);
+        handleKey();
     }, [jwt_data?.availablecredit]);
 
     const Logout = () => {
@@ -55,13 +61,11 @@ const Header = () => {
                 </div>
                 <div className="header_right">
                     <ul className="my-auto">
-                        <li className="header_credits">
-                            Credits: {jwt_data?.availablecredit ?? credits}
-                        </li>
+                        <li className="header_credits">Credits: {jwt_data?.availablecredit}</li>
 
                         <li onClick={() => setProfileStatus(!profileStatus)}>
                             <img
-                                src={`https://v1.ibib.io:7070/${jwt_data?.p}/png/${jwt_data?.h}.png`}
+                                src={`https://v1.ibib.io:7070/1/png/${jwt_data?.h}.png`}
                                 alt="Profile"
                             />
                         </li>
@@ -74,8 +78,22 @@ const Header = () => {
 
             {profileStatus ? (
                 <div className="profile_popup">
-                    <p>{`${jwt_data?.fn} ${jwt_data?.mn} ${jwt_data?.sn}`}</p>
-                    <p>ID: {jwt_data?.userid}</p>
+                    <p
+                        onClick={() => {
+                            history.push('/view-profile');
+                            setProfileStatus(false);
+                        }}
+                    >
+                        {`${jwt_data?.fn} ${jwt_data?.mn} ${jwt_data?.sn}`}
+                    </p>
+                    <p
+                        onClick={() => {
+                            history.push('/view-profile');
+                            setProfileStatus(false);
+                        }}
+                    >
+                        ID: {jwt_data?.userid}
+                    </p>
                     <div className="d-flex justify-content-start">
                         <Power className="mr-2" />
                         <p className="p-0 my-auto" onClick={() => Logout()}>

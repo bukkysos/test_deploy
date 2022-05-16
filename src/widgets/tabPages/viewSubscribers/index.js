@@ -24,7 +24,10 @@ const ViewSubscribers = () => {
     const handleKey = useCallback(async () => {
         let ciDD = await ciEncrypt.getItem('ciDD');
         let userData = await decryptAndDecode(ciDD);
-        setData(userData);
+        console.log(userData);
+        if (userData.userid) {
+            setData(userData);
+        }
     }, [ciEncrypt]);
 
     useEffect(() => {
@@ -32,20 +35,22 @@ const ViewSubscribers = () => {
     }, [handleKey]);
 
     useEffect(() => {
-        axios({
-            method: 'get',
-            url: `${BASE_URL}subscriptionHistory/mySubscribers?userID=${data?.userID}`,
-            headers: {
-                Authorization: `Bearer ${ciDT}`
-            }
-        })
-            .then((response) => {
-                filterRecurrentData(response.data.data);
-                setLoading(false);
+        if (data.userid) {
+            axios({
+                method: 'get',
+                url: `${BASE_URL}subscriptionHistory/mySubscribers?userID=${data?.userid}`,
+                headers: {
+                    Authorization: `Bearer ${ciDT}`
+                }
             })
-            .catch(() => {
-                setIsEmptyTable(true);
-            });
+                .then((response) => {
+                    filterRecurrentData(response.data.data);
+                    setLoading(false);
+                })
+                .catch(() => {
+                    setIsEmptyTable(true);
+                });
+        }
     }, [ciDT, data?.userid]);
 
     const convertToCsv = useCallback((objArray) => {
@@ -88,16 +93,16 @@ const ViewSubscribers = () => {
     }, [responseData]);
 
     const filterRecurrentData = (data) => {
-        const result = [];
-        const map = new Map();
-        for (const item of data) {
-            if (!map.has(item.staffId)) {
-                map.set(item.staffId, true);
-                result.push(item);
-            }
-        }
-        setDisplay(result);
-        setResponseData(result);
+        // const result = [];
+        // const map = new Map();
+        // for (const item of data) {
+        //     if (!map.has(item.staffId)) {
+        //         map.set(item.staffId, true);
+        //         result.push(item);
+        //     }
+        // }
+        setDisplay(data);
+        setResponseData(data);
     };
 
     // Filter Data

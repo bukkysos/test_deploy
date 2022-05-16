@@ -11,6 +11,7 @@
     display: block;
     text-align: center;
     margin-top: 3rem;
+    white-space: nowrap;
 }
 
 .primary {
@@ -29,7 +30,7 @@
 
 .secondary {
     color: #ffffff;
-    background: #27923e;
+    background: #27923e !important;
 }
 
 .secondary:hover {

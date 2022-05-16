@@ -17,6 +17,7 @@ import {
     SingleDependent
 } from './widgets';
 import ResponsePage from './widgets/tabPages/responsePage';
+import { TestComp } from './widgets/tabPages/testComp';
 // import { OrderManagement, Login, ProductsUpload, VehicleLookup, Admin, MainLayout, OrderOverview } from './pages';
 
 const AppRoute = () => {
@@ -84,6 +85,7 @@ const AppRoute = () => {
                     <MainRoute path={'/link-number'} exact={true} Component={LinkMobileNumber} />
                     <MainRoute path={'/view-profile'} exact={true} Component={ViewProfile} />
                     <MainRoute path={'/payment-response'} exact={true} Component={ResponsePage} />
+                    <MainRoute path={'/test-comp'} exact={true} Component={TestComp} />
                     {/*<MainRoute path={"/payment-response/:id"} exact={true} Component={ResponsePage} />*/}
 
                     <Route path={'*'} render={() => <Redirect to={'/'} />} />

@@ -135,10 +135,12 @@ const VerificationHistory = () => {
                     ? 'n'
                     : searchFilter;
             const filtered = responseData.filter((item) =>
-                searchParam.some((newItem) => {
+                searchParam.some(() => {
                     return (
-                        item[newItem].toString().toLowerCase().indexOf(searchFilter.toLowerCase()) >
-                        -1
+                        item.level.toString().toLowerCase() ===
+                            searchFilter.toString().toLowerCase() ||
+                        item.status.toString().toLowerCase() ===
+                            searchFilter.toString().toLowerCase()
                     );
                 })
             );
@@ -155,7 +157,7 @@ const VerificationHistory = () => {
     const generateVerificationSheet = (transactionID) => {
         axios({
             method: 'get',
-            url: `https://v1.ibib.io:7072/api/v1/verification/verificationSheet?txID=${transactionID}`,
+            url: `http://164.92.179.237:7071/api/v1/verification/verificationSheet?txID=${transactionID}`,
             headers: {
                 Authorization: `Bearer ${ciDT}`
             }

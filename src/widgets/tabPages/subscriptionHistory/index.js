@@ -13,6 +13,8 @@ const filterItems = {
     }
 };
 
+const searchParam = ['credits', 'subscriptionPlan', 'sid', 'credits'];
+
 const SubscriptionHistory = () => {
     const [modalState, setModal] = useState(false);
     const [data, setData] = useState({});
@@ -21,8 +23,6 @@ const SubscriptionHistory = () => {
     const [IsEmptyTable, setIsEmptyTable] = useState(false);
     const [sortValues, setSortValues] = useState({});
     const [display, setDisplay] = useState([]);
-
-    const [searchParam] = useState(['credits', 'subscriptionPlan', 'sid', 'credits']);
     const [csv, setcsv] = useState('');
 
     let ciDT = ciEncrypt.getItem('ciDT');
@@ -38,22 +38,24 @@ const SubscriptionHistory = () => {
     }, [handleKey]);
 
     useEffect(() => {
-        axios({
-            method: 'get',
-            url: `${BASE_URL}subscriptionHistory/transactions?userID=${data?.userID}`,
-            headers: {
-                Authorization: `Bearer ${ciDT}`
-            }
-        })
-            .then((response) => {
-                setResponseData(() => response.data.data);
-                setDisplay(response.data.data);
-                setLoading(false);
+        if (data?.userid) {
+            axios({
+                method: 'get',
+                url: `${BASE_URL}subscriptionHistory/transactions?userID=${data?.userid}`,
+                headers: {
+                    Authorization: `Bearer ${ciDT}`
+                }
             })
-            .catch(() => {
-                setIsEmptyTable(true);
-            });
-    }, [ciDT, data?.userID]);
+                .then((response) => {
+                    setResponseData(() => response.data.data);
+                    setDisplay(response.data.data);
+                    setLoading(false);
+                })
+                .catch(() => {
+                    setIsEmptyTable(true);
+                });
+        }
+    }, [ciDT, data?.userid]);
 
     const convertToCsv = useCallback((objArray) => {
         // JSON to CSV Converter

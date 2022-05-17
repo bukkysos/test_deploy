@@ -49,7 +49,6 @@ const generateRemitaRRR = async (amount, reference, user, description, payersNam
         const f = new Function('jsonp', `${req.data}`);
         f(function (ref) {
             RRR = ref.RRR;
-            console.log({ RRR });
         });
         return RRR;
     } catch (err) {

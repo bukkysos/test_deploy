@@ -26,6 +26,10 @@
     height: 3rem;
 }
 
+.remita_modal_wrapper > .resend_otp {
+    cursor: pointer;
+}
+
 .remita_select_input > .select_dropdown_icon {
     top: -2rem;
     left: 94%;

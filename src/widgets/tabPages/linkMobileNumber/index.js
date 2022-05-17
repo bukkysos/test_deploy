@@ -15,9 +15,9 @@ import { LoadingIcon } from '../../../assets';
 import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 
 const filterItems = {
-    filterItem: ['Status'],
+    filterItem: ['Operator'],
     filterState: {
-        Status: ['Active', 'Inactive']
+        Operator: ['MTN', 'Glo', 'Airtel', '9Mobile']
     }
 };
 
@@ -143,8 +143,8 @@ const LinkMobileNumber = () => {
     const sendOTP = () => {
         if (
             normalInputVal === '' ||
-            normalInputVal.length < 11 ||
-            normalInputVal.length > 11 ||
+            normalInputVal.length < 13 ||
+            normalInputVal.length > 13 ||
             isNaN(parseInt(normalInputVal))
         ) {
             setError(true);
@@ -170,6 +170,32 @@ const LinkMobileNumber = () => {
                 if (response.data.success) {
                     setBtnLoading(false);
                     handlePrimaryButton('change');
+                } else {
+                    setNumberLinked(false);
+                    setBtnLoading(false);
+                }
+            })
+            .catch(() => {
+                setBtnLoading(false);
+            });
+    };
+
+    const resendOTP = () => {
+        axios({
+            method: 'post',
+            url: `${BASE_URL}utility/sendOTP`,
+            data: {
+                userID: data?.userid,
+                mobile: normalInputVal
+            },
+            headers: {
+                Authorization: `Bearer ${ciDT}`
+            }
+        })
+            .then((response) => {
+                if (response.data.success) {
+                    setBtnLoading(false);
+                    // handlePrimaryButton('change');
                 } else {
                     setNumberLinked(false);
                     setBtnLoading(false);
@@ -235,12 +261,10 @@ const LinkMobileNumber = () => {
             }
 
             const filtered = responseData.filter((item) =>
-                ['MSISDN', 'deviceID', 'deviceStatus', 'idNumber'].some((newItem) => {
+                ['MTN', 'Glo', 'Airtel', '9Mobile'].some(() => {
                     return (
-                        item[newItem]
-                            ?.toString()
-                            ?.toLowerCase()
-                            ?.indexOf(searchFilter?.toLowerCase()) ?? '' > -1
+                        item.operator?.toString()?.toLowerCase() ===
+                        searchFilter.toString()?.toLowerCase()
                     );
                 })
             );
@@ -256,14 +280,14 @@ const LinkMobileNumber = () => {
 
     const handleSort = useCallback(
         (sortValues) => {
-            console.log({ sortValues });
-            if (sortValues.headerItem === 'ID Number' || sortValues.headerItem === 'Status') {
+            if (sortValues.headerItem === 'Mobile') {
                 let reversedData = responseData.reverse();
                 setDisplay(reversedData);
-            } else if (sortValues.headerItem === 'Credits') {
-                let creditState = sortValues.sortState ? 'Highest' : 'Lowest';
-                filterData(creditState);
             }
+            // else if (sortValues.headerItem === 'Operator') {
+            //     let creditState = sortValues.sortState ? 'Highest' : 'Lowest';
+            //     filterData(creditState);
+            // }
         },
         [responseData, filterData]
     );
@@ -289,7 +313,7 @@ const LinkMobileNumber = () => {
                     <div className="col-12 mt-5 page_table">
                         <Table
                             filterButtonText={'Add Number'}
-                            headerItems={['ID Number', 'Mobile', 'Status', 'Device ID']}
+                            headerItems={['Operator', 'Mobile', 'Device ID']}
                             filterButtonState={modal}
                             filterItems={filterItems}
                             csvFile={csv}
@@ -303,15 +327,10 @@ const LinkMobileNumber = () => {
                             tableContents={display.map((tableRow, index) => (
                                 <React.Fragment key={index}>
                                     <tr>
-                                        <td className={`mobile_sticky_table_side`}>
-                                            {tableRow.idNumber === '' ? 'NA' : tableRow.idNumber}
+                                        <td>
+                                            {tableRow.operator === '' ? 'NA' : tableRow.operator}
                                         </td>
                                         <td>{tableRow.MSISDN === '' ? 'NA' : tableRow.msisdn}</td>
-                                        <td>
-                                            {tableRow.deviceStatus === ''
-                                                ? 'NA'
-                                                : tableRow.deviceStatus}
-                                        </td>
                                         <td>
                                             {tableRow.deviceID === '' ? 'NA' : tableRow.deviceID}
                                         </td>
@@ -408,6 +427,14 @@ const LinkMobileNumber = () => {
                                             separator={' '}
                                         />
                                     </div>
+                                    <p
+                                        className={`w-100 mb-2 d-flex justify-content-center error_text p-0 m-0 resend_otp`}
+                                        onClick={() => resendOTP()}
+                                    >
+                                        <small>
+                                            Resend OTP in <strong>60s</strong>
+                                        </small>
+                                    </p>
                                     <div className="remita_buttons d-flex justify-content-between">
                                         <div className="col-4 p-0">
                                             <Button

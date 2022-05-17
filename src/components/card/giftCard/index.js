@@ -39,7 +39,6 @@ const GiftCard = ({ getResponse, recipient = null }) => {
         let ciDD = await ciEncrypt.getItem('ciDD');
         let userData = await decryptAndDecode(ciDD);
         setData(userData);
-        console.log(userData, 'ddddd');
     }, [ciEncrypt]);
 
     useEffect(() => {
@@ -64,7 +63,6 @@ const GiftCard = ({ getResponse, recipient = null }) => {
             } else {
                 setCreditError(false);
             }
-            console.log(units, inputVal, 'units, inputVal');
             setUnits(inputVal);
         }
     };

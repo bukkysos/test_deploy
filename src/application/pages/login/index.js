@@ -134,7 +134,6 @@ const Login = () => {
                     }, 2000);
                 })
                 .catch((error) => {
-                    console.log({ error }, 'fetchkey');
                     setErrorMessage(error.response.data.message.toUpperCase());
                     setModalError(true);
                     setLoading(false);

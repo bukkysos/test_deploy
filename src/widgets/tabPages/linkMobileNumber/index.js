@@ -15,11 +15,14 @@ import { LoadingIcon } from '../../../assets';
 import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 
 const filterItems = {
-    filterItem: ['Status'],
+    filterItem: ['Operator'],
     filterState: {
-        Status: ['Active', 'Inactive']
+        Operator: ['MTN', 'Glo', 'Airtel', '9Mobile']
     }
 };
+
+let otpDurationTimer;
+const otpDuration = 60;
 
 const LinkMobileNumber = () => {
     const [modal, setModal] = useState(false);
@@ -38,6 +41,10 @@ const LinkMobileNumber = () => {
     const [csv, setcsv] = useState('');
     const [sortValues, setSortValues] = useState({});
     const [display, setDisplay] = useState([]);
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const [otpTimeCounter, setOtpTimeCounter] = useState(otpDuration);
+    const [resendOtpState, setResendOtpState] = useState(false);
 
     let ciDT = ciEncrypt.getItem('ciDT');
     const handleKey = useCallback(async () => {
@@ -143,8 +150,8 @@ const LinkMobileNumber = () => {
     const sendOTP = () => {
         if (
             normalInputVal === '' ||
-            normalInputVal.length < 11 ||
-            normalInputVal.length > 11 ||
+            normalInputVal.length < 13 ||
+            normalInputVal.length > 13 ||
             isNaN(parseInt(normalInputVal))
         ) {
             setError(true);
@@ -168,6 +175,8 @@ const LinkMobileNumber = () => {
         })
             .then((response) => {
                 if (response.data.success) {
+                    console.log(response.data);
+                    setResendOtpState(true);
                     setBtnLoading(false);
                     handlePrimaryButton('change');
                 } else {
@@ -178,6 +187,62 @@ const LinkMobileNumber = () => {
             .catch(() => {
                 setBtnLoading(false);
             });
+    };
+
+    const countDown = () => {
+        otpDurationTimer = setTimeout(() => {
+            setOtpTimeCounter(otpTimeCounter - 1);
+        }, 1000);
+        if (otpTimeCounter === 0) {
+            setResendOtpState(false);
+            setOtpTimeCounter(otpDuration);
+        }
+        // return true;
+    };
+
+    useEffect(() => {
+        if (resendOtpState) {
+            countDown();
+        } else {
+            clearTimeout(otpDurationTimer);
+        }
+        // return () => {
+        //     setResendOtpState(false);
+        //     clearTimeout(otpDurationTimer);
+        //     setOtpTimeCounter(0);
+        // };
+    }, [countDown, resendOtpState]);
+
+    const resendOTP = () => {
+        try {
+            axios({
+                method: 'post',
+                url: `${BASE_URL}utility/sendOTP`,
+                data: {
+                    userID: data?.userid,
+                    mobile: normalInputVal
+                },
+                headers: {
+                    Authorization: `Bearer ${ciDT}`
+                }
+            })
+                .then((response) => {
+                    if (response.data.success) {
+                        setBtnLoading(false);
+                        // handlePrimaryButton('change');
+                    } else {
+                        setNumberLinked(false);
+                        setBtnLoading(false);
+                        setErrorMessage(response.data.message);
+                    }
+                })
+                .catch((error) => {
+                    setBtnLoading(false);
+                    setErrorMessage(error.response.message);
+                });
+        } catch (error) {
+            setErrorMessage(error.response.message);
+        }
     };
 
     // Hit this endpoint with OTP to add number
@@ -211,11 +276,14 @@ const LinkMobileNumber = () => {
                 } else {
                     setNumberLinked(false);
                     setBtnLoading(false);
+                    console.log(response, 'kkkkk');
+                    setErrorMessage(response.data.message);
                 }
             })
-            .catch(() => {
+            .catch((error) => {
                 setNumberLinked(false);
                 setBtnLoading(false);
+                setErrorMessage(error.response.data.message);
             });
         return true;
     };
@@ -235,12 +303,10 @@ const LinkMobileNumber = () => {
             }
 
             const filtered = responseData.filter((item) =>
-                ['MSISDN', 'deviceID', 'deviceStatus', 'idNumber'].some((newItem) => {
+                ['MTN', 'Glo', 'Airtel', '9Mobile'].some(() => {
                     return (
-                        item[newItem]
-                            ?.toString()
-                            ?.toLowerCase()
-                            ?.indexOf(searchFilter?.toLowerCase()) ?? '' > -1
+                        item.operator?.toString()?.toLowerCase() ===
+                        searchFilter.toString()?.toLowerCase()
                     );
                 })
             );
@@ -256,14 +322,14 @@ const LinkMobileNumber = () => {
 
     const handleSort = useCallback(
         (sortValues) => {
-            console.log({ sortValues });
-            if (sortValues.headerItem === 'ID Number' || sortValues.headerItem === 'Status') {
+            if (sortValues.headerItem === 'Mobile') {
                 let reversedData = responseData.reverse();
                 setDisplay(reversedData);
-            } else if (sortValues.headerItem === 'Credits') {
-                let creditState = sortValues.sortState ? 'Highest' : 'Lowest';
-                filterData(creditState);
             }
+            // else if (sortValues.headerItem === 'Operator') {
+            //     let creditState = sortValues.sortState ? 'Highest' : 'Lowest';
+            //     filterData(creditState);
+            // }
         },
         [responseData, filterData]
     );
@@ -289,7 +355,7 @@ const LinkMobileNumber = () => {
                     <div className="col-12 mt-5 page_table">
                         <Table
                             filterButtonText={'Add Number'}
-                            headerItems={['ID Number', 'Mobile', 'Status', 'Device ID']}
+                            headerItems={['Operator', 'Mobile', 'Timestamp']}
                             filterButtonState={modal}
                             filterItems={filterItems}
                             csvFile={csv}
@@ -303,15 +369,10 @@ const LinkMobileNumber = () => {
                             tableContents={display.map((tableRow, index) => (
                                 <React.Fragment key={index}>
                                     <tr>
-                                        <td className={`mobile_sticky_table_side`}>
-                                            {tableRow.idNumber === '' ? 'NA' : tableRow.idNumber}
+                                        <td>
+                                            {tableRow.operator === '' ? 'NA' : tableRow.operator}
                                         </td>
                                         <td>{tableRow.MSISDN === '' ? 'NA' : tableRow.msisdn}</td>
-                                        <td>
-                                            {tableRow.deviceStatus === ''
-                                                ? 'NA'
-                                                : tableRow.deviceStatus}
-                                        </td>
                                         <td>
                                             {tableRow.deviceID === '' ? 'NA' : tableRow.deviceID}
                                         </td>
@@ -407,7 +468,32 @@ const LinkMobileNumber = () => {
                                             hasErrored={true}
                                             separator={' '}
                                         />
+                                        {errorMessage ? (
+                                            <p
+                                                className={`text-danger w-100 mt-2 d-flex justify-content-center error_text p-0 m-0 resend_otp`}
+                                                onClick={() => resendOTP()}
+                                            >
+                                                <em>
+                                                    <small>{errorMessage}</small>
+                                                </em>
+                                            </p>
+                                        ) : (
+                                            <></>
+                                        )}
                                     </div>
+                                    <p
+                                        className={`w-100 mb-2 d-flex justify-content-center error_text p-0 m-0 resend_otp`}
+                                    >
+                                        {resendOtpState ? (
+                                            <small>
+                                                Resend OTP in <strong>{otpTimeCounter}s</strong>
+                                            </small>
+                                        ) : (
+                                            <small onClick={() => resendOTP()}>
+                                                <u>Resend OTP</u>
+                                            </small>
+                                        )}
+                                    </p>
                                     <div className="remita_buttons d-flex justify-content-between">
                                         <div className="col-4 p-0">
                                             <Button

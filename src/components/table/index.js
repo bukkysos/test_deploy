@@ -194,11 +194,11 @@ const Table = ({
                                         }))
                                     }
                                 >
-                                    {headerItems[0]} <SortIcon />
+                                    {headerItems[0]} {headerItems[0] !== 'Operator' && <SortIcon />}
                                 </th>
                                 <th
                                     onClick={
-                                        headerItems[1] === 'Credits'
+                                        headerItems[1] === 'Credits' || headerItems[1] === 'Mobile'
                                             ? () =>
                                                   setSort((prevState) => ({
                                                       ...prevState,
@@ -210,7 +210,11 @@ const Table = ({
                                 >
                                     {' '}
                                     {headerItems[1]}{' '}
-                                    {headerItems[1] === 'Credits' ? <SortIcon /> : <></>}{' '}
+                                    {headerItems[1] === 'Credits' || headerItems[1] === 'Mobile' ? (
+                                        <SortIcon />
+                                    ) : (
+                                        <></>
+                                    )}{' '}
                                 </th>
                                 <th
                                     onClick={() =>

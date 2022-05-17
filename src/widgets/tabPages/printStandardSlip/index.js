@@ -15,7 +15,7 @@ const PrintStandardSlip = () => {
     const [modal, setModal] = useState(false);
     const [checkLoading, setCheckLoading] = useState(false);
     const [context, setContext] = useContext(AppContext);
-    const [errorHandler, setErrorHandler] = useState(false);
+    const [errorHandler, setErrorHandler] = useState({ status: false, message: '' });
 
     const history = useHistory();
 
@@ -112,8 +112,11 @@ const PrintStandardSlip = () => {
                 setCheckLoading(false);
                 return history.push(`/payment-response`);
             })
-            .catch(() => {
-                setErrorHandler(true);
+            .catch((error) => {
+                setErrorHandler({
+                    status: true,
+                    message: error.response.message
+                });
                 return setCheckLoading(false);
             });
     };
@@ -134,8 +137,11 @@ const PrintStandardSlip = () => {
                 // need to rethink what happens when response is false due payment
                 //record previously existing
             })
-            .catch(() => {
-                setErrorHandler(true);
+            .catch((error) => {
+                setErrorHandler({
+                    status: true,
+                    message: error.response.message
+                });
                 return setLoading(false);
             });
     };
@@ -158,16 +164,20 @@ const PrintStandardSlip = () => {
                     }, 4000);
                 } else {
                     setModal(false);
-                    setErrorHandler(true);
+                    setErrorHandler({
+                        status: true,
+                        message: response.data.message
+                    });
                     setLoading(false);
-                    console.log({ response });
                 }
             })
             .catch((error) => {
                 setModal(false);
-                setErrorHandler(true);
+                setErrorHandler({
+                    status: true,
+                    message: error.response.message
+                });
                 setLoading(false);
-                console.log({ error });
             });
     };
 
@@ -189,7 +199,10 @@ const PrintStandardSlip = () => {
                 saveSlipForDownload(user);
                 createPaymentLog(paymentReference);
             } else {
-                setErrorHandler(true);
+                setErrorHandler({
+                    status: true,
+                    message: response.data.message
+                });
                 setLoading(false);
             }
         };
@@ -225,11 +238,18 @@ const PrintStandardSlip = () => {
                             history.push(`/payment-response`);
                         }, 1000);
                     } else {
-                        setErrorHandler(true);
+                        setErrorHandler({
+                            status: true,
+                            message: response.data.message
+                        });
                         setLoading(false);
                     }
                 })
-                .catch(() => {
+                .catch((error) => {
+                    setErrorHandler({
+                        status: true,
+                        message: error.response.message
+                    });
                     localStorage.setItem(
                         'paymentResponse',
                         JSON.stringify({
@@ -263,13 +283,15 @@ const PrintStandardSlip = () => {
                 return onPaySuccess(response);
             },
             onError: function (response) {
-                setErrorHandler(true);
+                setErrorHandler({
+                    status: true,
+                    message: response.data.message
+                });
                 setLoading(false);
                 return onError(response);
             },
             onClose: function () {
                 setLoading(false);
-                console.log('closed');
             }
         });
 
@@ -283,7 +305,7 @@ const PrintStandardSlip = () => {
 
     return (
         <>
-            <div className={`${modal || errorHandler ? 'blur' : ''} ${context ? '' : ''}`}>
+            <div className={`${modal || errorHandler.status ? 'blur' : ''} ${context ? '' : ''}`}>
                 <h3 className="tab_page_title mx-auto">Print Standard NIN Slip</h3>
                 <p className="mx-auto tab_page_subtitle">
                     Your NIN slip serves as a legal tender throughout the Federal Republic of
@@ -318,12 +340,12 @@ const PrintStandardSlip = () => {
                 </>
             )}
 
-            {errorHandler && (
+            {errorHandler.status && (
                 <Modal
                     content={
                         <SuccessContent
                             responseType={'error'}
-                            responseTexts={'An Error occured! Please try again!'}
+                            responseTexts={errorHandler.message}
                         />
                     }
                     showCloseButton={true}

@@ -46,7 +46,6 @@ const VerificationHistory = () => {
         let userData = await decryptAndDecode(ciDD);
         if (userData.userid) {
             setData(userData);
-            console.log(userData);
         }
     }, [ciEncrypt]);
 
@@ -60,7 +59,6 @@ const VerificationHistory = () => {
 
     useEffect(() => {
         if (data.userid) {
-            console.log(data.userid);
             setLoading(true);
             axios({
                 method: 'get',

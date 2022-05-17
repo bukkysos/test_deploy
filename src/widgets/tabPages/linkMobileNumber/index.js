@@ -21,6 +21,9 @@ const filterItems = {
     }
 };
 
+let otpDurationTimer;
+const otpDuration = 60;
+
 const LinkMobileNumber = () => {
     const [modal, setModal] = useState(false);
     const [context, setContext] = useContext(AppContext);
@@ -38,6 +41,10 @@ const LinkMobileNumber = () => {
     const [csv, setcsv] = useState('');
     const [sortValues, setSortValues] = useState({});
     const [display, setDisplay] = useState([]);
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const [otpTimeCounter, setOtpTimeCounter] = useState(otpDuration);
+    const [resendOtpState, setResendOtpState] = useState(false);
 
     let ciDT = ciEncrypt.getItem('ciDT');
     const handleKey = useCallback(async () => {
@@ -168,6 +175,8 @@ const LinkMobileNumber = () => {
         })
             .then((response) => {
                 if (response.data.success) {
+                    console.log(response.data);
+                    setResendOtpState(true);
                     setBtnLoading(false);
                     handlePrimaryButton('change');
                 } else {
@@ -180,30 +189,60 @@ const LinkMobileNumber = () => {
             });
     };
 
+    const countDown = () => {
+        otpDurationTimer = setTimeout(() => {
+            setOtpTimeCounter(otpTimeCounter - 1);
+        }, 1000);
+        if (otpTimeCounter === 0) {
+            setResendOtpState(false);
+            setOtpTimeCounter(otpDuration);
+        }
+        // return true;
+    };
+
+    useEffect(() => {
+        if (resendOtpState) {
+            countDown();
+        } else {
+            clearTimeout(otpDurationTimer);
+        }
+        // return () => {
+        //     setResendOtpState(false);
+        //     clearTimeout(otpDurationTimer);
+        //     setOtpTimeCounter(0);
+        // };
+    }, [countDown, resendOtpState]);
+
     const resendOTP = () => {
-        axios({
-            method: 'post',
-            url: `${BASE_URL}utility/sendOTP`,
-            data: {
-                userID: data?.userid,
-                mobile: normalInputVal
-            },
-            headers: {
-                Authorization: `Bearer ${ciDT}`
-            }
-        })
-            .then((response) => {
-                if (response.data.success) {
-                    setBtnLoading(false);
-                    // handlePrimaryButton('change');
-                } else {
-                    setNumberLinked(false);
-                    setBtnLoading(false);
+        try {
+            axios({
+                method: 'post',
+                url: `${BASE_URL}utility/sendOTP`,
+                data: {
+                    userID: data?.userid,
+                    mobile: normalInputVal
+                },
+                headers: {
+                    Authorization: `Bearer ${ciDT}`
                 }
             })
-            .catch(() => {
-                setBtnLoading(false);
-            });
+                .then((response) => {
+                    if (response.data.success) {
+                        setBtnLoading(false);
+                        // handlePrimaryButton('change');
+                    } else {
+                        setNumberLinked(false);
+                        setBtnLoading(false);
+                        setErrorMessage(response.data.message);
+                    }
+                })
+                .catch((error) => {
+                    setBtnLoading(false);
+                    setErrorMessage(error.response.message);
+                });
+        } catch (error) {
+            setErrorMessage(error.response.message);
+        }
     };
 
     // Hit this endpoint with OTP to add number
@@ -237,11 +276,14 @@ const LinkMobileNumber = () => {
                 } else {
                     setNumberLinked(false);
                     setBtnLoading(false);
+                    console.log(response, 'kkkkk');
+                    setErrorMessage(response.data.message);
                 }
             })
-            .catch(() => {
+            .catch((error) => {
                 setNumberLinked(false);
                 setBtnLoading(false);
+                setErrorMessage(error.response.data.message);
             });
         return true;
     };
@@ -313,7 +355,7 @@ const LinkMobileNumber = () => {
                     <div className="col-12 mt-5 page_table">
                         <Table
                             filterButtonText={'Add Number'}
-                            headerItems={['Operator', 'Mobile', 'Device ID']}
+                            headerItems={['Operator', 'Mobile', 'Timestamp']}
                             filterButtonState={modal}
                             filterItems={filterItems}
                             csvFile={csv}
@@ -426,14 +468,31 @@ const LinkMobileNumber = () => {
                                             hasErrored={true}
                                             separator={' '}
                                         />
+                                        {errorMessage ? (
+                                            <p
+                                                className={`text-danger w-100 mt-2 d-flex justify-content-center error_text p-0 m-0 resend_otp`}
+                                                onClick={() => resendOTP()}
+                                            >
+                                                <em>
+                                                    <small>{errorMessage}</small>
+                                                </em>
+                                            </p>
+                                        ) : (
+                                            <></>
+                                        )}
                                     </div>
                                     <p
                                         className={`w-100 mb-2 d-flex justify-content-center error_text p-0 m-0 resend_otp`}
-                                        onClick={() => resendOTP()}
                                     >
-                                        <small>
-                                            Resend OTP in <strong>60s</strong>
-                                        </small>
+                                        {resendOtpState ? (
+                                            <small>
+                                                Resend OTP in <strong>{otpTimeCounter}s</strong>
+                                            </small>
+                                        ) : (
+                                            <small onClick={() => resendOTP()}>
+                                                <u>Resend OTP</u>
+                                            </small>
+                                        )}
                                     </p>
                                     <div className="remita_buttons d-flex justify-content-between">
                                         <div className="col-4 p-0">

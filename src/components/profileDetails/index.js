@@ -40,7 +40,7 @@ const ProfileDetails = ({
                                 <thead>
                                     <tr>
                                         <th>
-                                            ID Number <SortIcon />
+                                            Operator <SortIcon />
                                         </th>
                                         <th>Mobile</th>
                                         <th>
@@ -55,7 +55,7 @@ const ProfileDetails = ({
                                                 <tr key={i}>
                                                     <td>{d.idNumber === '' ? 'NA' : d.idNumber}</td>
                                                     <td>{d.mobile === '' ? 'NA' : d.mobile}</td>
-                                                    <td>{d.status === '' ? 'NA' : d.status}</td>
+                                                    <td>ACTIVE</td>
                                                 </tr>
                                             );
                                         })

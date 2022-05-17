@@ -104,7 +104,7 @@ const ViewProfile = () => {
                 'NATIONALITY'
             ],
             rightData: [
-                data?.userID,
+                data?.userid,
                 data?.fn,
                 data?.mn,
                 data?.sn,
@@ -127,8 +127,8 @@ const ViewProfile = () => {
         },
         deviceInfo.map((info) => {
             return {
-                idNumber: info.idNumber,
-                mobile: info.MSISDN,
+                idNumber: info.operator,
+                mobile: info.msisdn,
                 status: info.deviceStatus,
                 primaryButtonText: 'Link Mobile Number',
                 contentType: 'table',
@@ -163,29 +163,31 @@ const ViewProfile = () => {
             if (deviceInfo && Object.keys(deviceInfo).length !== 0) {
                 // Do something here
             } else {
-                axios({
-                    method: 'get',
-                    url: `${BASE_URL}device/getMobileNumbers?userID=${data?.userID}`,
-                    headers: {
-                        Authorization: `Bearer ${ciDT}`
-                    }
-                })
-                    .then((response) => {
-                        setDeviceInfo(response.data.data);
+                if (data.userid) {
+                    axios({
+                        method: 'get',
+                        url: `${BASE_URL}device/getMobileNumbers?userID=${data?.userid}`,
+                        headers: {
+                            Authorization: `Bearer ${ciDT}`
+                        }
                     })
-                    .catch(() => {
-                        // return;
-                    });
+                        .then((response) => {
+                            setDeviceInfo(response.data.data);
+                        })
+                        .catch(() => {
+                            // return;
+                        });
+                }
             }
         }
-    }, [tabIndex, ciDT, deviceInfo, data?.userID]);
+    }, [tabIndex, ciDT, deviceInfo, data?.userid]);
 
     // Payment
 
     const [paymentError, setPaymentError] = useState('');
 
     const remitaPayload = {
-        user: data?.userID,
+        user: data?.userid,
         reference: '0000',
         payersName: `${data?.fn} ${data?.sn}`,
         plan: '',
@@ -238,7 +240,7 @@ const ViewProfile = () => {
             method: 'post',
             url: `${BASE_URL}utility/sendOTP`,
             data: {
-                userID: data?.userID,
+                userID: data?.userid,
                 mobile: normalInputVal
             },
             headers: {
@@ -273,7 +275,7 @@ const ViewProfile = () => {
             method: 'post',
             url: `${BASE_URL}utility/addMobileNumber`,
             data: {
-                userID: data?.userID,
+                userID: data?.userid,
                 mobile: normalInputVal,
                 otp: otpInputVal,
                 index: '4'
@@ -325,7 +327,7 @@ const ViewProfile = () => {
                     method: 'post',
                     url: `${BASE_URL}nimcSlip/paymentLog`,
                     data: {
-                        userID: data?.userID,
+                        userID: data?.userid,
                         txRef: paymentReference,
                         rrr: rrr,
                         service: cardType === 'Standard' ? 1 : 2
@@ -382,14 +384,14 @@ const ViewProfile = () => {
 
             remitaPaymentEngine.showPaymentWidget();
         },
-        [ciDT, key, data.sn, data.fn, payersName, reference, data.userID, user]
+        [ciDT, key, data.sn, data.fn, payersName, reference, data.userid, user]
     );
 
     const premiumNinSlip = useCallback(
         (cardType) => {
             axios({
                 method: 'get',
-                url: `${BASE_URL}nimcSlip/premium?userID=${data.userID}`,
+                url: `${BASE_URL}nimcSlip/premium?userID=${data.userid}`,
                 headers: {
                     Authorization: `Bearer ${ciDT}`
                 }

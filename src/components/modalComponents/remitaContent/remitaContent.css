@@ -27,6 +27,7 @@
 }
 
 .remita_modal_wrapper > .resend_otp {
+    margin-top: 5rem !important;
     cursor: pointer;
 }
 

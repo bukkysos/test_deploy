@@ -52,8 +52,9 @@ nav {
     position: fixed;
     top: 3.5rem;
     left: 40%;
-    width: 90vw;
-    transform: translate(-40%, 0);
+    min-width: 70vw;
+    transform: translate(-20%, 0);
+    font-size: .9rem;
     z-index: 9999999999999999;
 }
 

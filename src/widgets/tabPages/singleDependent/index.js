@@ -15,7 +15,7 @@ import {
     SelectInput,
     SuccessContent
 } from '../../../components';
-import { Print } from '../../../assets';
+import { Print, Profile } from '../../../assets';
 import './singleDependent.css';
 import { BASE_URL } from '../../../config';
 import axios from 'axios';
@@ -126,18 +126,7 @@ const SingleDependent = () => {
             ],
             primaryButtonText: 'Request Profile Update',
             contentType: null
-        },
-
-        deviceInfo.map((info) => {
-            return {
-                idNumber: info.idNumber,
-                mobile: info.MSISDN,
-                status: info.deviceStatus,
-                primaryButtonText: 'Link Mobile Number',
-                contentType: 'table',
-                routeTo: '/link-number'
-            };
-        })
+        }
     ];
 
     useEffect(() => {
@@ -477,6 +466,12 @@ const SingleDependent = () => {
                                 setModal(true);
                                 setProfileBtnLoading(true);
                             }}
+                            sidebarItems={[
+                                {
+                                    linkName: 'Account Information',
+                                    linkIcon: <Profile />
+                                }
+                            ]}
                             profileImage={`https://v1.ibib.io:7070/1/png/${responseData?.ninHash}.png`}
                         />
                         <div

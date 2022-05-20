@@ -175,7 +175,7 @@ const VerificationHistory = () => {
                 }
             })
             .catch((error) => {
-                setError(error);
+                setError(error.response.data.error);
             });
     };
 
@@ -230,6 +230,7 @@ const VerificationHistory = () => {
                             tableContents={display.map((tableRow, index) => (
                                 <React.Fragment key={index}>
                                     <tr>
+                                        {console.log(tableRow, 'tablerow')}
                                         <td className={`mobile_sticky_table_side`}>
                                             {new Date(tableRow.ts).toLocaleDateString(undefined, {
                                                 weekday: 'long',
@@ -309,7 +310,10 @@ const VerificationHistory = () => {
 
             {error !== null ? (
                 <Modal
-                    onclick={(modal) => modal}
+                    onclick={() => {
+                        setError(null);
+                        setPreviewId('');
+                    }}
                     content={
                         <SuccessContent
                             responseType={'error'}

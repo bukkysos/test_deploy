@@ -1,68 +1,89 @@
-import React, {
-    // useCallback,
-    useContext,
-    useEffect
-    // useState
-} from 'react';
-// import { useHistory } from "react-router-dom";
-// import { Agent } from "end-user-activity-monitor";
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Header, Sidebar } from '../../../widgets';
 import { MainContent } from '../../../widgets/mainContent';
-import './dashboard.css';
+import { ciEncrypt } from '../../../config/utils/red';
 import { AppContext, HeaderIconProvider, SidebarContext } from '../../../appContext';
+import './dashboard.css';
 
-// let countDownTimer;
-// let countDownTime = 30 * 60000
-//   let warningTime = 20 * 60000;
+let countDownTimer;
+let countDownTime = 30 * 60000;
+let warningTime = 20 * 60000;
 
 const Dashboard = ({ children }) => {
     const [context] = useContext(AppContext);
     const [sidebarState, setSidebarState] = useContext(SidebarContext);
-    // const [idleState, setIdleState] = useState(false);
-    // const [counter, setCounter] = useState(countDownTime);
-    // const [warning, setWarning] = useState(false);
+    const [idleState, setIdleState] = useState(true);
+    const [counter, setCounter] = useState(countDownTime);
+    const [warning, setWarning] = useState(false);
 
-    // const history = useHistory();
+    const history = useHistory();
 
-    // const activityDetectorAgent = new Agent({ idleInterval: 5000 });
+    const logout = useCallback(() => {
+        handleMouseMove = () => {};
+        handleKeyUp = () => {};
+        handleClick = () => {};
+        ciEncrypt.removeItem('ciDK');
+        ciEncrypt.removeItem('ciDD');
+        history.push('/');
+    }, [history]);
 
-    // const logout = useCallback(() => {
-    //   localStorage.removeItem("data");
-    //   localStorage.removeItem("accessToken");
-    //   history.push("/");
-    // }, [history]);
+    const countDown = useCallback(() => {
+        countDownTimer = setTimeout(() => {
+            setCounter(counter - 10);
+        }, 10000);
+        if (counter === warningTime) {
+            setWarning(true);
+        }
+        if (counter === 0) {
+            logout();
+        }
+        console.log(counter);
+    }, [counter, logout]);
 
-    // const countDown = useCallback(() => {
-    //   countDownTimer = setTimeout(() => {
-    //     setCounter(counter - 1);
-    //   }, 1000);
-    //   if (counter === warningTime) {
-    //     setWarning(true);
-    //   }
-    //   if (counter === 0) {
-    //     logout();
-    //   }
-    // }, [counter, logout]);
+    useEffect(() => {
+        if (idleState) {
+            countDown();
+        } else {
+            setCounter(countDownTime);
+            clearTimeout(countDownTimer);
+        }
+    }, [countDown, idleState]);
 
-    // useEffect(() => {
-    //   if (idleState) {
-    //     countDown();
-    //   } else {
-    //     setCounter(countDownTime);
-    //     clearTimeout(countDownTimer);
-    //   }
-    // }, [countDown, idleState]);
+    const resetIdleAttributes = () => {
+        setTimeout(() => {
+            setIdleState(true);
+        }, 5000);
+        setIdleState(false);
+        setCounter(countDownTime);
+        console.log('mouse moved');
+    };
 
-    // useEffect(() => {
-    //   activityDetectorAgent.startMonitor();
-    //   activityDetectorAgent.activityObservable().subscribe((status) => {
-    //     if (status === "idle") {
-    //       setIdleState(true);
-    //     } else {
-    //       setIdleState(false);
-    //     }
-    //   });
-    // });
+    let handleMouseMove = useCallback(() => {
+        document.addEventListener('mousemove', resetIdleAttributes);
+    }, [idleState]);
+
+    let handleKeyUp = useCallback(() => {
+        document.addEventListener('keyup', resetIdleAttributes);
+    }, [idleState]);
+
+    let handleClick = useCallback(() => {
+        document.addEventListener('click', resetIdleAttributes);
+    }, [idleState]);
+
+    useEffect(() => {
+        setTimeout(() => {
+            handleMouseMove();
+            handleKeyUp();
+            handleClick();
+        }, 5000);
+
+        return () => {
+            document.removeEventListener('mousemove', resetIdleAttributes);
+            document.removeEventListener('keyup', resetIdleAttributes);
+            document.removeEventListener('click', resetIdleAttributes);
+        };
+    }, []);
 
     useEffect(() => {
         const script = document.createElement('script');
@@ -74,26 +95,28 @@ const Dashboard = ({ children }) => {
 
     return (
         <>
-            {/* {warning ? (
-        <div
-          className="timeout_alert alert alert-danger alert-dismissible fade show text-center"
-          role="alert"
-        >
-          <strong>Still there?</strong> You will soon be logged out due to
-          inactivity. Move mouse, click, or press a key to continue.
-          <button
-            type="button"
-            className="close"
-            data-dismiss="alert"
-            aria-label="Close"
-            onClick={() => {setWarning(false)}}
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-      ) : (
-        <></>
-      )} */}
+            {warning ? (
+                <div
+                    className="timeout_alert alert alert-danger alert-dismissible fade show text-center"
+                    role="alert"
+                >
+                    <strong>Still there?</strong> You will soon be logged out due to inactivity.
+                    Move mouse, click, or press a key to continue.
+                    <button
+                        type="button"
+                        className="close"
+                        data-dismiss="alert"
+                        aria-label="Close"
+                        onClick={() => {
+                            setWarning(false);
+                        }}
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            ) : (
+                <></>
+            )}
 
             <HeaderIconProvider>
                 <div className={`d-flex justify-content-center p-0 dashboard_wrapper`}>

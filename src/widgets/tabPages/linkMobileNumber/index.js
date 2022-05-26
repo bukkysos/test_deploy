@@ -353,7 +353,7 @@ const LinkMobileNumber = () => {
                     <div className="col-12 mt-5 page_table">
                         <Table
                             filterButtonText={'Add Number'}
-                            headerItems={['Operator', 'Mobile', 'Timestamp']}
+                            headerItems={['Operator', 'Mobile']}
                             filterButtonState={modal}
                             filterItems={filterItems}
                             csvFile={csv}

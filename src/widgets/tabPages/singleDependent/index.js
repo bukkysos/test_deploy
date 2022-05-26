@@ -263,6 +263,7 @@ const SingleDependent = () => {
                             setTimeout(() => {
                                 history.push(`/payment-response/${paymentReference}`);
                             }, 1000);
+                            setNoticeModal(false);
                         } else {
                             setVerificationError(error);
                             setProfileBtnLoading(false);
@@ -298,11 +299,13 @@ const SingleDependent = () => {
                     setPremiumLoading(false);
                     setStandardLoading(false);
                     setNinSlipError(true);
+                    setNoticeModal(false);
                     return onError(response);
                 },
                 onClose: function () {
                     setPremiumLoading(false);
                     setStandardLoading(false);
+                    setNoticeModal(false);
                 }
             });
 
@@ -341,7 +344,7 @@ const SingleDependent = () => {
                 }
             })
                 .then((response) => {
-                    if (response.data.success === true) {
+                    if (response.data.success) {
                         setNoticeModal(true);
                         setNinSlipError(false);
 

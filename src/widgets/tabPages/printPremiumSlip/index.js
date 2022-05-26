@@ -164,14 +164,12 @@ const PrintPremiumSlip = () => {
                     setModal(false);
                     setErrorHandler(true);
                     setLoading(false);
-                    console.log({ response });
                 }
             })
-            .catch((error) => {
+            .catch(() => {
                 setModal(false);
                 setErrorHandler(true);
                 setLoading(false);
-                console.log({ error });
             });
     };
 
@@ -180,13 +178,10 @@ const PrintPremiumSlip = () => {
         const description = 'Premium NIN Slip';
         const rrr = await generateRemitaRRR(amt, reference, user, description, payersName);
 
-        console.log({ rrr }, { remitaPayload });
-
         const onError = (response) => {
             if (response) {
                 setLoading(false);
             }
-            console.log({ response });
         };
 
         const onPaySuccess = (response) => {
@@ -265,7 +260,6 @@ const PrintPremiumSlip = () => {
             onError: function (response) {
                 setErrorHandler(true);
                 setLoading(false);
-                console.log(response, 'inside response');
                 return onError(response);
             },
             onClose: function () {

@@ -53,7 +53,7 @@ const Table = ({
                             : filterParams.headerItem}
                     </p>
                 </div>
-                {dropDownState && filterItems.length !== 0 ? (
+                {dropDownState && filterItems.length ? (
                     <div className="filter_dropdown">
                         {filterItems?.filterItem?.map((item, i) => (
                             <React.Fragment key={i}>

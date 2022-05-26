@@ -38,7 +38,6 @@ const Dashboard = ({ children }) => {
         if (counter === 0) {
             logout();
         }
-        console.log(counter);
     }, [counter, logout]);
 
     useEffect(() => {
@@ -56,7 +55,6 @@ const Dashboard = ({ children }) => {
         }, 5000);
         setIdleState(false);
         setCounter(countDownTime);
-        console.log('mouse moved');
     };
 
     let handleMouseMove = useCallback(() => {
@@ -139,15 +137,6 @@ const Dashboard = ({ children }) => {
                             <Header />
                         </div>
                         <MainContent children={children} />
-
-                        {/* <div
-              className={`dashboard_support d-flex justify-content-between align-content-center py-2 px-4 ${
-                context ? "blur" : ""
-              }`}
-            >
-              <SupportIcon />
-              <p className="p-0 my-auto">Support</p>
-            </div> */}
                     </div>
                 </div>
             </HeaderIconProvider>

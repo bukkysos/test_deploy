@@ -175,7 +175,6 @@ const LinkMobileNumber = () => {
         })
             .then((response) => {
                 if (response.data.success) {
-                    console.log(response.data);
                     setResendOtpState(true);
                     setBtnLoading(false);
                     handlePrimaryButton('change');
@@ -276,7 +275,6 @@ const LinkMobileNumber = () => {
                 } else {
                     setNumberLinked(false);
                     setBtnLoading(false);
-                    console.log(response, 'kkkkk');
                     setErrorMessage(response.data.message);
                 }
             })

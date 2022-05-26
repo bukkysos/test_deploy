@@ -377,7 +377,6 @@ const ViewProfile = () => {
                     return onError(response);
                 },
                 onClose: function () {
-                    console.log('Closed');
                     setProfileBtnLoading(false);
                 }
             });

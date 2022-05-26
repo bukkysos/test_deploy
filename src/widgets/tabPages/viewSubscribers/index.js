@@ -24,7 +24,6 @@ const ViewSubscribers = () => {
     const handleKey = useCallback(async () => {
         let ciDD = await ciEncrypt.getItem('ciDD');
         let userData = await decryptAndDecode(ciDD);
-        console.log(userData);
         if (userData.userid) {
             setData(userData);
         }
@@ -93,14 +92,6 @@ const ViewSubscribers = () => {
     }, [responseData]);
 
     const filterRecurrentData = (data) => {
-        // const result = [];
-        // const map = new Map();
-        // for (const item of data) {
-        //     if (!map.has(item.staffId)) {
-        //         map.set(item.staffId, true);
-        //         result.push(item);
-        //     }
-        // }
         setDisplay(data);
         setResponseData(data);
     };

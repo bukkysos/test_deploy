@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { SortIcon } from '../../assets';
 import { Button } from '../button';
 import './profileDetails.css';
@@ -10,8 +10,6 @@ const ProfileDetails = ({
     showAddNumberModal = () => {},
     printNIN = () => {}
 }) => {
-    useEffect(() => {}, [data]);
-
     const handleProfleButton = (determinant) => {
         if (determinant === 'Request Profile Update') {
             showProfileModal(true);

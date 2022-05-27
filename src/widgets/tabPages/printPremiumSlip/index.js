@@ -262,7 +262,6 @@ const PrintPremiumSlip = () => {
             onError: function (response) {
                 setErrorHandler(true);
                 setLoading(false);
-                console.log({ response });
                 return onError(response);
             },
             onClose: function () {

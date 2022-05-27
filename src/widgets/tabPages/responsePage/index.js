@@ -41,7 +41,6 @@ const ResponsePage = () => {
         let shaObj = new jsSHA('SHA-512', 'TEXT');
         let shaObj2 = new jsSHA('SHA-512', 'TEXT');
         shaObj.update(inflow);
-        console.log({ inflow });
         let s1 = shaObj.getHash('HEX');
         shaObj2.update(s1);
         let s2 = shaObj2.getHash('HEX');

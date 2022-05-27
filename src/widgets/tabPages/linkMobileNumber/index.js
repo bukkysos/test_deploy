@@ -204,12 +204,8 @@ const LinkMobileNumber = () => {
             countDown();
         } else {
             clearTimeout(otpDurationTimer);
+            setOtpTimeCounter(otpDuration);
         }
-        // return () => {
-        //     setResendOtpState(false);
-        //     clearTimeout(otpDurationTimer);
-        //     setOtpTimeCounter(0);
-        // };
     }, [countDown, resendOtpState]);
 
     const resendOTP = () => {
@@ -228,6 +224,7 @@ const LinkMobileNumber = () => {
                 .then((response) => {
                     if (response.data.success) {
                         setBtnLoading(false);
+                        setResendOtpState(true);
                         // handlePrimaryButton('change');
                     } else {
                         setNumberLinked(false);

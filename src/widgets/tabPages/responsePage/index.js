@@ -31,6 +31,8 @@ const ResponsePage = () => {
         handleKey();
     }, [handleKey]);
 
+    console.log(jwt_data);
+
     let generateHash = ({ fn, mn, sn, nin }) => {
         let inflow = JSON.stringify({
             fn: fn,

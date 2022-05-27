@@ -234,8 +234,6 @@ const PrintPremiumSlip = () => {
                 });
         };
 
-        console.log(data, amount, rrr);
-
         const remitaPaymentEngine = window.RmPaymentEngine.init({
             // key: 'REVNT05UR0lGVHw0MDgyNTIxNHwxZTI1NGNlNTVhMzkyYTgxYjYyNjQ2ZWIwNWU0YWE4ZTNjOTU0ZWFlODllZGEwMTUwMjYyMTk2ZmFmOGMzNWE5ZGVjYmU3Y2JkOGI5ZWI5YzFmZWMwYTI3MGI5MzA0N2FjZWEzZDhiZjUwNDY5YjVjOGY3M2NhYjQzMTg3NzI4Mg==',
             key,
@@ -256,7 +254,6 @@ const PrintPremiumSlip = () => {
             },
 
             onSuccess: function (response) {
-                console.log(response, 'onSuccess');
                 return onPaySuccess(response);
             },
             onError: function (response) {

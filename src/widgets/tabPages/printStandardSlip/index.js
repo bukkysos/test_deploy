@@ -42,8 +42,8 @@ const PrintStandardSlip = () => {
 
     useEffect(() => {
         const script = document.createElement('script');
-        script.src = 'https://remitademo.net/payment/v1/remita-pay-inline.bundle.js';
-        // script.src = 'https://login.remita.net/payment/v1/remita-pay-inline.bundle.js';
+        // script.src = 'https://remitademo.net/payment/v1/remita-pay-inline.bundle.js';
+        script.src = 'https://login.remita.net/payment/v1/remita-pay-inline.bundle.js';
         script.async = true;
         script.onload = () => console.log('Loaded...');
         document.body.appendChild(script);

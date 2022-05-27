@@ -7,13 +7,13 @@ const generateRemitaRRR = async (amount, reference, user, description, payersNam
     const email = 'mobileid@nimc.gov.ng';
     var d = new Date();
 
-    const apiKey = '1946';
-    const merchantId = '2547916';
-    const serviceTypeId = '4430731';
+    // const apiKey = '1946';
+    // const merchantId = '2547916';
+    // const serviceTypeId = '4430731';
 
-    // const apiKey = '193664733';
-    // const merchantId = '6385767922';
-    // const serviceTypeId = '6493110142';
+    const apiKey = '193664733';
+    const merchantId = '6385767922';
+    const serviceTypeId = '6493110142';
 
     const orderId = d.getTime();
     const payerName = `${payersName}`;
@@ -21,9 +21,10 @@ const generateRemitaRRR = async (amount, reference, user, description, payersNam
     const amt = String(amount);
     const consumerToken = sha512(merchantId + serviceTypeId + orderId + amt + apiKey);
 
+    // const url =
+    //     'https://remitademo.net/remita/exapp/api/v1/send/api/echannelsvc/merchant/api/paymentinit?callback=jsonp';
     const url =
-        'https://remitademo.net/remita/exapp/api/v1/send/api/echannelsvc/merchant/api/paymentinit?callback=jsonp';
-    //const url = 'https://login.remita.net/remita/exapp/api/v1/send/api/echannelsvc/merchant/api/paymentinit?callback=jsonp';
+        'https://login.remita.net/remita/exapp/api/v1/send/api/echannelsvc/merchant/api/paymentinit?callback=jsonp';
 
     const requestData = {
         serviceTypeId: serviceTypeId,

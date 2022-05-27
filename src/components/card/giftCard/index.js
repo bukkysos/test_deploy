@@ -148,7 +148,7 @@ const GiftCard = ({ getResponse, recipient = null }) => {
                     localStorage.setItem('credits', credits - units);
                 })
                 .catch((error) => {
-                    getResponse(error.response.data.success, error.response.statusText);
+                    getResponse(error.response.data.success, error.response.data.message);
                     setBtnLoading(false);
                 });
         }

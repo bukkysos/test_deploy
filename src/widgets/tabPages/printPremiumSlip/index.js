@@ -45,10 +45,12 @@ const PrintPremiumSlip = () => {
 
     useEffect(() => {
         const script = document.createElement('script');
-        script.src =
-            // "https://remitademo.net/payment/v1/remita-pay-inline.bundle.js"
-            'https://login.remita.net/payment/v1/remita-pay-inline.bundle.js';
+
+        script.src = window.location.host.includes('localhost')
+            ? 'https://remitademo.net/payment/v1/remita-pay-inline.bundle.js'
+            : 'https://login.remita.net/payment/v1/remita-pay-inline.bundle.js';
         script.async = true;
+
         script.onload = () => console.log('Loaded...');
         document.body.appendChild(script);
     }, []);
@@ -70,7 +72,7 @@ const PrintPremiumSlip = () => {
     };
 
     const remitaPayload = {
-        user: data?.userID,
+        user: data?.userid,
         amount: 1039.38,
         reference: '0000',
         payersName: `${data.fn} ${data.sn}`,
@@ -85,7 +87,7 @@ const PrintPremiumSlip = () => {
         setCheckLoading(true);
         axios({
             method: 'get',
-            url: `${BASE_URL}nimcSlip/download?userID=${data.userID}`,
+            url: `${BASE_URL}nimcSlip/download?userID=${data.userid}`,
             headers: {
                 Authorization: `Bearer ${ciDT}`
             }
@@ -177,7 +179,6 @@ const PrintPremiumSlip = () => {
         const amt = String(amount);
         const description = 'Premium NIN Slip';
         const rrr = await generateRemitaRRR(amt, reference, user, description, payersName);
-
         const onError = (response) => {
             if (response) {
                 setLoading(false);
@@ -237,11 +238,12 @@ const PrintPremiumSlip = () => {
         };
 
         const remitaPaymentEngine = window.RmPaymentEngine.init({
-            // key: "REVNT05UR0lGVHw0MDgyNTIxNHwxZTI1NGNlNTVhMzkyYTgxYjYyNjQ2ZWIwNWU0YWE4ZTNjOTU0ZWFlODllZGEwMTUwMjYyMTk2ZmFmOGMzNWE5ZGVjYmU3Y2JkOGI5ZWI5YzFmZWMwYTI3MGI5MzA0N2FjZWEzZDhiZjUwNDY5YjVjOGY3M2NhYjQzMTg3NzI4Mg==",
+            // key: 'REVNT05UR0lGVHw0MDgyNTIxNHwxZTI1NGNlNTVhMzkyYTgxYjYyNjQ2ZWIwNWU0YWE4ZTNjOTU0ZWFlODllZGEwMTUwMjYyMTk2ZmFmOGMzNWE5ZGVjYmU3Y2JkOGI5ZWI5YzFmZWMwYTI3MGI5MzA0N2FjZWEzZDhiZjUwNDY5YjVjOGY3M2NhYjQzMTg3NzI4Mg==',
             key,
             firstName: `${data.fn}`,
             lastName: `${data.sn}`,
             narration: 'Premium NIN slip',
+            // customerId: `${data.userid}`,
             amount: amount,
             transactionId: '',
             processRrr: true,
@@ -260,6 +262,7 @@ const PrintPremiumSlip = () => {
             onError: function (response) {
                 setErrorHandler(true);
                 setLoading(false);
+                console.log({ response });
                 return onError(response);
             },
             onClose: function () {

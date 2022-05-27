@@ -31,9 +31,6 @@ const ViewProfile = () => {
     const [printModal, showPrintModal] = useState(false);
     const [profileModal, setProfileModal] = useState(false);
     const [errorText, setErrorText] = useState('');
-    const [verificationError, setVerificationError] = useState(null);
-    const [cardType, setCardType] = useState('');
-    const [ninSlipError, setNinSlipError] = useState(false);
     const [noticeModal, setNoticeModal] = useState(false);
     const [data, setData] = useState({});
     const [selectedState, setSelectedSate] = useState('');
@@ -43,6 +40,7 @@ const ViewProfile = () => {
     const [numberLinked, setNumberLinked] = useState(false);
     const [profileBtnloading, setProfileBtnLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [paymentError, setPaymentError] = useState({ status: '', message: '' });
 
     const [otpTimeCounter, setOtpTimeCounter] = useState(otpDuration);
     const [resendOtpState, setResendOtpState] = useState(false);
@@ -154,8 +152,8 @@ const ViewProfile = () => {
     }, [modal, setContext]);
 
     useEffect(() => {
-        setContext(ninSlipError);
-    }, [ninSlipError, setContext]);
+        setContext(!!paymentError.status);
+    }, [paymentError, setContext]);
 
     useEffect(() => {
         setContext(profileModal);
@@ -190,11 +188,9 @@ const ViewProfile = () => {
     }, [tabIndex, ciDT, deviceInfo, data?.userid]);
 
     // Payment
-
-    const [paymentError, setPaymentError] = useState('');
-
     const remitaPayload = {
-        user: data?.userid,
+        user: data?.userID,
+        amount: 5227.26,
         reference: '0000',
         payersName: `${data?.fn} ${data?.sn}`,
         plan: '',
@@ -203,11 +199,15 @@ const ViewProfile = () => {
         key: process.env.REACT_APP_REMITA_PUBLIC_KEY
     };
 
-    const { user, key, payersName, reference } = remitaPayload;
+    const { amount, user, key, payersName, reference } = remitaPayload;
 
     useEffect(() => {
         const script = document.createElement('script');
-        script.src = 'https://login.remita.net/payment/v1/remita-pay-inline.bundle.js';
+
+        script.src = window.location.host.includes('localhost')
+            ? 'https://remitademo.net/payment/v1/remita-pay-inline.bundle.js'
+            : 'https://login.remita.net/payment/v1/remita-pay-inline.bundle.js';
+
         script.async = true;
         script.onload = () => document.body.appendChild(script);
     }, []);
@@ -380,137 +380,100 @@ const ViewProfile = () => {
         return true;
     };
 
-    const initRemita = useCallback(
-        async (cardType) => {
-            const amt = cardType === 'Standard' ? '416.88' : '1039.38';
-            const description = `${cardType} NIN Slip`;
+    const handleCreditPurchase = () => {
+        setNoticeModal(true);
+        setTimeout(() => {
+            setNoticeModal(false);
+            initRemita();
+        }, 4000);
+    };
 
-            const rrr = await generateRemitaRRR(amt, reference, user, description, payersName);
-            const onError = (response) => {
-                if (response) {
-                    setPaymentError(true);
-                }
-            };
+    const initRemita = useCallback(async () => {
+        const amt = String(amount);
+        const description = 'Purchase Plan';
 
-            const onPaySuccess = (response) => {
-                // card charged successfully, get reference here
-                if (response) {
-                    const paymentReference = generatePaymentReference(response.transactionId);
-                    createPaymentLog(paymentReference);
-                }
-            };
-
-            const createPaymentLog = (paymentReference) => {
-                axios({
-                    method: 'post',
-                    url: `${BASE_URL}nimcSlip/paymentLog`,
-                    data: {
-                        userID: data?.userid,
-                        txRef: paymentReference,
-                        rrr: rrr,
-                        service: cardType === 'Standard' ? 1 : 2
-                    },
-                    headers: {
-                        Authorization: `Bearer ${ciDT}`
-                    }
-                })
-                    .then((response) => {
-                        if (response.data.success === true) {
-                            showPrintModal(true);
-                            setProfileBtnLoading(false);
-                        } else {
-                            setProfileBtnLoading(false);
-                            setNinSlipError(true);
-                        }
-                    })
-                    .catch((error) => {
-                        setVerificationError(error);
-                        setProfileBtnLoading(false);
-                    });
-            };
-
-            const remitaPaymentEngine = window.RmPaymentEngine.init({
-                key: key,
-                firstName: `${data.fn}`,
-                lastName: `${data.sn}`,
-                narration: `${cardType} NIN slip`,
-                amount: amt,
-                transactionId: '',
-                processRrr: true,
-                extendedData: {
-                    customFields: [
-                        {
-                            name: 'rrr',
-                            value: rrr
-                        }
-                    ]
-                },
-
-                onSuccess: function (response) {
-                    return onPaySuccess(response);
-                },
-                onError: function (response) {
-                    setProfileBtnLoading(false);
-                    setNinSlipError(true);
-                    return onError(response);
-                },
-                onClose: function () {
-                    setProfileBtnLoading(false);
-                }
-            });
-
-            remitaPaymentEngine.showPaymentWidget();
-        },
-        [ciDT, key, data.sn, data.fn, payersName, reference, data.userid, user]
-    );
-
-    const premiumNinSlip = useCallback(
-        (cardType) => {
-            axios({
-                method: 'get',
-                url: `${BASE_URL}nimcSlip/premium?userID=${data.userid}`,
-                headers: {
-                    Authorization: `Bearer ${ciDT}`
-                }
-            })
-                .then((response) => {
-                    if (response.data.success === true) {
-                        setNoticeModal(true);
-                        setTimeout(() => {
-                            initRemita(cardType);
-                            setNoticeModal(false);
-                        }, 4000);
-                    } else {
-                        setNinSlipError(true);
-                        setProfileBtnLoading(false);
-                    }
-                })
-                .catch(() => {
-                    setNinSlipError(true);
-                    setProfileBtnLoading(false);
+        const rrr = await generateRemitaRRR(amt, reference, user, description, payersName);
+        const onError = (response) => {
+            if (response) {
+                setError(true);
+                setPaymentError({
+                    status: 'error',
+                    message: 'Payment Gateway Error'
                 });
-        },
-        [data.userid, initRemita, ciDT]
-    );
-
-    useEffect(() => {
-        if (cardType !== '') {
-            premiumNinSlip(cardType);
-        }
-        return () => {
-            setCardType('');
+            }
         };
-    }, [cardType, initRemita, premiumNinSlip]);
 
-    const generatePaymentReference = (transactionId) => {
-        const value = `NINSLIP-${transactionId}`;
-        return value;
+        const onPaySuccess = (response) => {
+            // card charged successfully, get reference here
+            if (response) {
+                purchaseSubscription();
+            }
+        };
+
+        const remitaPaymentEngine = window.RmPaymentEngine.init({
+            key: key,
+            firstName: `${data.fn}`,
+            lastName: `${data.sn}`,
+            narration: 'Purchase Plan',
+            amount: amount,
+            transactionId: '',
+            processRrr: true,
+            extendedData: {
+                customFields: [
+                    {
+                        name: 'rrr',
+                        value: rrr
+                    }
+                ]
+            },
+
+            onSuccess: function (response) {
+                return onPaySuccess(response);
+            },
+            onError: function (response) {
+                setProfileBtnLoading(false);
+                return onError(response);
+            },
+            onClose: function () {
+                setProfileBtnLoading(false);
+                setPaymentError({
+                    status: 'error',
+                    message: 'Payment Modal Closed'
+                });
+            }
+        });
+
+        remitaPaymentEngine.showPaymentWidget();
+    }, [ciDT, key, data.sn, data.fn, payersName, reference, data.userid, user]);
+
+    const purchaseSubscription = async () => {
+        await axios({
+            method: 'get',
+            url: `${BASE_URL}credit/buySubscription?userID=${data?.userid}&txRef=SUBSCRIPTION-dddd&servicePlan=Individual`,
+            headers: {
+                Authorization: `Bearer ${ciDT}`
+            }
+        })
+            .then((response) => {
+                setError(false);
+                setPaymentError({
+                    status: 'success',
+                    message: response?.data?.message ?? 'Purchase Successful'
+                });
+            })
+            .catch((error) => {
+                setError(true);
+                setPaymentError({
+                    status: 'error',
+                    message: error.response.data.message
+                });
+            });
     };
 
     return (
         <>
             <div
-                className={`${modal || profileModal || ninSlipError ? 'blur' : ''} ${
+                className={`${modal || profileModal ? 'blur' : ''} ${
                     context ? '' : ''
                 } profile col-md-11 col-lg-10 d-flex justify-content-between p-0 mx-auto align-self-center`}
             >
@@ -529,7 +492,7 @@ const ViewProfile = () => {
                         setProfileBtnLoading(true);
                     }}
                     printNIN={() => {
-                        premiumNinSlip('Premium');
+                        handleCreditPurchase();
                         setProfileBtnLoading(true);
                     }}
                 />
@@ -551,7 +514,7 @@ const ViewProfile = () => {
                                 setProfileBtnLoading(true);
                             }}
                             printNIN={() => {
-                                premiumNinSlip('Premium');
+                                handleCreditPurchase();
                                 setProfileBtnLoading(true);
                             }}
                         />
@@ -767,49 +730,20 @@ const ViewProfile = () => {
                 <></>
             )}
 
-            {paymentError !== '' || ninSlipError ? (
-                <Modal
-                    onclick={(modal) => {
-                        setModal(modal);
-                        setProfileBtnLoading(false);
-                        setNinSlipError(false);
-                    }}
-                    content={
-                        <SuccessContent
-                            responseType={'error'}
-                            responseTexts={
-                                <>
-                                    {' '}
-                                    <p>
-                                        {!ninSlipError
-                                            ? paymentError
-                                            : 'An Error occured! Please try again!'}
-                                    </p>{' '}
-                                    <p>{paymentError}</p>
-                                </>
-                            }
-                        />
-                    }
-                    showCloseButton={true}
-                />
-            ) : (
-                <></>
-            )}
-            {verificationError !== null ? (
+            {paymentError.status !== '' ? (
                 <Modal
                     onclick={() => {
-                        verificationError(null);
-                        setProfileBtnLoading(false);
+                        setPaymentError({
+                            status: '',
+                            message: ''
+                        });
                     }}
                     content={
                         <SuccessContent
-                            responseType={'error'}
+                            responseType={paymentError.status}
                             responseTexts={
-                                <>
-                                    <p>{verificationError}</p>
-                                </>
+                                paymentError.message || 'An Error occured! Please try again!'
                             }
-                            onclick={(modal) => setModal(modal)}
                         />
                     }
                     showCloseButton={true}

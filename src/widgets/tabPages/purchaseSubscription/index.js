@@ -41,8 +41,11 @@ const PurchaseSubscription = () => {
 
     useEffect(() => {
         const script = document.createElement('script');
-        script.src = 'https://login.remita.net/payment/v1/remita-pay-inline.bundle.js';
-        // script.src = 'https://remitademo.net/payment/v1/remita-pay-inline.bundle.js';
+
+        script.src = window.location.host.includes('localhost')
+            ? 'https://remitademo.net/payment/v1/remita-pay-inline.bundle.js'
+            : 'https://login.remita.net/payment/v1/remita-pay-inline.bundle.js';
+
         script.async = true;
         script.onload = () => document.body.appendChild(script);
     }, []);
@@ -104,10 +107,10 @@ const PurchaseSubscription = () => {
         return value;
     };
 
-    const purchaseSubscription = async (paymentReference) => {
+    const purchaseSubscription = async () => {
         await axios({
-            method: 'post',
-            url: `${BASE_URL}credit/buySubscription?userID=${data?.userid}&txRef=${paymentReference}&servicePlan=Individual`,
+            method: 'get',
+            url: `${BASE_URL}credit/buySubscription?userID=${data?.userid}&txRef=SUBSCRIPTION-dddd&servicePlan=Individual`,
             headers: {
                 Authorization: `Bearer ${ciDT}`
             }

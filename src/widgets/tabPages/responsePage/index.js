@@ -31,8 +31,6 @@ const ResponsePage = () => {
         handleKey();
     }, [handleKey]);
 
-    console.log(jwt_data);
-
     let generateHash = ({ fn, mn, sn, nin }) => {
         let inflow = JSON.stringify({
             fn: fn,
@@ -43,6 +41,7 @@ const ResponsePage = () => {
         let shaObj = new jsSHA('SHA-512', 'TEXT');
         let shaObj2 = new jsSHA('SHA-512', 'TEXT');
         shaObj.update(inflow);
+        console.log({ inflow });
         let s1 = shaObj.getHash('HEX');
         shaObj2.update(s1);
         let s2 = shaObj2.getHash('HEX');
@@ -50,15 +49,17 @@ const ResponsePage = () => {
     };
 
     let download = () => {
-        let url = `https://slipserver1.nimc.gov.ng/ijebu?h=${generateHash(jwt_data)}&p=1&type=${
-            service === 1 ? 'ninslip' : 'pns'
-        }`;
-        var element = document.createElement('a');
-        element.setAttribute('href', url);
-        element.setAttribute('download', `${h}.pdf`);
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
+        if (jwt_data) {
+            let url = `https://slipserver1.nimc.gov.ng/ijebu?h=${generateHash(jwt_data)}&p=1&type=${
+                service === 1 ? 'ninslip' : 'pns'
+            }`;
+            var element = document.createElement('a');
+            element.setAttribute('href', url);
+            element.setAttribute('download', `${h}.pdf`);
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
     };
 
     const checkPaymentStatus = () => {

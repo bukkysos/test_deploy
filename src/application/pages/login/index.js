@@ -103,8 +103,6 @@ const Login = () => {
         }
     };
 
-    useEffect(() => {}, [userId]);
-
     const login = (e) => {
         e.preventDefault();
         let domUserID = e.target['userId'].value;

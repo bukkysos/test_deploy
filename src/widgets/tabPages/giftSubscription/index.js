@@ -45,7 +45,7 @@ const GiftSubscription = () => {
                         <SuccessContent
                             responseType={response.status ? 'success' : 'error'}
                             responseTexts={response.responseText}
-                            btnAction={() => console.log('Done')}
+                            btnAction={() => {}}
                         />
                     }
                     showCloseButton={true}

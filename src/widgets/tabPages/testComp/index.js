@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
-// import { LinkNumbersTable } from '../../../components/table/NewTable/LinkNumbersTable';
 import { NewTable } from '../../../components/table/NewTable/newTable';
 import { BASE_URL } from '../../../config';
 import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
@@ -31,11 +30,6 @@ export const TestComp = () => {
         handleKey();
     }, [handleKey]);
 
-    // useEffect(() => {
-    //     setContext(modal);
-    // }, [modal, setContext]);
-    console.log(serverResponse);
-
     useEffect(() => {
         if (data.userid) {
             axios({
@@ -48,12 +42,10 @@ export const TestComp = () => {
                 .then((response) => {
                     setResponseData(() => response.data.data);
                 })
-                .catch((error) => {
-                    console.log(error);
+                .catch(() => {
+                    setData({});
                 });
         }
-
-        // return () => {};
     }, [data.userid]);
 
     return (

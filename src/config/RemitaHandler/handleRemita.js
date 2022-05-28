@@ -108,17 +108,14 @@ export const initializeRemita = async ({
         onSuccess: function (response) {
             // return onPaySuccess(response);
             onPaySuccess(response);
-            console.log(response, 'RmPaymentEngine success');
         },
         onError: function (response) {
             // setErrorHandler(true)
             // setLoading(false);
             // return onError(response);
-            console.log(response, 'RmPaymentEngine error');
         },
         onClose: function () {
             // setLoading(false)
-            console.log('RmPaymentEngine close');
         }
     });
     remitaPaymentEngine.showPaymentWidget();

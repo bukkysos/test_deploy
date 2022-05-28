@@ -204,7 +204,11 @@ const SingleDependent = () => {
 
     useEffect(() => {
         const script = document.createElement('script');
-        script.src = 'https://login.remita.net/payment/v1/remita-pay-inline.bundle.js';
+
+        script.src = window.location.host.includes('localhost')
+            ? 'https://remitademo.net/payment/v1/remita-pay-inline.bundle.js'
+            : 'https://login.remita.net/payment/v1/remita-pay-inline.bundle.js';
+
         script.async = true;
         script.onload = () => document.body.appendChild(script);
     }, []);
@@ -261,8 +265,9 @@ const SingleDependent = () => {
                                 })
                             );
                             setTimeout(() => {
-                                history.push(`/payment-response/${paymentReference}`);
+                                history.push(`/payment-response`);
                             }, 1000);
+                            setNoticeModal(false);
                         } else {
                             setVerificationError(error);
                             setProfileBtnLoading(false);
@@ -298,11 +303,13 @@ const SingleDependent = () => {
                     setPremiumLoading(false);
                     setStandardLoading(false);
                     setNinSlipError(true);
+                    setNoticeModal(false);
                     return onError(response);
                 },
                 onClose: function () {
                     setPremiumLoading(false);
                     setStandardLoading(false);
+                    setNoticeModal(false);
                 }
             });
 
@@ -341,7 +348,7 @@ const SingleDependent = () => {
                 }
             })
                 .then((response) => {
-                    if (response.data.success === true) {
+                    if (response.data.success) {
                         setNoticeModal(true);
                         setNinSlipError(false);
 
@@ -530,7 +537,10 @@ const SingleDependent = () => {
 
             {paymentError !== '' || ninSlipError ? (
                 <Modal
-                    onclick={(modal) => modal}
+                    onclick={() => {
+                        setNinSlipError(false);
+                        setPaymentError('');
+                    }}
                     content={
                         <SuccessContent
                             responseType={'error'}

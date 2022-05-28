@@ -175,7 +175,6 @@ const LinkMobileNumber = () => {
         })
             .then((response) => {
                 if (response.data.success) {
-                    console.log(response.data);
                     setResendOtpState(true);
                     setBtnLoading(false);
                     handlePrimaryButton('change');
@@ -205,12 +204,8 @@ const LinkMobileNumber = () => {
             countDown();
         } else {
             clearTimeout(otpDurationTimer);
+            setOtpTimeCounter(otpDuration);
         }
-        // return () => {
-        //     setResendOtpState(false);
-        //     clearTimeout(otpDurationTimer);
-        //     setOtpTimeCounter(0);
-        // };
     }, [countDown, resendOtpState]);
 
     const resendOTP = () => {
@@ -229,6 +224,7 @@ const LinkMobileNumber = () => {
                 .then((response) => {
                     if (response.data.success) {
                         setBtnLoading(false);
+                        setResendOtpState(true);
                         // handlePrimaryButton('change');
                     } else {
                         setNumberLinked(false);
@@ -276,7 +272,6 @@ const LinkMobileNumber = () => {
                 } else {
                     setNumberLinked(false);
                     setBtnLoading(false);
-                    console.log(response, 'kkkkk');
                     setErrorMessage(response.data.message);
                 }
             })
@@ -355,7 +350,7 @@ const LinkMobileNumber = () => {
                     <div className="col-12 mt-5 page_table">
                         <Table
                             filterButtonText={'Add Number'}
-                            headerItems={['Operator', 'Mobile', 'Timestamp']}
+                            headerItems={['Operator', 'Mobile']}
                             filterButtonState={modal}
                             filterItems={filterItems}
                             csvFile={csv}

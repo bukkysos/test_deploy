@@ -230,7 +230,6 @@ const VerificationHistory = () => {
                             tableContents={display.map((tableRow, index) => (
                                 <React.Fragment key={index}>
                                     <tr>
-                                        {console.log(tableRow, 'tablerow')}
                                         <td className={`mobile_sticky_table_side`}>
                                             {new Date(tableRow.ts).toLocaleDateString(undefined, {
                                                 weekday: 'long',

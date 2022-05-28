@@ -1,12 +1,12 @@
 import axios from 'axios';
-import jwt_decode from 'jwt-decode';
 import { BASE_URL } from '../../../config';
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ResponseCard } from '../../../components';
 // import { useHistory, useParams } from 'react-router-dom';
 import { Modal, SuccessContent } from '../../../components';
 import jsSHA from 'jssha';
 import { hex_rmd160 } from '../../../config/hex-ripe';
+import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 
 const ResponsePage = () => {
     let message = useRef('An Error occured! Please try again!');
@@ -14,19 +14,22 @@ const ResponsePage = () => {
     //   const { id } = useParams();
     const [loading, setLoading] = useState(false);
     const [errorHandler, setErrorHandler] = useState(false);
-    const accessToken = localStorage.getItem('accessToken');
+    const [jwt_data, setData] = useState({});
 
-    const jwt_code = localStorage.getItem('data');
     const paymentResponse = JSON.parse(localStorage.getItem('paymentResponse'));
     const { service, status, h, action } = paymentResponse;
 
-    if (jwt_code && accessToken) {
-        var jwt_data = jwt_decode(jwt_code);
-    }
+    let ciDT = ciEncrypt.getItem('ciDT');
 
-    // if (id === undefined || id === "" || id !== txRef) {
-    //     history.goBack()
-    // }
+    const handleKey = useCallback(async () => {
+        let ciDD = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(ciDD);
+        setData(userData);
+    }, [ciEncrypt]);
+
+    useEffect(() => {
+        handleKey();
+    }, [handleKey]);
 
     let generateHash = ({ fn, mn, sn, nin }) => {
         let inflow = JSON.stringify({
@@ -45,24 +48,26 @@ const ResponsePage = () => {
     };
 
     let download = () => {
-        let url = `https://slipserver1.nimc.gov.ng/ijebu?h=${generateHash(jwt_data)}&p=1&type=${
-            service === 1 ? 'ninslip' : 'pns'
-        }`;
-        var element = document.createElement('a');
-        element.setAttribute('href', url);
-        element.setAttribute('download', `${h}.pdf`);
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
+        if (jwt_data) {
+            let url = `https://slipserver1.nimc.gov.ng/ijebu?h=${generateHash(jwt_data)}&p=1&type=${
+                service === 1 ? 'ninslip' : 'pns'
+            }`;
+            var element = document.createElement('a');
+            element.setAttribute('href', url);
+            element.setAttribute('download', `${h}.pdf`);
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
     };
 
     const checkPaymentStatus = () => {
         setLoading(true);
         axios({
             method: 'get',
-            url: `${BASE_URL}nimcSlip/download?userID=${jwt_data.userID}`,
+            url: `${BASE_URL}nimcSlip/download?userID=${jwt_data.userid}`,
             headers: {
-                Authorization: `Bearer ${accessToken}`
+                Authorization: `Bearer ${ciDT}`
             }
         })
             .then((response) => {

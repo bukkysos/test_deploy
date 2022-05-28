@@ -42,7 +42,11 @@ const PrintStandardSlip = () => {
 
     useEffect(() => {
         const script = document.createElement('script');
-        script.src = 'https://login.remita.net/payment/v1/remita-pay-inline.bundle.js';
+
+        script.src = window.location.host.includes('localhost')
+            ? 'https://remitademo.net/payment/v1/remita-pay-inline.bundle.js'
+            : 'https://login.remita.net/payment/v1/remita-pay-inline.bundle.js';
+
         script.async = true;
         script.onload = () => console.log('Loaded...');
         document.body.appendChild(script);
@@ -65,7 +69,7 @@ const PrintStandardSlip = () => {
     };
 
     const remitaPayload = {
-        user: data.userID,
+        user: data?.userid,
         amount: 416.88,
         reference: '0000',
         payersName: `${data.fn} ${data.sn}`,
@@ -81,7 +85,7 @@ const PrintStandardSlip = () => {
         setCheckLoading(true);
         axios({
             method: 'get',
-            url: `${BASE_URL}nimcSlip/download?userID=${data.userID}`,
+            url: `${BASE_URL}nimcSlip/download?userID=${data.userid}`,
             headers: {
                 Authorization: `Bearer ${ciDT}`
             }
@@ -263,7 +267,7 @@ const PrintStandardSlip = () => {
         };
 
         const remitaPaymentEngine = window.RmPaymentEngine.init({
-            key: key,
+            key,
             firstName: `${data.fn}`,
             lastName: `${data.sn}`,
             narration: 'Standard NIN slip',

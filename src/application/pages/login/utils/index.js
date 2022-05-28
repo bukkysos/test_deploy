@@ -19,8 +19,7 @@ export const fetchKey = (token, data) => {
             }
             return true;
         })
-        .catch((error) => {
-            console.log({ error });
+        .catch(() => {
             return false;
         });
 };

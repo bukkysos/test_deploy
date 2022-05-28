@@ -12,12 +12,7 @@ const Header = () => {
     const [jwt_data, setJWTData] = useState({});
 
     const history = useHistory();
-    // const credits = localStorage.getItem('credits');
 
-    // const jwt_code = localStorage?.getItem('data');
-    // if (jwt_code) {
-    //     var jwt_data = jwt_decode(jwt_code);
-    // }
     const handleKey = useCallback(async () => {
         let ciDD = await ciEncrypt.getItem('ciDD');
         let userData = await decryptAndDecode(ciDD);
@@ -61,7 +56,9 @@ const Header = () => {
                 </div>
                 <div className="header_right">
                     <ul className="my-auto">
-                        <li className="header_credits">Credits: {jwt_data?.availablecredit}</li>
+                        <li className="header_credits">
+                            Credits: {localStorage.getItem('credits')}
+                        </li>
 
                         <li onClick={() => setProfileStatus(!profileStatus)}>
                             <img

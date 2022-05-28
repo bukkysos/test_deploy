@@ -7,11 +7,19 @@ import { Table } from '../../../components/table';
 import { LoadingIcon } from '../../../assets';
 import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 
+const searchParam = ['adminId', 'staffId', 'sn', 'credits'];
+
+const filterItems = {
+    filterItem: ['Credits'],
+    filterState: {
+        Credits: ['Highest', 'Lowest']
+    }
+};
+
 const ViewSubscribers = () => {
     const [responseData, setResponseData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState({});
-    const [searchParam] = useState(['adminId', 'staffId', 'sn', 'credits']);
     const [IsEmptyTable, setIsEmptyTable] = useState(false);
     const [csv, setcsv] = useState('');
     const [sortValues, setSortValues] = useState({});
@@ -24,7 +32,6 @@ const ViewSubscribers = () => {
     const handleKey = useCallback(async () => {
         let ciDD = await ciEncrypt.getItem('ciDD');
         let userData = await decryptAndDecode(ciDD);
-        console.log(userData);
         if (userData.userid) {
             setData(userData);
         }
@@ -93,14 +100,6 @@ const ViewSubscribers = () => {
     }, [responseData]);
 
     const filterRecurrentData = (data) => {
-        // const result = [];
-        // const map = new Map();
-        // for (const item of data) {
-        //     if (!map.has(item.staffId)) {
-        //         map.set(item.staffId, true);
-        //         result.push(item);
-        //     }
-        // }
         setDisplay(data);
         setResponseData(data);
     };
@@ -200,6 +199,7 @@ const ViewSubscribers = () => {
                         getFilterDropdown={(selectedItem) => filterData(selectedItem.selectedItem)}
                         sortData={(data) => setSortValues(data)}
                         isEmptyTable={IsEmptyTable}
+                        filterItems={filterItems}
                         tableContents={display.map((tableRow, index) => (
                             <React.Fragment key={index}>
                                 <tr>
@@ -225,7 +225,7 @@ const ViewSubscribers = () => {
                             </React.Fragment>
                         ))}
                         showBtn={true}
-                        iconDisplay={true}
+                        // iconDisplay={true}
                         onInputChange={(val) => filterData(val.toLowerCase())}
                     />
                 )}

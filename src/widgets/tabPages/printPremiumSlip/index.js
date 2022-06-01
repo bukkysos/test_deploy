@@ -7,18 +7,20 @@ import { AppContext } from '../../../appContext';
 import { hex_rmd160 } from '../../../config/hex-ripe';
 import { Modal, SuccessContent } from '../../../components';
 import { generateRemitaRRR } from '../../../application/paymentHandler';
-import React, { useContext, useEffect, useState, useRef, useCallback } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { PremiumPrintCard, PremiumCardButton } from '../../../components/card/premiumPrintCard';
 import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 
 const PrintPremiumSlip = () => {
-    let message = useRef('An Error occured! Please try again!');
     const [data, setData] = useState({});
     const [context, setContext] = useContext(AppContext);
     const [modal, setModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [checkLoading, setCheckLoading] = useState(false);
-    const [errorHandler, setErrorHandler] = useState(false);
+    const [errorHandler, setErrorHandler] = useState({
+        status: false,
+        message: ''
+    });
 
     const history = useHistory();
 
@@ -40,8 +42,8 @@ const PrintPremiumSlip = () => {
     }, [modal, setContext, data]);
 
     useEffect(() => {
-        setContext(errorHandler);
-    }, [errorHandler, setContext]);
+        setContext(errorHandler.status);
+    }, [errorHandler.status, setContext]);
 
     useEffect(() => {
         const script = document.createElement('script');
@@ -119,8 +121,11 @@ const PrintPremiumSlip = () => {
                 setCheckLoading(false);
                 return history.push(`/payment-response`);
             })
-            .catch(() => {
-                setErrorHandler(true);
+            .catch((error) => {
+                setErrorHandler({
+                    status: true,
+                    message: error.response.message
+                });
                 return setCheckLoading(false);
             });
     };
@@ -141,8 +146,11 @@ const PrintPremiumSlip = () => {
                 // need to rethink what happens when response is false due payment
                 //record previously existing
             })
-            .catch(() => {
-                setErrorHandler(true);
+            .catch((error) => {
+                setErrorHandler({
+                    status: true,
+                    message: error.response.message
+                });
                 return setLoading(false);
             });
     };
@@ -165,13 +173,20 @@ const PrintPremiumSlip = () => {
                     }, 4000);
                 } else {
                     setModal(false);
-                    setErrorHandler(true);
+                    setErrorHandler({
+                        status: true,
+                        message: response.data.message
+                    });
                     setLoading(false);
                 }
             })
-            .catch(() => {
+            .catch((error) => {
                 setModal(false);
-                setErrorHandler(true);
+                setErrorHandler({
+                    status: true,
+                    message: error.response.message
+                });
+                console.log({ error });
                 setLoading(false);
             });
     };
@@ -193,7 +208,10 @@ const PrintPremiumSlip = () => {
                 saveSlipForDownload(user);
                 createPaymentLog(paymentReference);
             } else {
-                setErrorHandler(true);
+                setErrorHandler({
+                    status: true,
+                    message: response.data.message
+                });
                 setLoading(false);
             }
         };
@@ -228,12 +246,18 @@ const PrintPremiumSlip = () => {
                         );
                         history.push(`/payment-response`);
                     } else {
-                        setErrorHandler(true);
+                        setErrorHandler({
+                            status: true,
+                            message: response.data.message
+                        });
                         setLoading(false);
                     }
                 })
-                .catch(() => {
-                    setErrorHandler(true);
+                .catch((error) => {
+                    setErrorHandler({
+                        status: true,
+                        message: error.response.message
+                    });
                     setLoading(false);
                 });
         };
@@ -261,7 +285,10 @@ const PrintPremiumSlip = () => {
                 return onPaySuccess(response);
             },
             onError: function (response) {
-                setErrorHandler(true);
+                setErrorHandler({
+                    status: true,
+                    message: 'Remita Payment Error!'
+                });
                 setLoading(false);
                 return onError(response);
             },
@@ -278,7 +305,7 @@ const PrintPremiumSlip = () => {
 
     return (
         <>
-            <div className={`${modal || errorHandler ? 'blur' : ''} ${context ? '' : ''}`}>
+            <div className={`${modal || errorHandler.status ? 'blur' : ''} ${context ? '' : ''}`}>
                 <h3 className="tab_page_title mx-auto">Print Premium NIN Slip</h3>
                 <p className="mx-auto tab_page_subtitle">
                     Your NIN slip serves as a legal tender throughout the Federal Republic of
@@ -308,13 +335,21 @@ const PrintPremiumSlip = () => {
                 </>
             )}
 
-            {errorHandler && (
+            {errorHandler.status && (
                 <Modal
                     content={
-                        <SuccessContent responseType={'error'} responseTexts={message.current} />
+                        <SuccessContent
+                            responseType={'error'}
+                            responseTexts={errorHandler.message}
+                        />
                     }
                     showCloseButton={true}
-                    onclick={() => setErrorHandler(false)}
+                    onclick={() =>
+                        setErrorHandler({
+                            status: false,
+                            message: ''
+                        })
+                    }
                 />
             )}
         </>

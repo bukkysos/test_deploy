@@ -155,9 +155,7 @@ const SingleDependent = () => {
                 }
             })
                 .then((response) => {
-                    decryptAndDecode(response.data.data).then((data) => {
-                        setResponseData(() => data[index]);
-                    });
+                    setResponseData(() => response.data.data[index]);
                 })
                 .catch(() => {
                     // return;

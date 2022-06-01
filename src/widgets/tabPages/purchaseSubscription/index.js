@@ -6,6 +6,7 @@ import axios from 'axios';
 import { BASE_URL } from '../../../config';
 import { generateRemitaRRR } from '../../../application/paymentHandler';
 import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
+import { getCreditInfo } from './utility/getCreditInfo';
 
 const PurchaseSubscription = () => {
     const [userPlan, setPlan] = useState('Individual');
@@ -115,11 +116,13 @@ const PurchaseSubscription = () => {
                 Authorization: `Bearer ${ciDT}`
             }
         })
-            .then(() => {
-                setLoading(false);
-                setError(false);
-                showModal(true);
-                localStorage.setItem('credits', localStorage.getItem('credits') + 50);
+            .then((response) => {
+                if (response.data.success) {
+                    setLoading(false);
+                    setError(false);
+                    showModal(true);
+                    getCreditInfo(data?.userid, ciDT);
+                }
             })
             .catch(() => {
                 setLoading(false);

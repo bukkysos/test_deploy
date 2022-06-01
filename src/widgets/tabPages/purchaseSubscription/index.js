@@ -119,6 +119,7 @@ const PurchaseSubscription = () => {
                 setLoading(false);
                 setError(false);
                 showModal(true);
+                localStorage.setItem('credits', localStorage.getItem('credits') + 50);
             })
             .catch(() => {
                 setLoading(false);

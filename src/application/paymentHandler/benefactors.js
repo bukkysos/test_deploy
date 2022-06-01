@@ -18,63 +18,63 @@ const getBenefactors = (amount) => {
         remitaCut = '80.63';
     }
 
-    if (window.location.host.includes('localhost')) {
-        benefactors = [
-            {
-                lineItemsId: 'itemid1',
-                beneficiaryName: 'Test Corporation',
-                beneficiaryAccount: '0360883515',
-                bankCode: '057',
-                beneficiaryAmount: commonIdentityCut,
-                deductFeeFrom: '1'
-            },
-            {
-                lineItemsId: 'itemid1',
-                beneficiaryName: 'Folivi Joshua',
-                beneficiaryAccount: '4017904612',
-                bankCode: '058',
-                beneficiaryAmount: NIMCCut,
-                deductFeeFrom: '0'
-            },
-            {
-                lineItemsId: 'itemid1',
-                beneficiaryName: 'Folivi Joshua',
-                beneficiaryAccount: '4017904612',
-                bankCode: '058',
-                beneficiaryAmount: remitaCut,
-                deductFeeFrom: '0'
-            }
-        ];
-        return benefactors;
-    } else {
-        benefactors = [
-            {
-                lineItemsId: 'itemid1',
-                beneficiaryName: 'CommonIdentity Ltd',
-                beneficiaryAccount: '1015865808',
-                bankCode: '057',
-                beneficiaryAmount: commonIdentityCut,
-                deductFeeFrom: '1'
-            },
-            {
-                lineItemsId: 'itemid1',
-                beneficiaryName: 'National Identity Management Commission',
-                beneficiaryAccount: '0020451061012',
-                bankCode: '000',
-                beneficiaryAmount: NIMCCut,
-                deductFeeFrom: '0'
-            },
-            {
-                lineItemsId: 'itemid1',
-                beneficiaryName: 'SystemSpecs Limited',
-                beneficiaryAccount: '0001624760',
-                bankCode: '044',
-                beneficiaryAmount: remitaCut,
-                deductFeeFrom: '0'
-            }
-        ];
-        return benefactors;
-    }
+    // if (window.location.host.includes('localhost')) {
+    //     benefactors = [
+    //         {
+    //             lineItemsId: 'itemid1',
+    //             beneficiaryName: 'Test Corporation',
+    //             beneficiaryAccount: '0360883515',
+    //             bankCode: '057',
+    //             beneficiaryAmount: commonIdentityCut,
+    //             deductFeeFrom: '1'
+    //         },
+    //         {
+    //             lineItemsId: 'itemid1',
+    //             beneficiaryName: 'Folivi Joshua',
+    //             beneficiaryAccount: '4017904612',
+    //             bankCode: '058',
+    //             beneficiaryAmount: NIMCCut,
+    //             deductFeeFrom: '0'
+    //         },
+    //         {
+    //             lineItemsId: 'itemid1',
+    //             beneficiaryName: 'Folivi Joshua',
+    //             beneficiaryAccount: '4017904612',
+    //             bankCode: '058',
+    //             beneficiaryAmount: remitaCut,
+    //             deductFeeFrom: '0'
+    //         }
+    //     ];
+    //     return benefactors;
+    // } else {
+    benefactors = [
+        {
+            lineItemsId: 'itemid1',
+            beneficiaryName: 'CommonIdentity Ltd',
+            beneficiaryAccount: '1015865808',
+            bankCode: '057',
+            beneficiaryAmount: commonIdentityCut,
+            deductFeeFrom: '1'
+        },
+        {
+            lineItemsId: 'itemid1',
+            beneficiaryName: 'National Identity Management Commission',
+            beneficiaryAccount: '0020451061012',
+            bankCode: '000',
+            beneficiaryAmount: NIMCCut,
+            deductFeeFrom: '0'
+        },
+        {
+            lineItemsId: 'itemid1',
+            beneficiaryName: 'SystemSpecs Limited',
+            beneficiaryAccount: '0001624760',
+            bankCode: '044',
+            beneficiaryAmount: remitaCut,
+            deductFeeFrom: '0'
+        }
+    ];
+    return benefactors;
+    // }
 };
 
 export { getBenefactors };

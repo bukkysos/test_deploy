@@ -21,11 +21,6 @@ const MyDependents = () => {
         setNin(userData.nin);
     }, [ciEncrypt]);
 
-    const decryptData = async (data) => {
-        let userData = await decryptAndDecode(data);
-        return userData;
-    };
-
     useEffect(() => {
         handleKey();
     }, [handleKey]);
@@ -34,29 +29,29 @@ const MyDependents = () => {
 
     const fetchDependents = useCallback(
         async (nin) => {
-            axios({
-                method: 'get',
-                url: `${BASE_URL}utility/myDependents?parentNin=${nin}`,
-                headers: {
-                    Authorization: `Bearer ${ciDT}`
-                }
-            })
-                .then((response) => {
-                    setLoading(false);
-                    if (response.data.data.length) {
-                        setEmptyState(false);
-                        decryptData(response.data.data).then((data) => {
-                            setResponseData(() => data);
-                        });
-                    } else {
-                        setEmptyState(true);
+            if (nin) {
+                axios({
+                    method: 'get',
+                    url: `${BASE_URL}utility/myDependents?parentNin=${nin}`,
+                    headers: {
+                        Authorization: `Bearer ${ciDT}`
                     }
                 })
-                .catch(() => {
-                    // console.error(error, 'error');
-                    setLoading(false);
-                    setResponseData([]);
-                });
+                    .then((response) => {
+                        setLoading(false);
+                        if (response.data.data.length) {
+                            setEmptyState(false);
+                            setResponseData(response.data.data);
+                        } else {
+                            setEmptyState(true);
+                        }
+                    })
+                    .catch(() => {
+                        // console.error(error, 'error');
+                        setLoading(false);
+                        setResponseData([]);
+                    });
+            }
             return true;
         },
         [ciDT]

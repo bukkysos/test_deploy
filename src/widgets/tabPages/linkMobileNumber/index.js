@@ -47,7 +47,9 @@ const LinkMobileNumber = () => {
     const [totalPages, setTotalPages] = useState(null);
     const [sortParams, setSortParams] = useState({});
     const [canLoadMore, setCanLoadMore] = useState(false);
-    const [loadingTableData, setLoadingTableData] = useState(false)
+    const [loadingTableData, setLoadingTableData] = useState(false);
+    const [loadMoreState, setLoadMoreState] = useState(false);
+    const [searchString, setSearchString] = useState('');
 
     const [payload, setPayload] = useState({
         pageNo: 1,
@@ -59,11 +61,9 @@ const LinkMobileNumber = () => {
         generateUrl({
             ...payload,
             ...sortParams,
-            noOfRequests: 2,
+            noOfRequests: 4,
         }), [sortParams, payload]
     );
-
-    console.log(display, responseData);
 
     const [otpTimeCounter, setOtpTimeCounter] = useState(otpDuration);
     const [resendOtpState, setResendOtpState] = useState(false);
@@ -96,7 +96,6 @@ const LinkMobileNumber = () => {
                 if (response.data.success) {
                     setCurrentPage(response.data.data.pageNo);
                     setTotalPages(response.data.data.availablePages);
-
                     setResponseData(
                         response.data.data.pageNo > 1 ?
                             [...responseData, ...response.data.data.response]
@@ -106,6 +105,7 @@ const LinkMobileNumber = () => {
                         : response.data.data.response);
                     setCanLoadMore(response.data.data.pageNo < response.data.data.availablePages);
                     setLoadingTableData(false);
+                    setLoadMoreState(false);
                 }
                 setLoading(false);
             })
@@ -117,9 +117,18 @@ const LinkMobileNumber = () => {
 
     const loadMore = () => {
         if (canLoadMore) {
+            setLoadMoreState(true);
             updatePayload('pageNo', currentPage + 1)
         }
     }
+    
+    useEffect(() => {
+        timeout = setTimeout(() => {
+            setPayload(prevValue => ({ ...prevValue, search: searchString, pageNo: 1 }));
+            clearTimeout(timeout);
+        }, 500);
+        return () => { clearTimeout(timeout); }
+    }, [searchString]);
 
     useEffect(() => {
         if (data.userid) {
@@ -131,7 +140,6 @@ const LinkMobileNumber = () => {
     const updatePayload = useCallback(
         (key, value) => {
             setPayload((prevValue) => ({ ...prevValue, pageNo: 1, [key]: value }));
-            console.log(payload);
         },
         [payload]
     );
@@ -151,8 +159,7 @@ const LinkMobileNumber = () => {
     const handleSort = useCallback(
         (sortValues) => {
             if (sortValues.headerItem === 'Mobile') {
-                console.log(sortValues.headerItem, sortParams);
-                let newParam = {
+                let newParam = {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
                     mobile: sortValues.sortState ? 'desc' : 'asc'
                 };
                 setSortParams(newParam);
@@ -402,7 +409,7 @@ const LinkMobileNumber = () => {
                                 filterData(selectedItem.selectedItem)
                             }
                             handleLoadMore={() => loadMore()}
-                            loadingTableData={loadingTableData}
+                            loadingTableData={loadMoreState}
                             tableContents={
                                 <>
                                     {display.map((tableRow, index) => (
@@ -422,23 +429,22 @@ const LinkMobileNumber = () => {
                                             </tr>
                                         </React.Fragment>
                                     ))}
-                                    {
-                                        loadingTableData ?
-
-                                            <tr className='load_more_indicator'>
-                                                <td colSpan="9">
-                                                    <LoadingIcon className='col-12' fill={'#27923E'} />
-                                                </td>
-                                            </tr>
-                                            :
-                                            <></>
-                                    }
                                 </>
                             }
                             showModal={(modal) => setModal(modal)}
-                            // onInputChange={(val) => filterData(val.toLowerCase())}
-                            onInputChange={() => { }}
-                        />
+                            onInputChange={(val) => setSearchString(val.toLowerCase())}
+                            />
+                            {
+                                loadingTableData ?
+
+                                    <div className='load_more_indicator'>
+                                        <span >
+                                            <LoadingIcon className='col-12' fill={'#27923E'} />
+                                        </span>
+                                    </div>
+                                    :
+                                    <></>
+                            }
                     </div>
                 )}
             </div>

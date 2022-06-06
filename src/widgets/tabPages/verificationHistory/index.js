@@ -1,17 +1,16 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../../../config';
 import { LoadingIcon } from '../../../assets';
 import { AppContext } from '../../../appContext';
 import { PrintCardModal, Button, Modal, SuccessContent, Table } from '../../../components';
 import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
-// import { ciEncrypt, decrypt } from '../../../config/utils/red';
+import { generateUrl } from '../../../config/generateUrl';
 
-// const searchParam = ["txid",  "level", "verifiedID"];
 const filterItems = {
     filterItem: ['Level', 'Status'],
     filterState: {
-        Level: ['Basic', 'Full', 'NIN Slip'],
+        Level: ['Basic', 'Full', 'NIN Slip', 'Transacted'],
         Status: ['OK', 'Failed']
     }
 };
@@ -30,6 +29,29 @@ const VerificationHistory = () => {
     const [IsEmptyTable, setIsEmptyTable] = useState(false);
     const [csv, setcsv] = useState('');
     const [sortValues, setSortValues] = useState({});
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(null);
+    const [sortParams, setSortParams] = useState({});
+    const [canLoadMore, setCanLoadMore] = useState(false);
+    const [loadingTableData, setLoadingTableData] = useState(false);
+    const [loadMoreState, setLoadMoreState] = useState(false);
+    const [searchString, setSearchString] = useState('');
+
+    const [payload, setPayload] = useState({
+        pageNo: 1,
+        ts: '',
+        status: '',
+        level: '',
+        search: ''
+    });
+
+    const queryParam = useMemo(() =>
+        generateUrl({
+            ...payload,
+            ...sortParams,
+            noOfRequests: 4,
+        }), [sortParams, payload]
+    );
 
     const [rowData, setRowData] = useState({
         timeStamp: null,
@@ -57,26 +79,42 @@ const VerificationHistory = () => {
         setContext(modalState);
     }, [modalState, setContext]);
 
+    const fetchVerificationHistory = (userID) => {
+        setLoading(true);
+        axios({
+            method: 'get',
+            url: `${BASE_URL}verification/vh?userID=${userID}&${queryParam}`,
+            headers: {
+                Authorization: `Bearer ${ciDT}`
+            }
+        })
+            .then((response) => {
+                if (response.data.success) {
+                    setResponseData(
+                        response.data.data.pageNo > 1 ?
+                            [...responseData, ...response.data.data.response]
+                            : response.data.data.response);
+                    setDisplay(response.data.data.pageNo > 1 ?
+                        [...responseData, ...response.data.data.response]
+                        : response.data.data.response);
+                    setCurrentPage(response.data.data.pageNo);
+                    setTotalPages(response.data.data.availablePages);
+                    setCanLoadMore(response.data.data.pageNo < response.data.data.availablePages);
+                    setLoadingTableData(false);
+                    setLoadMoreState(false);
+                }
+                setLoading(false);
+            })
+            .catch(() => {
+                setIsEmptyTable(true);
+            });
+    }
+
     useEffect(() => {
         if (data.userid) {
-            setLoading(true);
-            axios({
-                method: 'get',
-                url: `${BASE_URL}verification/vh?userID=${data.userid}`,
-                headers: {
-                    Authorization: `Bearer ${ciDT}`
-                }
-            })
-                .then((response) => {
-                    setResponseData(() => response.data.data);
-                    setLoading(false);
-                    setDisplay(() => response.data.data);
-                })
-                .catch(() => {
-                    setIsEmptyTable(true);
-                });
+            fetchVerificationHistory(data.userid);
         }
-    }, [ciDT, data.userid]);
+    }, [ciDT, data.userid, queryParam]);
 
     const convertToCsv = useCallback((objArray) => {
         // JSON to CSV Converter
@@ -123,31 +161,15 @@ const VerificationHistory = () => {
             if (searchFilter === undefined || searchFilter === '' || searchFilter === null) {
                 return;
             }
+            let dropdownCategory = searchFilter.headerItem.toLowerCase();
 
-            searchFilter =
-                searchFilter === 'Full'
-                    ? 'f'
-                    : searchFilter === 'Basic'
-                    ? 'b'
-                    : searchFilter === 'NIN Slip'
-                    ? 'n'
-                    : searchFilter;
-            const filtered = responseData.filter((item) =>
-                searchParam.some(() => {
-                    return (
-                        item.level.toString().toLowerCase() ===
-                            searchFilter.toString().toLowerCase() ||
-                        item.status.toString().toLowerCase() ===
-                            searchFilter.toString().toLowerCase()
-                    );
-                })
-            );
-            setDisplay(filtered);
-            if (filtered.length === 0) {
-                setIsEmptyTable(true);
-            } else {
-                setIsEmptyTable(false);
-            }
+            selectedFilter = searchFilter.selectedItem === 'Full' ? 'f'
+                : searchFilter === 'Basic' ? 'b'
+                    : searchFilter === 'NIN Slip' ? 'n'
+                        : searchFilter === 'Transacted' ? 't'
+                            : searchFilter;
+            updatePayload(dropdownCategory, selectedFilter)
+
         },
         [responseData, searchParam]
     );
@@ -181,16 +203,22 @@ const VerificationHistory = () => {
 
     const handleSort = useCallback(
         (sortValues) => {
-            if (sortValues.headerItem === 'Timestamp') {
-                let reversedData = responseData.reverse();
-                setDisplay(reversedData);
-            } else if (sortValues.headerItem === 'Credits') {
-                let creditState = sortValues.sortState ? 'Highest' : 'Lowest';
-                filterData(creditState);
-            }
-        },
-        [responseData, filterData]
+            let headerItemLoweCase = sortValues?.headerItem?.toLowerCase();
+            let newParam = {
+                [headerItemLoweCase]: sortValues.sortState ? 'desc' : 'asc'
+            };
+            setSortParams(newParam);
+            updatePayload('pageNo', 1);
+        }, [sortValues]
     );
+
+    useEffect(() => {
+        timeout = setTimeout(() => {
+            setPayload(prevValue => ({ ...prevValue, search: searchString, pageNo: 1 }));
+            clearTimeout(timeout);
+        }, 500);
+        return () => { clearTimeout(timeout); }
+    }, [searchString]);
 
     useEffect(() => {
         handleSort(sortValues);
@@ -223,10 +251,13 @@ const VerificationHistory = () => {
                             filterItems={filterItems}
                             csvFile={csv}
                             getFilterDropdown={(selectedItem) =>
-                                filterData(selectedItem.selectedItem)
+                                filterData(selectedItem)
                             }
                             sortData={(data) => setSortValues(data)}
                             isEmptyTable={IsEmptyTable}
+                            canLoadMore={canLoadMore}
+                            handleLoadMore={() => loadMore()}
+                            loadingTableData={loadMoreState}
                             tableContents={display.map((tableRow, index) => (
                                 <React.Fragment key={index}>
                                     <tr>
@@ -247,10 +278,12 @@ const VerificationHistory = () => {
                                             {tableRow.level === 'b'
                                                 ? 'Basic'
                                                 : tableRow.level === 'f'
-                                                ? 'Full'
-                                                : tableRow.level === 'n'
-                                                ? 'NIN'
-                                                : ''}
+                                                    ? 'Full'
+                                                    : tableRow.level === 'n'
+                                                        ? 'NIN'
+                                                        : tableRow.level === 't'
+                                                            ? 'Transacted'
+                                                            : ''}
                                         </td>
                                         <td>{tableRow.status}</td>
 
@@ -287,9 +320,20 @@ const VerificationHistory = () => {
                             modalState={modalState}
                             showBtn={true}
                             buttonText={'Preview'}
-                            onInputChange={(val) => filterData(val.toLowerCase())}
+                            onInputChange={(val) => setSearchString(val.toLowerCase())}
                         />
                     )}
+                    {
+                        loadingTableData ?
+
+                            <div className='load_more_indicator'>
+                                <span >
+                                    <LoadingIcon className='col-12' fill={'#27923E'} />
+                                </span>
+                            </div>
+                            :
+                            <></>
+                    }
                 </div>
             </div>
             {modalState ? (

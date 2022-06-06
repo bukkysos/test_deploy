@@ -120,12 +120,13 @@
 
 .component_table > table > tbody {
     overflow-y: auto;
+    position: relative;
 }
 
 .component_table > table > tbody > tr td {
     white-space: nowrap;
     width: 25%;
-    height: 5rem;
+    /* height: 5rem; */
     border-top: 0 !important;
     border-bottom: 0.2px solid #a2a7b426;
     vertical-align: middle !important;
@@ -162,13 +163,19 @@
 }
 
 .load_more_indicator {
-    position: sticky;
-    bottom: -62px;
+    position: absolute;
+    bottom: 73px;
     background: transparent !important;
+    width: 100%;
+    left: 0;
 }
 
 .load_more_button {
     max-width: 130px !important;
+}
+
+.load_more_indicator > span > svg {
+    animation: rotation 1s infinite linear;
 }
 
 @keyframes rotation {

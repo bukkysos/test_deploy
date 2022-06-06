@@ -88,7 +88,7 @@
     box-shadow: 0px 5.82826px 101.995px rgba(0, 0, 0, 0.03),
         0px 0.729789px 92.5711px rgba(0, 0, 0, 0.015);
     border-radius: 4px;
-    height: calc(58vh - 3.5rem);
+    height: calc(51vh - 3.5rem);
     overflow-y: scroll;
 }
 
@@ -159,6 +159,16 @@
 
 .loading_icon > svg {
     animation: rotation 1s infinite linear;
+}
+
+.load_more_indicator {
+    position: sticky;
+    bottom: -62px;
+    background: transparent !important;
+}
+
+.load_more_button {
+    max-width: 130px !important;
 }
 
 @keyframes rotation {

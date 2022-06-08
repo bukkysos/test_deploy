@@ -67,11 +67,10 @@ const Table = ({
                                         placeholder="Select filter"
                                         selectItems={filterItems.filterState[item]}
                                         getSelectedItem={(selectedItem) => {
-                                            setFilterParams((prevState) => ({
-                                                ...prevState,
+                                            setFilterParams({
                                                 selectedItem: selectedItem.selected,
                                                 headerItem: selectedItem.header
-                                            }));
+                                            });
                                         }}
                                     />
                                 </div>

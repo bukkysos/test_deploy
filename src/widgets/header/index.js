@@ -14,8 +14,8 @@ const Header = () => {
     const history = useHistory();
 
     const handleKey = useCallback(async () => {
-        let ciDD = await ciEncrypt.getItem('ciDD');
-        let userData = await decryptAndDecode(ciDD);
+        let { data } = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(data);
         setJWTData(userData);
     }, [ciEncrypt]);
 

@@ -15,7 +15,7 @@ const filterItems = {
 };
 
 const searchParam = ['credits', 'subscriptionPlan', 'sid', 'credits'];
-
+let timeout;
 const SubscriptionHistory = () => {
     const [modalState, setModal] = useState(false);
     const [data, setData] = useState({});
@@ -51,8 +51,8 @@ const SubscriptionHistory = () => {
     let ciDT = ciEncrypt.getItem('ciDT');
 
     const handleKey = useCallback(async () => {
-        let ciDD = await ciEncrypt.getItem('ciDD');
-        let userData = await decryptAndDecode(ciDD);
+        let { data } = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(data);
         setData(userData);
     }, [ciEncrypt]);
 
@@ -181,7 +181,7 @@ const SubscriptionHistory = () => {
             setPayload(prevValue => ({ ...prevValue, search: searchString, pageNo: 1 }));
             clearTimeout(timeout);
         }, 500);
-        return () => { clearTimeout(timeout); }
+        return () => { clearTimeout(timeout) }
     }, [searchString]);
 
     useEffect(() => {

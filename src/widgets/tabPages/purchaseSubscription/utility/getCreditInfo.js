@@ -12,7 +12,6 @@ export const getCreditInfo = async (userid, ciDT) => {
             }
         })
             .then(async (response) => {
-                console.log(response, 'gteCredInfo');
                 if (response.data.success) {
                     const rawData = await decryptAndDecode(response.data.data);
                     localStorage.setItem('credits', rawData.credittotal);

@@ -16,8 +16,8 @@ const MyDependents = () => {
     let ciDT = ciEncrypt.getItem('ciDT');
 
     const handleKey = useCallback(async () => {
-        let ciDD = await ciEncrypt.getItem('ciDD');
-        let userData = await decryptAndDecode(ciDD);
+        let { data } = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(data);
         setNin(userData.nin);
     }, [ciEncrypt]);
 

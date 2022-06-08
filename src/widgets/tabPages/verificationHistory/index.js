@@ -15,6 +15,14 @@ const filterItems = {
     }
 };
 
+const convertToServerValues = {
+    'Basic': 'b',
+    'Transacted': 't',
+    'Full': 'f',
+    'NIN Slip': 'n'
+}
+
+let timeout;
 const VerificationHistory = () => {
     const [modalState, setModal] = useState(false);
     const [context, setContext] = useContext(AppContext);
@@ -64,8 +72,8 @@ const VerificationHistory = () => {
     let ciDT = ciEncrypt.getItem('ciDT');
 
     const handleKey = useCallback(async () => {
-        let ciDD = await ciEncrypt.getItem('ciDD');
-        let userData = await decryptAndDecode(ciDD);
+        let { data } = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(data);
         if (userData.userid) {
             setData(userData);
         }
@@ -80,7 +88,7 @@ const VerificationHistory = () => {
     }, [modalState, setContext]);
 
     const fetchVerificationHistory = (userID) => {
-        setLoading(true);
+        setLoadingTableData(true);
         axios({
             method: 'get',
             url: `${BASE_URL}verification/vh?userID=${userID}&${queryParam}`,
@@ -155,20 +163,34 @@ const VerificationHistory = () => {
         }
     }, [responseData]);
 
+    const updatePayload = useCallback(
+        (key, value) => {
+            setPayload((prevValue) => ({ ...prevValue, pageNo: 1, [key]: value }));
+        }, [payload]
+    );
+
+    const loadMore = () => {
+        if (canLoadMore) {
+            setLoadMoreState(true);
+            updatePayload('pageNo', currentPage + 1)
+        }
+    }
+
     // Filter Data
     const filterData = useCallback(
         (searchFilter) => {
-            if (searchFilter === undefined || searchFilter === '' || searchFilter === null) {
+            if (!searchFilter.headerItem || searchFilter.selectedItem === '') {
                 return;
             }
             let dropdownCategory = searchFilter.headerItem.toLowerCase();
 
-            selectedFilter = searchFilter.selectedItem === 'Full' ? 'f'
-                : searchFilter === 'Basic' ? 'b'
-                    : searchFilter === 'NIN Slip' ? 'n'
-                        : searchFilter === 'Transacted' ? 't'
-                            : searchFilter;
-            updatePayload(dropdownCategory, selectedFilter)
+            if (searchFilter.headerItem === 'Status') {
+                updatePayload(dropdownCategory, searchFilter.selectedItem);
+            } else {
+                updatePayload(dropdownCategory, convertToServerValues[searchFilter.selectedItem]);
+            }
+
+
 
         },
         [responseData, searchParam]

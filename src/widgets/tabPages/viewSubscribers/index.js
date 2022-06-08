@@ -9,7 +9,7 @@ import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 import { generateUrl } from '../../../config/generateUrl';
 
 const searchParam = ['adminId', 'staffId', 'sn', 'credits'];
-
+let timeout;
 const filterItems = {
     filterItem: ['Credits'],
     filterState: {
@@ -53,8 +53,8 @@ const ViewSubscribers = () => {
     let ciDT = ciEncrypt.getItem('ciDT');
 
     const handleKey = useCallback(async () => {
-        let ciDD = await ciEncrypt.getItem('ciDD');
-        let userData = await decryptAndDecode(ciDD);
+        let { data } = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(data);
         if (userData.userid) {
             setData(userData);
         }
@@ -65,6 +65,7 @@ const ViewSubscribers = () => {
     }, [handleKey]);
 
     const fetchSubscribers = (userID) => {
+        setLoadingTableData(true);
         axios({
             method: 'get',
             url: `${BASE_URL}subscriptionHistory/mySubscribers?userID=${userID}&${queryParam}`,
@@ -151,20 +152,18 @@ const ViewSubscribers = () => {
         [responseData, searchParam]
     );
 
-    
     const updatePayload = useCallback(
         (key, value) => {
             setPayload((prevValue) => ({ ...prevValue, pageNo: 1, [key]: value }));
-        },
-        [payload]
-        );
-        
-        const loadMore = () => {
-            if (canLoadMore) {
-                setLoadMoreState(true);
-                updatePayload('pageNo', currentPage + 1)
-            }
+        }, [payload]
+    );
+
+    const loadMore = () => {
+        if (canLoadMore) {
+            setLoadMoreState(true);
+            updatePayload('pageNo', currentPage + 1)
         }
+    }
 
     const handleSort = useCallback(
         (sortValues) => {
@@ -176,22 +175,22 @@ const ViewSubscribers = () => {
             updatePayload('pageNo', 1);
         },
         [sortValues]
-        );
-        
-        useEffect(() => {
-            timeout = setTimeout(() => {
-                setPayload(prevValue => ({ ...prevValue, search: searchString, pageNo: 1 }));
-                clearTimeout(timeout);
-            }, 500);
-            return () => { clearTimeout(timeout); }
-        }, [searchString]);
-        
-        useEffect(() => {
-            handleSort(sortValues);
-        }, [sortValues, handleSort]);
-        
-        return (
-            <>
+    );
+
+    useEffect(() => {
+        timeout = setTimeout(() => {
+            setPayload(prevValue => ({ ...prevValue, search: searchString, pageNo: 1 }));
+            clearTimeout(timeout);
+        }, 500);
+        return () => { clearTimeout(timeout); }
+    }, [searchString]);
+
+    useEffect(() => {
+        handleSort(sortValues);
+    }, [sortValues, handleSort]);
+
+    return (
+        <>
             {/* <div className={`${modalState ? "blur" : ""}`}> */}
             <h3 className="tab_page_title mx-auto">View Subscribers</h3>
             <p className="mx-auto tab_page_subtitle mb-5">

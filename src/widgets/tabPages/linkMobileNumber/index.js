@@ -24,6 +24,7 @@ const filterItems = {
 
 let otpDurationTimer;
 const otpDuration = 60;
+let timeout;
 
 const LinkMobileNumber = () => {
     const [modal, setModal] = useState(false);
@@ -70,8 +71,8 @@ const LinkMobileNumber = () => {
 
     let ciDT = ciEncrypt.getItem('ciDT');
     const handleKey = useCallback(async () => {
-        let ciDD = await ciEncrypt.getItem('ciDD');
-        let userData = await decryptAndDecode(ciDD);
+        let { data } = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(data);
         setData(userData);
     }, [ciEncrypt]);
 
@@ -121,7 +122,7 @@ const LinkMobileNumber = () => {
             updatePayload('pageNo', currentPage + 1)
         }
     }
-    
+
     useEffect(() => {
         timeout = setTimeout(() => {
             setPayload(prevValue => ({ ...prevValue, search: searchString, pageNo: 1 }));

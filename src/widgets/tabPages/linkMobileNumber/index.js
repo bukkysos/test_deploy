@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { AppContext } from '../../../appContext';
 import {
     Button,
@@ -13,6 +13,7 @@ import { BASE_URL } from '../../../config';
 import OtpInput from 'react-otp-input';
 import { LoadingIcon } from '../../../assets';
 import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
+import { generateUrl } from '../../../config/generateUrl';
 
 const filterItems = {
     filterItem: ['Operator'],
@@ -23,6 +24,7 @@ const filterItems = {
 
 let otpDurationTimer;
 const otpDuration = 60;
+let timeout;
 
 const LinkMobileNumber = () => {
     const [modal, setModal] = useState(false);
@@ -42,14 +44,35 @@ const LinkMobileNumber = () => {
     const [sortValues, setSortValues] = useState({});
     const [display, setDisplay] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(null);
+    const [sortParams, setSortParams] = useState({});
+    const [canLoadMore, setCanLoadMore] = useState(false);
+    const [loadingTableData, setLoadingTableData] = useState(false);
+    const [loadMoreState, setLoadMoreState] = useState(false);
+    const [searchString, setSearchString] = useState('');
+
+    const [payload, setPayload] = useState({
+        pageNo: 1,
+        network: '',
+        mobile: ''
+    });
+
+    const queryParam = useMemo(() =>
+        generateUrl({
+            ...payload,
+            ...sortParams,
+            noOfRequests: 4,
+        }), [sortParams, payload]
+    );
 
     const [otpTimeCounter, setOtpTimeCounter] = useState(otpDuration);
     const [resendOtpState, setResendOtpState] = useState(false);
 
     let ciDT = ciEncrypt.getItem('ciDT');
     const handleKey = useCallback(async () => {
-        let ciDD = await ciEncrypt.getItem('ciDD');
-        let userData = await decryptAndDecode(ciDD);
+        let { data } = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(data);
         setData(userData);
     }, [ciEncrypt]);
 
@@ -61,27 +84,91 @@ const LinkMobileNumber = () => {
         setContext(modal);
     }, [modal, setContext]);
 
+    const fetchNumbers = useCallback((userID) => {
+        setLoadingTableData(true);
+        axios({
+            method: 'get',
+            url: `${BASE_URL}device/getMobileNumbers?userID=${userID}&${queryParam}`,
+            headers: {
+                Authorization: `Bearer ${ciDT}`
+            }
+        })
+            .then((response) => {
+                if (response.data.success) {
+                    setCurrentPage(response.data.data.pageNo);
+                    setTotalPages(response.data.data.availablePages);
+                    setResponseData(
+                        response.data.data.pageNo > 1 ?
+                            [...responseData, ...response.data.data.response]
+                            : response.data.data.response);
+                    setDisplay(() => response.data.data.pageNo > 1 ?
+                        [...responseData, ...response.data.data.response]
+                        : response.data.data.response);
+                    setCanLoadMore(response.data.data.pageNo < response.data.data.availablePages);
+                    setLoadingTableData(false);
+                    setLoadMoreState(false);
+                }
+                setLoading(false);
+            })
+            .catch(() => {
+                setIsEmptyTable(true);
+            });
+
+    }, [queryParam])
+
+    const loadMore = () => {
+        if (canLoadMore) {
+            setLoadMoreState(true);
+            updatePayload('pageNo', currentPage + 1)
+        }
+    }
+
+    useEffect(() => {
+        timeout = setTimeout(() => {
+            setPayload(prevValue => ({ ...prevValue, search: searchString, pageNo: 1 }));
+            clearTimeout(timeout);
+        }, 500);
+        return () => { clearTimeout(timeout); }
+    }, [searchString]);
+
     useEffect(() => {
         if (data.userid) {
-            axios({
-                method: 'get',
-                url: `${BASE_URL}device/getMobileNumbers?userID=${data.userid}`,
-                headers: {
-                    Authorization: `Bearer ${ciDT}`
-                }
-            })
-                .then((response) => {
-                    if (response.data.data) {
-                        setResponseData(() => response.data.data);
-                        setDisplay(() => response.data.data);
-                    }
-                    setLoading(false);
-                })
-                .catch(() => {
-                    setIsEmptyTable(true);
-                });
+            fetchNumbers(data.userid);
         }
-    }, [data.userid, ciDT]);
+    }, [data.userid, ciDT, queryParam]);
+
+    // 
+    const updatePayload = useCallback(
+        (key, value) => {
+            setPayload((prevValue) => ({ ...prevValue, pageNo: 1, [key]: value }));
+        },
+        [payload]
+    );
+
+    // 
+    const filterData = useCallback(
+        (searchFilter) => {
+            if (searchFilter === undefined || searchFilter === '' || searchFilter === null) {
+                return;
+            }
+            updatePayload('network', searchFilter);
+        },
+        [responseData]
+    );
+
+    // 
+    const handleSort = useCallback(
+        (sortValues) => {
+            if (sortValues.headerItem === 'Mobile') {
+                let newParam = {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                    mobile: sortValues.sortState ? 'desc' : 'asc'
+                };
+                setSortParams(newParam);
+                updatePayload('pageNo', 1);
+            }
+        },
+        [sortValues]
+    );
 
     const convertToCsv = useCallback((objArray) => {
         // JSON to CSV Converter
@@ -291,44 +378,6 @@ const LinkMobileNumber = () => {
         }
     }, [responseData]);
 
-    const filterData = useCallback(
-        (searchFilter) => {
-            if (searchFilter === undefined || searchFilter === '' || searchFilter === null) {
-                return;
-            }
-
-            const filtered = responseData.filter((item) =>
-                ['MTN', 'Glo', 'Airtel', '9Mobile'].some(() => {
-                    return (
-                        item.operator?.toString()?.toLowerCase() ===
-                        searchFilter.toString()?.toLowerCase()
-                    );
-                })
-            );
-            setDisplay(filtered);
-            if (filtered.length === 0) {
-                setIsEmptyTable(true);
-            } else {
-                setIsEmptyTable(false);
-            }
-        },
-        [responseData]
-    );
-
-    const handleSort = useCallback(
-        (sortValues) => {
-            if (sortValues.headerItem === 'Mobile') {
-                let reversedData = responseData.reverse();
-                setDisplay(reversedData);
-            }
-            // else if (sortValues.headerItem === 'Operator') {
-            //     let creditState = sortValues.sortState ? 'Highest' : 'Lowest';
-            //     filterData(creditState);
-            // }
-        },
-        [responseData, filterData]
-    );
-
     useEffect(() => {
         handleSort(sortValues);
     }, [sortValues, handleSort]);
@@ -356,28 +405,47 @@ const LinkMobileNumber = () => {
                             csvFile={csv}
                             isEmptyTable={IsEmptyTable}
                             sortData={(data) => setSortValues(data)}
-                            // sortData={() => {}}
+                            canLoadMore={canLoadMore}
                             getFilterDropdown={(selectedItem) =>
                                 filterData(selectedItem.selectedItem)
                             }
-                            // getFilterDropdown={() => {}}
-                            tableContents={display.map((tableRow, index) => (
-                                <React.Fragment key={index}>
-                                    <tr>
-                                        <td>
-                                            {tableRow.operator === '' ? 'NA' : tableRow.operator}
-                                        </td>
-                                        <td>{tableRow.MSISDN === '' ? 'NA' : tableRow.msisdn}</td>
-                                        <td>
-                                            {tableRow.deviceID === '' ? 'NA' : tableRow.deviceID}
-                                        </td>
-                                    </tr>
-                                </React.Fragment>
-                            ))}
+                            handleLoadMore={() => loadMore()}
+                            loadingTableData={loadMoreState}
+                            tableContents={
+                                <>
+                                    {display.map((tableRow, index) => (
+                                        <React.Fragment key={index}>
+                                            <tr>
+                                                <td>
+                                                    {tableRow.operator === ''
+                                                        ? 'NA'
+                                                        : tableRow.operator}
+                                                </td>
+                                                <td>
+                                                    {tableRow.MSISDN === '' ? 'NA' : tableRow.msisdn}
+                                                </td>
+                                                <td>
+                                                    {tableRow.deviceID === '' ? 'NA' : tableRow.deviceID}
+                                                </td>
+                                            </tr>
+                                        </React.Fragment>
+                                    ))}
+                                </>
+                            }
                             showModal={(modal) => setModal(modal)}
-                            // onInputChange={(val) => filterData(val.toLowerCase())}
-                            onInputChange={() => {}}
-                        />
+                            onInputChange={(val) => setSearchString(val.toLowerCase())}
+                            />
+                            {
+                                loadingTableData ?
+
+                                    <div className='load_more_indicator'>
+                                        <span >
+                                            <LoadingIcon className='col-12' fill={'#27923E'} />
+                                        </span>
+                                    </div>
+                                    :
+                                    <></>
+                            }
                     </div>
                 )}
             </div>
@@ -545,7 +613,7 @@ const LinkMobileNumber = () => {
                                     </>
                                 }
                                 // onclick={(modal) => { }}
-                                onclick={() => {}}
+                                onclick={() => { }}
                             />
                         }
                         showCloseButton={true}

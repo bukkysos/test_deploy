@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router';
 import { Button } from '../../../components';
@@ -6,9 +6,10 @@ import { BASE_URL } from '../../../config';
 import { Table } from '../../../components/table';
 import { LoadingIcon } from '../../../assets';
 import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
+import { generateUrl } from '../../../config/generateUrl';
 
 const searchParam = ['adminId', 'staffId', 'sn', 'credits'];
-
+let timeout;
 const filterItems = {
     filterItem: ['Credits'],
     filterState: {
@@ -24,14 +25,36 @@ const ViewSubscribers = () => {
     const [csv, setcsv] = useState('');
     const [sortValues, setSortValues] = useState({});
     const [display, setDisplay] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(null);
+    const [sortParams, setSortParams] = useState({});
+    const [canLoadMore, setCanLoadMore] = useState(false);
+    const [loadingTableData, setLoadingTableData] = useState(false);
+    const [loadMoreState, setLoadMoreState] = useState(false);
+    const [searchString, setSearchString] = useState('');
 
+    const [payload, setPayload] = useState({
+        pageNo: 1,
+        search: '',
+        surname: '',
+        credits: '',
+        level: ''
+    });
+
+    const queryParam = useMemo(() =>
+        generateUrl({
+            ...payload,
+            ...sortParams,
+            noOfRequests: 4,
+        }), [sortParams, payload]
+    );
     const history = useHistory();
 
     let ciDT = ciEncrypt.getItem('ciDT');
 
     const handleKey = useCallback(async () => {
-        let ciDD = await ciEncrypt.getItem('ciDD');
-        let userData = await decryptAndDecode(ciDD);
+        let { data } = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(data);
         if (userData.userid) {
             setData(userData);
         }
@@ -41,24 +64,42 @@ const ViewSubscribers = () => {
         handleKey();
     }, [handleKey]);
 
+    const fetchSubscribers = (userID) => {
+        setLoadingTableData(true);
+        axios({
+            method: 'get',
+            url: `${BASE_URL}subscriptionHistory/mySubscribers?userID=${userID}&${queryParam}`,
+            headers: {
+                Authorization: `Bearer ${ciDT}`
+            }
+        })
+            .then((response) => {
+                if (response.data.success) {
+                    setResponseData(
+                        response.data.data.pageNo > 1 ?
+                            [...responseData, ...response.data.data.response]
+                            : response.data.data.response);
+                    setDisplay(response.data.data.pageNo > 1 ?
+                        [...responseData, ...response.data.data.response]
+                        : response.data.data.response);
+                    setCurrentPage(response.data.data.pageNo);
+                    setTotalPages(response.data.data.availablePages);
+                    setCanLoadMore(response.data.data.pageNo < response.data.data.availablePages);
+                    setLoadingTableData(false);
+                    setLoadMoreState(false);
+                }
+                setLoading(false);
+            })
+            .catch(() => {
+                setIsEmptyTable(true);
+            });
+    }
+
     useEffect(() => {
         if (data.userid) {
-            axios({
-                method: 'get',
-                url: `${BASE_URL}subscriptionHistory/mySubscribers?userID=${data?.userid}`,
-                headers: {
-                    Authorization: `Bearer ${ciDT}`
-                }
-            })
-                .then((response) => {
-                    filterRecurrentData(response.data.data);
-                    setLoading(false);
-                })
-                .catch(() => {
-                    setIsEmptyTable(true);
-                });
+            fetchSubscribers(data.userid);
         }
-    }, [ciDT, data?.userid]);
+    }, [ciDT, data?.userid, queryParam]);
 
     const convertToCsv = useCallback((objArray) => {
         // JSON to CSV Converter
@@ -99,11 +140,6 @@ const ViewSubscribers = () => {
         }
     }, [responseData]);
 
-    const filterRecurrentData = (data) => {
-        setDisplay(data);
-        setResponseData(data);
-    };
-
     // Filter Data
     const filterData = useCallback(
         (searchFilter) => {
@@ -111,68 +147,43 @@ const ViewSubscribers = () => {
                 return;
             }
 
-            if (searchFilter === 'Highest') {
-                const highestVal = Math.max.apply(
-                    Math,
-                    responseData.map(function (o) {
-                        return o.credits;
-                    })
-                );
-                const highest = responseData.filter((item) => item.credits === highestVal);
-                setDisplay(highest);
-                if (highest.length === 0) {
-                    setIsEmptyTable(true);
-                } else {
-                    setIsEmptyTable(false);
-                }
-            } else if (searchFilter === 'Lowest') {
-                const lowestVal = Math.min.apply(
-                    Math,
-                    responseData.map(function (o) {
-                        return o.credits;
-                    })
-                );
-                const lowest = responseData.filter((item) => item.credits === lowestVal);
-                setDisplay(lowest);
-                if (lowest.length === 0) {
-                    setIsEmptyTable(true);
-                } else {
-                    setIsEmptyTable(false);
-                }
-            } else {
-                const filtered = responseData.filter((item) =>
-                    searchParam.some((newItem) => {
-                        return (
-                            item[newItem]
-                                .toString()
-                                .toLowerCase()
-                                .indexOf(searchFilter.toLowerCase()) > -1
-                        );
-                    })
-                );
-                setDisplay(filtered);
-                if (filtered.length === 0) {
-                    setIsEmptyTable(true);
-                } else {
-                    setIsEmptyTable(false);
-                }
-            }
+            searchFilter === 'Highest' ? updatePayload('credits', 'desc') : updatePayload('credits', 'asc');
         },
         [responseData, searchParam]
     );
 
+    const updatePayload = useCallback(
+        (key, value) => {
+            setPayload((prevValue) => ({ ...prevValue, pageNo: 1, [key]: value }));
+        }, [payload]
+    );
+
+    const loadMore = () => {
+        if (canLoadMore) {
+            setLoadMoreState(true);
+            updatePayload('pageNo', currentPage + 1)
+        }
+    }
+
     const handleSort = useCallback(
         (sortValues) => {
-            if (sortValues.headerItem === 'Surname') {
-                let reversedData = responseData.reverse();
-                setDisplay(reversedData);
-            } else if (sortValues.headerItem === 'Credits') {
-                let creditState = sortValues.sortState ? 'Highest' : 'Lowest';
-                filterData(creditState);
-            }
+            let headerItemLoweCase = sortValues?.headerItem?.toLowerCase();
+            let newParam = {
+                [headerItemLoweCase]: sortValues.sortState ? 'desc' : 'asc'
+            };
+            setSortParams(newParam);
+            updatePayload('pageNo', 1);
         },
-        [responseData, filterData]
+        [sortValues]
     );
+
+    useEffect(() => {
+        timeout = setTimeout(() => {
+            setPayload(prevValue => ({ ...prevValue, search: searchString, pageNo: 1 }));
+            clearTimeout(timeout);
+        }, 500);
+        return () => { clearTimeout(timeout); }
+    }, [searchString]);
 
     useEffect(() => {
         handleSort(sortValues);
@@ -200,6 +211,9 @@ const ViewSubscribers = () => {
                         sortData={(data) => setSortValues(data)}
                         isEmptyTable={IsEmptyTable}
                         filterItems={filterItems}
+                        canLoadMore={canLoadMore}
+                        handleLoadMore={() => loadMore()}
+                        loadingTableData={loadMoreState}
                         tableContents={display.map((tableRow, index) => (
                             <React.Fragment key={index}>
                                 <tr>
@@ -226,9 +240,20 @@ const ViewSubscribers = () => {
                         ))}
                         showBtn={true}
                         // iconDisplay={true}
-                        onInputChange={(val) => filterData(val.toLowerCase())}
+                        onInputChange={(val) => setSearchString(val.toLowerCase())}
                     />
                 )}
+                {
+                    loadingTableData ?
+
+                        <div className='load_more_indicator'>
+                            <span >
+                                <LoadingIcon className='col-12' fill={'#27923E'} />
+                            </span>
+                        </div>
+                        :
+                        <></>
+                }
             </div>
             {/* </div> */}
         </>

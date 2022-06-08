@@ -88,12 +88,13 @@
     box-shadow: 0px 5.82826px 101.995px rgba(0, 0, 0, 0.03),
         0px 0.729789px 92.5711px rgba(0, 0, 0, 0.015);
     border-radius: 4px;
-    height: calc(58vh - 3.5rem);
+    height: calc(51vh - 3.5rem);
     overflow-y: scroll;
 }
 
 .component_table table thead {
     height: 4.3rem;
+    z-index: 2;
 }
 
 .component_table table,
@@ -120,12 +121,13 @@
 
 .component_table > table > tbody {
     overflow-y: auto;
+    position: relative;
 }
 
 .component_table > table > tbody > tr td {
     white-space: nowrap;
     width: 25%;
-    height: 5rem;
+    /* height: 5rem; */
     border-top: 0 !important;
     border-bottom: 0.2px solid #a2a7b426;
     vertical-align: middle !important;
@@ -158,6 +160,22 @@
 }
 
 .loading_icon > svg {
+    animation: rotation 1s infinite linear;
+}
+
+.load_more_indicator {
+    position: absolute;
+    bottom: 73px;
+    background: transparent !important;
+    width: 100%;
+    left: 0;
+}
+
+.load_more_button {
+    max-width: 130px !important;
+}
+
+.load_more_indicator > span > svg {
     animation: rotation 1s infinite linear;
 }
 

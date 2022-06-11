@@ -15,6 +15,10 @@ import { LoadingIcon } from '../../../assets';
 import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 import { generateUrl } from '../../../config/generateUrl';
 
+let otpDurationTimer;
+const otpDuration = 60;
+let timeout;
+
 const filterItems = {
     filterItem: ['Operator'],
     filterState: {
@@ -22,9 +26,15 @@ const filterItems = {
     }
 };
 
-let otpDurationTimer;
-const otpDuration = 60;
-let timeout;
+const OperatorLogos = {
+    '9Mobile': 'TU1VZC4J9',
+    'MTN': 'ODVDBF2MB',
+    'Airtel': 'RQAXA3A4E',
+    'Ntel': 'YR27Y3B2C',
+    'smile': 'FZVSMZKC4',
+    'Glo': 'NVTWIWMYQ',
+    'Spectranet': 'QGSJZDQO3'
+}
 
 const LinkMobileNumber = () => {
     const [modal, setModal] = useState(false);
@@ -160,7 +170,7 @@ const LinkMobileNumber = () => {
     const handleSort = useCallback(
         (sortValues) => {
             if (sortValues.headerItem === 'Mobile') {
-                let newParam = {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                let newParam = {
                     mobile: sortValues.sortState ? 'desc' : 'asc'
                 };
                 setSortParams(newParam);
@@ -417,9 +427,15 @@ const LinkMobileNumber = () => {
                                         <React.Fragment key={index}>
                                             <tr>
                                                 <td>
-                                                    {tableRow.operator === ''
+                                                    {!tableRow.operator
                                                         ? 'NA'
-                                                        : tableRow.operator}
+                                                        :
+                                                        <img
+                                                            className='operator_logo'
+                                                            src={`https://applications.fra1.digitaloceanspaces.com/Logo_${(OperatorLogos[tableRow.operator])}`}
+                                                            alt="Profile"
+                                                        />
+                                                    }
                                                 </td>
                                                 <td>
                                                     {tableRow.MSISDN === '' ? 'NA' : tableRow.msisdn}
@@ -434,18 +450,18 @@ const LinkMobileNumber = () => {
                             }
                             showModal={(modal) => setModal(modal)}
                             onInputChange={(val) => setSearchString(val.toLowerCase())}
-                            />
-                            {
-                                loadingTableData ?
+                        />
+                        {
+                            loadingTableData ?
 
-                                    <div className='load_more_indicator'>
-                                        <span >
-                                            <LoadingIcon className='col-12' fill={'#27923E'} />
-                                        </span>
-                                    </div>
-                                    :
-                                    <></>
-                            }
+                                <div className='load_more_indicator'>
+                                    <span >
+                                        <LoadingIcon className='col-12' fill={'#27923E'} />
+                                    </span>
+                                </div>
+                                :
+                                <></>
+                        }
                     </div>
                 )}
             </div>

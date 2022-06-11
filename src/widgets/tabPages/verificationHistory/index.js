@@ -8,21 +8,22 @@ import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 import { generateUrl } from '../../../config/generateUrl';
 
 const filterItems = {
-    filterItem: ['Level', 'Status'],
+    filterItem: ['Type', 'Status'],
     filterState: {
-        Level: ['Basic', 'Full', 'NIN Slip', 'Transacted'],
+        Type: ['Basic', 'Full', 'NIN Slip', 'Token'],
         Status: ['OK', 'Failed']
     }
 };
 
+let timeout;
+
 const convertToServerValues = {
     'Basic': 'b',
-    'Transacted': 't',
+    'Token': 't',
     'Full': 'f',
     'NIN Slip': 'n'
 }
 
-let timeout;
 const VerificationHistory = () => {
     const [modalState, setModal] = useState(false);
     const [context, setContext] = useContext(AppContext);
@@ -86,6 +87,8 @@ const VerificationHistory = () => {
     useEffect(() => {
         setContext(modalState);
     }, [modalState, setContext]);
+
+    // let logo = icons?.find((element) => element.operator.toLowerCase() === operator?.toLowerCase());
 
     const fetchVerificationHistory = (userID) => {
         setLoadingTableData(true);
@@ -189,9 +192,6 @@ const VerificationHistory = () => {
             } else {
                 updatePayload(dropdownCategory, convertToServerValues[searchFilter.selectedItem]);
             }
-
-
-
         },
         [responseData, searchParam]
     );
@@ -264,8 +264,8 @@ const VerificationHistory = () => {
                         <Table
                             headerItems={[
                                 'Timestamp',
-                                'USER ID',
-                                'Level',
+                                'User ID',
+                                'Type',
                                 'Status',
                                 'Transaction ID',
                                 'Action'
@@ -297,15 +297,7 @@ const VerificationHistory = () => {
                                                 : tableRow.verifiedID}
                                         </td>
                                         <td>
-                                            {tableRow.level === 'b'
-                                                ? 'Basic'
-                                                : tableRow.level === 'f'
-                                                    ? 'Full'
-                                                    : tableRow.level === 'n'
-                                                        ? 'NIN'
-                                                        : tableRow.level === 't'
-                                                            ? 'Transacted'
-                                                            : ''}
+                                            {tableRow.form}
                                         </td>
                                         <td>{tableRow.status}</td>
 

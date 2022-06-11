@@ -135,6 +135,11 @@
     padding-left: 8px !important;
     font-size: 0.8rem;
 }
+
+.component_table > table > tbody > tr td > .operator_logo {
+    width: 4rem;
+}
+
 .component_table > table > thead > tr td {
     white-space: nowrap;
 }
@@ -344,11 +349,11 @@
         left: 2rem;
     }
     .component_table > table > thead > tr > th {
-        text-align: center !important;
+        text-align: left !important;
         cursor: pointer;
     }
     .component_table > table > tbody > tr td {
-        text-align: center !important;
+        text-align: left !important;
     }
 }
 @media only screen and (min-width: 768px) and (max-width: 883px) {

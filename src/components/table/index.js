@@ -22,7 +22,7 @@ const Table = ({
     filterButtonState = false,
     csvFile,
     canLoadMore = false,
-    loadingTableData = false,
+    loadingTableData = false
 }) => {
     const [dropDownState, setDropDownState] = useState(false);
     const [searchShow, setSearchShow] = useState(false);
@@ -167,7 +167,8 @@ const Table = ({
                                     <span>
                                         <>
                                             <span className="mr-2 btn_loading">
-                                                <LoadingIcon fill={'#fff'} />{''}
+                                                <LoadingIcon fill={'#fff'} />
+                                                {''}
                                             </span>
                                             Export CSV
                                         </>
@@ -197,23 +198,26 @@ const Table = ({
                                             }))
                                         }
                                     >
-                                        {headerItems[0]} {headerItems[0] !== 'Operator' && <SortIcon />}
+                                        {headerItems[0]} {''}
+                                        {headerItems[0] !== 'Operator' && <SortIcon />}
                                     </th>
                                     <th
                                         onClick={
-                                            headerItems[1] === 'Credits' || headerItems[1] === 'Mobile'
+                                            headerItems[1] === 'Credits' ||
+                                            headerItems[1] === 'Mobile'
                                                 ? () =>
-                                                    setSort((prevState) => ({
-                                                        ...prevState,
-                                                        headerItem: headerItems[1],
-                                                        sortState: !prevState.sortState
-                                                    }))
-                                                : () => { }
+                                                      setSort((prevState) => ({
+                                                          ...prevState,
+                                                          headerItem: headerItems[1],
+                                                          sortState: !prevState.sortState
+                                                      }))
+                                                : () => {}
                                         }
                                     >
                                         {' '}
                                         {headerItems[1]}{' '}
-                                        {headerItems[1] === 'Credits' || headerItems[1] === 'Mobile' ? (
+                                        {headerItems[1] === 'Credits' ||
+                                        headerItems[1] === 'Mobile' ? (
                                             <SortIcon />
                                         ) : (
                                             <></>
@@ -223,10 +227,10 @@ const Table = ({
                                         onClick={() =>
                                             iconDisplay
                                                 ? setSort((prevState) => ({
-                                                    ...prevState,
-                                                    headerItem: headerItems[2],
-                                                    sortState: !prevState.sortState
-                                                }))
+                                                      ...prevState,
+                                                      headerItem: headerItems[2],
+                                                      sortState: !prevState.sortState
+                                                  }))
                                                 : () => {}
                                         }
                                     >
@@ -244,17 +248,16 @@ const Table = ({
                     <EmptyTableState />
                 )}
             </div>
-            {
-                canLoadMore ?
+            {canLoadMore ? (
                 <Button
-                buttonText="Load More"
-                className="load_more_button"
-                onButtonClick={() => handleLoadMore()}
-                loading={loadingTableData}
+                    buttonText="Load More"
+                    className="load_more_button"
+                    onButtonClick={() => handleLoadMore()}
+                    loading={loadingTableData}
                 />
-                :
+            ) : (
                 <></>
-            }
+            )}
         </>
     );
 };

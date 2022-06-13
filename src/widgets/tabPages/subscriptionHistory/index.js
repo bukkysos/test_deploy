@@ -26,7 +26,6 @@ const SubscriptionHistory = () => {
     const [display, setDisplay] = useState([]);
     const [csv, setcsv] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(null);
     const [sortParams, setSortParams] = useState({});
     const [canLoadMore, setCanLoadMore] = useState(false);
     const [loadingTableData, setLoadingTableData] = useState(false);
@@ -40,12 +39,14 @@ const SubscriptionHistory = () => {
         status: ''
     });
 
-    const queryParam = useMemo(() =>
-        generateUrl({
-            ...payload,
-            ...sortParams,
-            noOfRequests: 3,
-        }), [sortParams, payload]
+    const queryParam = useMemo(
+        () =>
+            generateUrl({
+                ...payload,
+                ...sortParams,
+                noOfRequests: 3
+            }),
+        [sortParams, payload]
     );
 
     let ciDT = ciEncrypt.getItem('ciDT');
@@ -60,45 +61,51 @@ const SubscriptionHistory = () => {
         handleKey();
     }, [handleKey]);
 
-
-    const fetchTransactions = useCallback((userID) => {
-        setLoadingTableData(true);
-        axios({
-            method: 'get',
-            url: `${BASE_URL}subscriptionHistory/transactions?userID=${userID}&${queryParam}`,
-            headers: {
-                Authorization: `Bearer ${ciDT}`
-            }
-        })
-            .then((response) => {
-                if (response.data.success) {
-                    setResponseData(
-                        response.data.data.pageNo > 1 ?
-                            [...responseData, ...response.data.data.response]
-                            : response.data.data.response);
-                    setDisplay(response.data.data.pageNo > 1 ?
-                        [...responseData, ...response.data.data.response]
-                        : response.data.data.response);
-                    setCurrentPage(response.data.data.pageNo);
-                    setTotalPages(response.data.data.availablePages);
-                    setCanLoadMore(response.data.data.pageNo < response.data.data.availablePages);
-                    setLoadingTableData(false);
-                    setLoadMoreState(false);
+    const fetchTransactions = useCallback(
+        (userID) => {
+            setLoadingTableData(true);
+            axios({
+                method: 'get',
+                url: `${BASE_URL}subscriptionHistory/transactions?userID=${userID}&${queryParam}`,
+                headers: {
+                    Authorization: `Bearer ${ciDT}`
                 }
-                setLoading(false);
             })
-            .catch(() => {
-                setIsEmptyTable(true);
-            });
-    }, [queryParam])
+                .then((response) => {
+                    if (response.data.success) {
+                        setResponseData(
+                            response.data.data.pageNo > 1
+                                ? [...responseData, ...response.data.data.response]
+                                : response.data.data.response
+                        );
+                        setDisplay(
+                            response.data.data.pageNo > 1
+                                ? [...responseData, ...response.data.data.response]
+                                : response.data.data.response
+                        );
+                        setCurrentPage(response.data.data.pageNo);
+                        setCanLoadMore(
+                            response.data.data.pageNo < response.data.data.availablePages
+                        );
+                        setLoadingTableData(false);
+                        setLoadMoreState(false);
+                    }
+                    setLoading(false);
+                })
+                .catch(() => {
+                    setIsEmptyTable(true);
+                });
+        },
+        [queryParam]
+    );
 
     useEffect(() => {
         if (data?.userid) {
-            fetchTransactions(data.userid)
+            fetchTransactions(data.userid);
         }
     }, [ciDT, data?.userid, queryParam]);
 
-    // 
+    //
     const updatePayload = useCallback(
         (key, value) => {
             setPayload((prevValue) => ({ ...prevValue, pageNo: 1, [key]: value }));
@@ -109,9 +116,10 @@ const SubscriptionHistory = () => {
     const loadMore = () => {
         if (canLoadMore) {
             setLoadMoreState(true);
-            updatePayload('pageNo', currentPage + 1)
+            updatePayload('pageNo', currentPage + 1);
         }
-    }
+    };
+
     const convertToCsv = useCallback((objArray) => {
         // JSON to CSV Converter
         var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
@@ -121,7 +129,6 @@ const SubscriptionHistory = () => {
             var line = '';
             for (var index in array[i]) {
                 if (line !== '') line += ',';
-
                 line += array[i][index];
             }
             str += line + '\r\n';
@@ -178,10 +185,12 @@ const SubscriptionHistory = () => {
 
     useEffect(() => {
         timeout = setTimeout(() => {
-            setPayload(prevValue => ({ ...prevValue, search: searchString, pageNo: 1 }));
+            setPayload((prevValue) => ({ ...prevValue, search: searchString, pageNo: 1 }));
             clearTimeout(timeout);
         }, 500);
-        return () => { clearTimeout(timeout) }
+        return () => {
+            clearTimeout(timeout);
+        };
     }, [searchString]);
 
     useEffect(() => {
@@ -213,26 +222,27 @@ const SubscriptionHistory = () => {
                         loadingTableData={loadMoreState}
                         tableContents={
                             <>
-                                {
-                                    display.map((tableRow, index) => (
-                                        <React.Fragment key={index}>
-                                            <tr>
-                                                <td className="mobile_sticky_table_side">
-                                                    {new Date(tableRow.ts).toLocaleDateString(undefined, {
+                                {display.map((tableRow, index) => (
+                                    <React.Fragment key={index}>
+                                        <tr>
+                                            <td className="mobile_sticky_table_side">
+                                                {new Date(tableRow.ts).toLocaleDateString(
+                                                    undefined,
+                                                    {
                                                         weekday: 'long',
                                                         year: 'numeric',
                                                         month: 'short',
                                                         day: 'numeric'
-                                                    })}
-                                                </td>
+                                                    }
+                                                )}
+                                            </td>
 
-                                                <td>{tableRow.credits}</td>
-
-                                                <td>{tableRow.subscriptionPlan}</td>
-                                                <td>{tableRow.sid}</td>
-                                            </tr>
-                                        </React.Fragment>
-                                    ))}
+                                            <td>{tableRow.credits}</td>
+                                            <td>{tableRow.subscriptionPlan}</td>
+                                            <td>{tableRow.sid}</td>
+                                        </tr>
+                                    </React.Fragment>
+                                ))}
                             </>
                         }
                         iconDisplay={false}
@@ -243,17 +253,15 @@ const SubscriptionHistory = () => {
                         onInputChange={(val) => setSearchString(val.toLowerCase())}
                     />
                 )}
-                {
-                    loadingTableData ?
-
-                        <div className='load_more_indicator'>
-                            <span >
-                                <LoadingIcon className='col-12' fill={'#27923E'} />
-                            </span>
-                        </div>
-                        :
-                        <></>
-                }
+                {loadingTableData ? (
+                    <div className="load_more_indicator">
+                        <span>
+                            <LoadingIcon className="col-12" fill="#27923E" />
+                        </span>
+                    </div>
+                ) : (
+                    <></>
+                )}
             </div>
         </>
     );

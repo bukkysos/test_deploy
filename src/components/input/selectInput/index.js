@@ -6,10 +6,9 @@ const SelectInput = ({
     inputName,
     placeholder,
     required = true,
-    getSelectedItem = () => { },
+    getSelectedItem = () => {},
     label = null,
     selectItems,
-    currentlySelected = '',
     profileSelect = false
 }) => {
     const [dropdownState, setDropdownState] = useState(false);
@@ -23,8 +22,6 @@ const SelectInput = ({
         getSelectedCallBack();
         setDropdownState(false);
     }, [dropdownItem, getSelectedCallBack]);
-
-    console.log(inputName, currentlySelected);
 
     return (
         <>
@@ -60,9 +57,10 @@ const SelectInput = ({
                             <div
                                 id={item}
                                 name={inputName}
-                                className={`select_dropdown_item d-flex ${dropdownItem.selected === item ? 'item_active' : ''
-                                    } justify-content-between pl-2`}
-                                onClick={(e) =>
+                                className={`select_dropdown_item d-flex ${
+                                    dropdownItem.selected === item ? 'item_active' : ''
+                                } justify-content-between pl-2`}
+                                onClick={() =>
                                     setDropdownItem({
                                         selected: item,
                                         header: inputName

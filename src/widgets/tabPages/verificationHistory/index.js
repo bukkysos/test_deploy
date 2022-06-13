@@ -18,11 +18,11 @@ const filterItems = {
 let timeout;
 
 const convertToServerValues = {
-    'Basic': 'b',
-    'Token': 't',
-    'Full': 'f',
+    Basic: 'b',
+    Token: 't',
+    Full: 'f',
     'NIN Slip': 'n'
-}
+};
 
 const VerificationHistory = () => {
     const [modalState, setModal] = useState(false);
@@ -39,7 +39,6 @@ const VerificationHistory = () => {
     const [csv, setcsv] = useState('');
     const [sortValues, setSortValues] = useState({});
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(null);
     const [sortParams, setSortParams] = useState({});
     const [canLoadMore, setCanLoadMore] = useState(false);
     const [loadingTableData, setLoadingTableData] = useState(false);
@@ -54,12 +53,14 @@ const VerificationHistory = () => {
         search: ''
     });
 
-    const queryParam = useMemo(() =>
-        generateUrl({
-            ...payload,
-            ...sortParams,
-            noOfRequests: 4,
-        }), [sortParams, payload]
+    const queryParam = useMemo(
+        () =>
+            generateUrl({
+                ...payload,
+                ...sortParams,
+                noOfRequests: 4
+            }),
+        [sortParams, payload]
     );
 
     const [rowData, setRowData] = useState({
@@ -102,14 +103,16 @@ const VerificationHistory = () => {
             .then((response) => {
                 if (response.data.success) {
                     setResponseData(
-                        response.data.data.pageNo > 1 ?
-                            [...responseData, ...response.data.data.response]
-                            : response.data.data.response);
-                    setDisplay(response.data.data.pageNo > 1 ?
-                        [...responseData, ...response.data.data.response]
-                        : response.data.data.response);
+                        response.data.data.pageNo > 1
+                            ? [...responseData, ...response.data.data.response]
+                            : response.data.data.response
+                    );
+                    setDisplay(
+                        response.data.data.pageNo > 1
+                            ? [...responseData, ...response.data.data.response]
+                            : response.data.data.response
+                    );
                     setCurrentPage(response.data.data.pageNo);
-                    setTotalPages(response.data.data.availablePages);
                     setCanLoadMore(response.data.data.pageNo < response.data.data.availablePages);
                     setLoadingTableData(false);
                     setLoadMoreState(false);
@@ -119,7 +122,7 @@ const VerificationHistory = () => {
             .catch(() => {
                 setIsEmptyTable(true);
             });
-    }
+    };
 
     useEffect(() => {
         if (data.userid) {
@@ -169,15 +172,16 @@ const VerificationHistory = () => {
     const updatePayload = useCallback(
         (key, value) => {
             setPayload((prevValue) => ({ ...prevValue, pageNo: 1, [key]: value }));
-        }, [payload]
+        },
+        [payload]
     );
 
     const loadMore = () => {
         if (canLoadMore) {
             setLoadMoreState(true);
-            updatePayload('pageNo', currentPage + 1)
+            updatePayload('pageNo', currentPage + 1);
         }
-    }
+    };
 
     // Filter Data
     const filterData = useCallback(
@@ -231,15 +235,18 @@ const VerificationHistory = () => {
             };
             setSortParams(newParam);
             updatePayload('pageNo', 1);
-        }, [sortValues]
+        },
+        [sortValues]
     );
 
     useEffect(() => {
         timeout = setTimeout(() => {
-            setPayload(prevValue => ({ ...prevValue, search: searchString, pageNo: 1 }));
+            setPayload((prevValue) => ({ ...prevValue, search: searchString, pageNo: 1 }));
             clearTimeout(timeout);
         }, 500);
-        return () => { clearTimeout(timeout); }
+        return () => {
+            clearTimeout(timeout);
+        };
     }, [searchString]);
 
     useEffect(() => {
@@ -272,9 +279,7 @@ const VerificationHistory = () => {
                             ]}
                             filterItems={filterItems}
                             csvFile={csv}
-                            getFilterDropdown={(selectedItem) =>
-                                filterData(selectedItem)
-                            }
+                            getFilterDropdown={(selectedItem) => filterData(selectedItem)}
                             sortData={(data) => setSortValues(data)}
                             isEmptyTable={IsEmptyTable}
                             canLoadMore={canLoadMore}
@@ -296,13 +301,9 @@ const VerificationHistory = () => {
                                                 ? 'NA'
                                                 : tableRow.verifiedID}
                                         </td>
-                                        <td>
-                                            {tableRow.form}
-                                        </td>
+                                        <td>{tableRow.form}</td>
                                         <td>{tableRow.status}</td>
-
                                         <td>{tableRow.txid}</td>
-
                                         <td className="send_credit_button">
                                             <div className="send_credit_button">
                                                 <Button
@@ -337,17 +338,15 @@ const VerificationHistory = () => {
                             onInputChange={(val) => setSearchString(val.toLowerCase())}
                         />
                     )}
-                    {
-                        loadingTableData ?
-
-                            <div className='load_more_indicator'>
-                                <span >
-                                    <LoadingIcon className='col-12' fill={'#27923E'} />
-                                </span>
-                            </div>
-                            :
-                            <></>
-                    }
+                    {loadingTableData ? (
+                        <div className="load_more_indicator">
+                            <span>
+                                <LoadingIcon className="col-12" fill="#27923E" />
+                            </span>
+                        </div>
+                    ) : (
+                        <></>
+                    )}
                 </div>
             </div>
             {modalState ? (

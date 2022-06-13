@@ -26,7 +26,6 @@ const ViewSubscribers = () => {
     const [sortValues, setSortValues] = useState({});
     const [display, setDisplay] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(null);
     const [sortParams, setSortParams] = useState({});
     const [canLoadMore, setCanLoadMore] = useState(false);
     const [loadingTableData, setLoadingTableData] = useState(false);
@@ -41,12 +40,14 @@ const ViewSubscribers = () => {
         level: ''
     });
 
-    const queryParam = useMemo(() =>
-        generateUrl({
-            ...payload,
-            ...sortParams,
-            noOfRequests: 4,
-        }), [sortParams, payload]
+    const queryParam = useMemo(
+        () =>
+            generateUrl({
+                ...payload,
+                ...sortParams,
+                noOfRequests: 4
+            }),
+        [sortParams, payload]
     );
     const history = useHistory();
 
@@ -76,14 +77,16 @@ const ViewSubscribers = () => {
             .then((response) => {
                 if (response.data.success) {
                     setResponseData(
-                        response.data.data.pageNo > 1 ?
-                            [...responseData, ...response.data.data.response]
-                            : response.data.data.response);
-                    setDisplay(response.data.data.pageNo > 1 ?
-                        [...responseData, ...response.data.data.response]
-                        : response.data.data.response);
+                        response.data.data.pageNo > 1
+                            ? [...responseData, ...response.data.data.response]
+                            : response.data.data.response
+                    );
+                    setDisplay(
+                        response.data.data.pageNo > 1
+                            ? [...responseData, ...response.data.data.response]
+                            : response.data.data.response
+                    );
                     setCurrentPage(response.data.data.pageNo);
-                    setTotalPages(response.data.data.availablePages);
                     setCanLoadMore(response.data.data.pageNo < response.data.data.availablePages);
                     setLoadingTableData(false);
                     setLoadMoreState(false);
@@ -93,7 +96,7 @@ const ViewSubscribers = () => {
             .catch(() => {
                 setIsEmptyTable(true);
             });
-    }
+    };
 
     useEffect(() => {
         if (data.userid) {
@@ -147,7 +150,9 @@ const ViewSubscribers = () => {
                 return;
             }
 
-            searchFilter === 'Highest' ? updatePayload('credits', 'desc') : updatePayload('credits', 'asc');
+            searchFilter === 'Highest'
+                ? updatePayload('credits', 'desc')
+                : updatePayload('credits', 'asc');
         },
         [responseData, searchParam]
     );
@@ -155,15 +160,16 @@ const ViewSubscribers = () => {
     const updatePayload = useCallback(
         (key, value) => {
             setPayload((prevValue) => ({ ...prevValue, pageNo: 1, [key]: value }));
-        }, [payload]
+        },
+        [payload]
     );
 
     const loadMore = () => {
         if (canLoadMore) {
             setLoadMoreState(true);
-            updatePayload('pageNo', currentPage + 1)
+            updatePayload('pageNo', currentPage + 1);
         }
-    }
+    };
 
     const handleSort = useCallback(
         (sortValues) => {
@@ -179,10 +185,12 @@ const ViewSubscribers = () => {
 
     useEffect(() => {
         timeout = setTimeout(() => {
-            setPayload(prevValue => ({ ...prevValue, search: searchString, pageNo: 1 }));
+            setPayload((prevValue) => ({ ...prevValue, search: searchString, pageNo: 1 }));
             clearTimeout(timeout);
         }, 500);
-        return () => { clearTimeout(timeout); }
+        return () => {
+            clearTimeout(timeout);
+        };
     }, [searchString]);
 
     useEffect(() => {
@@ -243,17 +251,15 @@ const ViewSubscribers = () => {
                         onInputChange={(val) => setSearchString(val.toLowerCase())}
                     />
                 )}
-                {
-                    loadingTableData ?
-
-                        <div className='load_more_indicator'>
-                            <span >
-                                <LoadingIcon className='col-12' fill={'#27923E'} />
-                            </span>
-                        </div>
-                        :
-                        <></>
-                }
+                {loadingTableData ? (
+                    <div className="load_more_indicator">
+                        <span>
+                            <LoadingIcon className="col-12" fill="#27923E" />
+                        </span>
+                    </div>
+                ) : (
+                    <></>
+                )}
             </div>
             {/* </div> */}
         </>

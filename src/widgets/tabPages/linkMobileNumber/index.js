@@ -522,14 +522,12 @@ const LinkMobileNumber = () => {
                                 responseTexts={
                                     <>
                                         {numberLinked ? (
-                                            // <p>{responseMessage}</p>
                                             <p>Number linked successfully</p>
                                         ) : (
                                             <p>Number not linked. Try again!</p>
                                         )}
                                     </>
                                 }
-                                // onclick={(modal) => { }}
                                 onclick={() => {}}
                             />
                         }

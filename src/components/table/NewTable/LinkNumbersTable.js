@@ -129,9 +129,11 @@ export const LinkNumbersTable = ({
                         {isEmptyTable ? (
                             <EmptyDependentState
                                 classname="numbers_empty"
-                                message={
-                                    'You currently do not have any Mobile Numbers under this operator.'
-                                }
+                                message={`You currently do not have any Mobile Numbers under ${
+                                    filterParams.headerItem.length
+                                        ? `the ${filterParams.selectedItem}`
+                                        : 'this'
+                                } operator.`}
                             />
                         ) : tableContent.length ? (
                             tableContent.map((content, index) => (

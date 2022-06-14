@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
-import { BASE_URL } from '../../../config';
+import { BASE_URL, VERIFICATION_SHEET_BASE_URL } from '../../../config';
 import { LoadingIcon } from '../../../assets';
 import { AppContext } from '../../../appContext';
 import { PrintCardModal, Button, Modal, SuccessContent, Table } from '../../../components';
@@ -200,10 +200,11 @@ const VerificationHistory = () => {
         [responseData, searchParam]
     );
 
-    const generateVerificationSheet = (transactionID) => {
+    const generateVerificationSheet = () => {
         axios({
             method: 'get',
-            url: `http://164.92.179.237:7071/api/v1/verification/verificationSheet?txID=${transactionID}`,
+            // url: `${VERIFICATION_SHEET_BASE_URL}verification/verificationSheet?txID=${transactionID}`,
+            url: `${VERIFICATION_SHEET_BASE_URL}verification/verificationSheet?txID=${`f32eaacb-d359-4a4e-8604-86d6263f8835`}`,
             headers: {
                 Authorization: `Bearer ${ciDT}`
             }

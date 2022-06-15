@@ -69,6 +69,11 @@ const LinkMobileNumber = () => {
         setContext(modal);
     }, [modal, setContext]);
 
+    const updateStates = (pageNo, availablePages) => {
+        setCurrentPage(pageNo);
+        setTotalPages(availablePages);
+    };
+
     const fetchNumbers = useCallback(
         (userID) => {
             axios({
@@ -80,8 +85,8 @@ const LinkMobileNumber = () => {
             })
                 .then((response) => {
                     if (response.data.success) {
-                        setCurrentPage(response.data.data.pageNo);
-                        setTotalPages(response.data.data.availablePages);
+                        let { pageNo, availablePages } = response.data.data;
+                        updateStates(pageNo, availablePages);
                         setResponseData(
                             response.data.data.pageNo > 1
                                 ? [...responseData, ...response.data.data.response]

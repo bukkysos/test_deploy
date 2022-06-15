@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { BASE_URL } from '../../../../config';
-import { decryptAndDecode } from '../../../../config/utils/red';
 
 export const getCreditInfo = async (userid, ciDT) => {
     if (userid) {
@@ -13,8 +12,7 @@ export const getCreditInfo = async (userid, ciDT) => {
         })
             .then(async (response) => {
                 if (response.data.success) {
-                    const rawData = await decryptAndDecode(response.data.data);
-                    localStorage.setItem('credits', rawData.credittotal);
+                    localStorage.setItem('credits', response.data.data.credittotal);
                 }
             })
             .catch((error) => {

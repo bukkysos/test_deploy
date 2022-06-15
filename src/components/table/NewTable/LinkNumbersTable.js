@@ -3,7 +3,6 @@ import { Button } from '../../button';
 import { SelectInput } from '../../input';
 import { LoadingIcon } from '../../../assets';
 import { Blank } from '../../../assets';
-// import { EmptyTableState } from '../../emptyStates';
 import { EmptyDependentState } from '../../../components';
 
 import './newTable.css';
@@ -115,8 +114,8 @@ export const LinkNumbersTable = ({
                             />
                         </div>
                     </div>
-                    <div className="mx-3 mb-4">
-                        <div className="numbers_display_section">
+                    <div className="mb-4">
+                        <div className="px-3 numbers_display_section">
                             {!isEmptyTable ? (
                                 <p className="mb-2">
                                     Showing {currentPageNo} out of {totalPageNo}
@@ -138,7 +137,7 @@ export const LinkNumbersTable = ({
                         ) : tableContent.length ? (
                             tableContent.map((content, index) => (
                                 <React.Fragment key={index}>
-                                    <div className="d-flex justify-content-start align-items-center number_strip">
+                                    <div className="d-flex justify-content-start align-items-center number_strip px-3">
                                         {!content.operator ? (
                                             <img
                                                 className="operator_logo mr-2"

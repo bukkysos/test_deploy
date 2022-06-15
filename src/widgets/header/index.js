@@ -20,7 +20,12 @@ const Header = () => {
     }, [ciEncrypt]);
 
     useEffect(() => {
-        localStorage.setItem('credits', jwt_data?.availablecredit);
+        if (
+            localStorage.getItem('credits') === undefined ||
+            localStorage.getItem('credits') === 'undefined'
+        ) {
+            localStorage.setItem('credits', jwt_data?.availablecredit);
+        }
         handleKey();
     }, [jwt_data?.availablecredit]);
 

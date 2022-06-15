@@ -6,6 +6,7 @@ import axios from 'axios';
 import { BASE_URL } from '../../../config';
 import { generateRemitaRRR } from '../../../application/paymentHandler';
 import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
+import { getCreditInfo } from './utility/getCreditInfo';
 
 const PurchaseSubscription = () => {
     const [userPlan, setPlan] = useState('Individual');
@@ -17,8 +18,8 @@ const PurchaseSubscription = () => {
     let ciDT = ciEncrypt.getItem('ciDT');
 
     const handleKey = useCallback(async () => {
-        let ciDD = await ciEncrypt.getItem('ciDD');
-        let userData = await decryptAndDecode(ciDD);
+        let { data } = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(data);
         setData(userData);
     }, [ciEncrypt]);
 
@@ -115,10 +116,13 @@ const PurchaseSubscription = () => {
                 Authorization: `Bearer ${ciDT}`
             }
         })
-            .then(() => {
-                setLoading(false);
-                setError(false);
-                showModal(true);
+            .then((response) => {
+                if (response.data.success) {
+                    setLoading(false);
+                    setError(false);
+                    showModal(true);
+                    getCreditInfo(data?.userid, ciDT);
+                }
             })
             .catch(() => {
                 setLoading(false);

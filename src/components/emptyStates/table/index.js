@@ -2,10 +2,10 @@ import React from 'react';
 import { EmptyTableIcon } from '../../../assets';
 import './emptyTable.css';
 
-const EmptyTableState = () => {
+const EmptyTableState = ({ classname = '' }) => {
     return (
         <div
-            className="col-12 h-100 d-flex flex-column justify-content-center align-items-center empty_description p-0"
+            className={`col-12 h-100 d-flex flex-column justify-content-center align-items-center empty_description p-0 ${classname}`}
             style={{ position: 'relative', zIndex: 0 }}
         >
             <EmptyTableIcon />

@@ -52,8 +52,8 @@ const SingleDependent = () => {
     let ciDT = ciEncrypt.getItem('ciDT');
 
     const handleKey = useCallback(async () => {
-        let ciDD = await ciEncrypt.getItem('ciDD');
-        let userData = await decryptAndDecode(ciDD);
+        let { data } = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(data);
         setNin(userData.nin);
         setData(userData);
     }, [ciEncrypt]);
@@ -155,9 +155,7 @@ const SingleDependent = () => {
                 }
             })
                 .then((response) => {
-                    decryptAndDecode(response.data.data).then((data) => {
-                        setResponseData(() => data[index]);
-                    });
+                    setResponseData(() => response.data.data[index]);
                 })
                 .catch(() => {
                     // return;

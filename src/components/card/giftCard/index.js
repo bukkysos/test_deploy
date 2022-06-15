@@ -36,8 +36,8 @@ const GiftCard = ({ getResponse, recipient = null }) => {
     let ciDT = ciEncrypt.getItem('ciDT');
 
     const handleKey = useCallback(async () => {
-        let ciDD = await ciEncrypt.getItem('ciDD');
-        let userData = await decryptAndDecode(ciDD);
+        let { data } = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(data);
         setData(userData);
     }, [ciEncrypt]);
 
@@ -146,6 +146,8 @@ const GiftCard = ({ getResponse, recipient = null }) => {
                     getResponse(response.data.success, response.data.message);
                     setBtnLoading(false);
                     localStorage.setItem('credits', credits - units);
+                    setUnits('');
+                    setUserId('');
                 })
                 .catch((error) => {
                     getResponse(error.response.data.success, error.response.data.message);

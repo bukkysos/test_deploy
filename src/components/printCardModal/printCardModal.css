@@ -282,6 +282,10 @@
     text-transform: uppercase;
 }
 
+.card_holder_right {
+    height: 95%;
+}
+
 .card_holder table > tbody td {
     font-size: 0.6rem;
     vertical-align: middle;
@@ -391,8 +395,9 @@
 }
 @media only screen and (min-width: 1025px) {
     .print_card_modal {
-        width: 60% !important ;
+        width: 70% !important ;
         min-height: 12rem !important;
+        margin-bottom: 6rem;
     }
     .card_logo {
         width: 25% !important;

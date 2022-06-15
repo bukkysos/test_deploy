@@ -11,6 +11,7 @@ import Passport from './passport.jpeg';
 import CoatOfArms from './coatOfArms.png';
 import PremiumCardPreview from './premiumCardPreview.png';
 import StandardCardPreview from './standardCardPreview.png';
+import Blank from './blank.png';
 
 export {
     ProfileImage,
@@ -25,5 +26,6 @@ export {
     Passport,
     CoatOfArms,
     PremiumCardPreview,
-    StandardCardPreview
+    StandardCardPreview,
+    Blank
 };

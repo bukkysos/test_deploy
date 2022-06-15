@@ -1,0 +1,105 @@
+.numbers_display_wrapper {
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 4px;
+}
+
+.numbers_display_container {
+    background: rgba(255, 255, 255, 0.724);
+    height: inherit;
+    overflow-y: auto;
+    position: relative;
+}
+
+.numbers_filter_tab {
+    max-width: 380px;
+    min-width: 280px;
+    padding: 0.6rem 0.6rem;
+    background: #fff;
+    position: sticky;
+    top: -2px;
+    z-index: 2;
+    box-shadow: 0px 5.82826px 101.995px rgba(0, 0, 0, 0.03),
+        0px 0.729789px 92.5711px rgba(0, 0, 0, 0.015);
+    border-radius: 4px;
+}
+
+.numbers_filter_method {
+    padding: 0px;
+    width: 11rem;
+}
+
+.numbers_filter_method>p {
+    font-size: 0.75rem;
+    padding-right: 1rem !important;
+    color: rgba(39, 146, 62, 0.6);
+    border-right: 1px solid #efefef;
+    cursor: pointer;
+}
+
+.numbers_display_section {
+    max-width: 380px;
+    min-width: 280px;
+    padding: 1rem 0px 0.1rem 0px;
+    position: sticky;
+    top: 44px;
+    z-index: 3;
+    background: rgba(255, 255, 255, 1);
+}
+
+.numbers_display_section>p {
+    font-size: 0.6rem;
+    color: #525A6E;
+}
+
+.number_strip {
+    padding: .85rem 0px;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #E9E9E9;
+}
+
+.number_strip:last-of-type {
+    border-bottom: none;
+    padding-bottom: 2.5rem;
+}
+
+.operator_logo {
+    width: 2.5rem;
+}
+
+.number_strip p {
+    margin: 0;
+    font-size: 0.65rem;
+}
+
+.number_strip p:last-of-type {
+    color: #525A6E;
+}
+
+.load_more_numbers {
+    position: absolute;
+    bottom: 12px;
+    background-color: rgba(255, 255, 255, 0.724);
+}
+
+.load_more_numbers>button {
+    max-width: 7rem;
+    background-color: #EDF0F4 !important;
+    color: #525A6E;
+}
+
+.load_more_numbers>button:hover {
+    color: #525A6E;
+}
+
+.operator_filter_dropdown {
+    left: 0px !important;
+    top: 3rem !important;
+}
+
+.numbers_empty {
+    width: 200px;
+    margin: 0px auto;
+}

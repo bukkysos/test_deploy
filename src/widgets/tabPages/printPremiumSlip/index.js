@@ -27,8 +27,8 @@ const PrintPremiumSlip = () => {
     let ciDT = ciEncrypt.getItem('ciDT');
 
     const handleKey = useCallback(async () => {
-        let ciDD = await ciEncrypt.getItem('ciDD');
-        let userData = await decryptAndDecode(ciDD);
+        let { data } = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(data);
         setData(userData);
     }, [ciEncrypt]);
 
@@ -47,13 +47,11 @@ const PrintPremiumSlip = () => {
 
     useEffect(() => {
         const script = document.createElement('script');
-
-        script.src = 'https://login.remita.net/payment/v1/remita-pay-inline.bundle.js';
-        // script.src = window.location.host.includes('localhost')
-        //     ? 'https://remitademo.net/payment/v1/remita-pay-inline.bundle.js'
-        //     : 'https://login.remita.net/payment/v1/remita-pay-inline.bundle.js';
+        // script.src = 'https://login.remita.net/payment/v1/remita-pay-inline.bundle.js';
+        script.src = window.location.host.includes('localhost')
+            ? 'https://remitademo.net/payment/v1/remita-pay-inline.bundle.js'
+            : 'https://login.remita.net/payment/v1/remita-pay-inline.bundle.js';
         script.async = true;
-
         script.onload = () => console.log('Loaded...');
         document.body.appendChild(script);
     }, []);

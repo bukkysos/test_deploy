@@ -14,13 +14,18 @@ const Header = () => {
     const history = useHistory();
 
     const handleKey = useCallback(async () => {
-        let ciDD = await ciEncrypt.getItem('ciDD');
-        let userData = await decryptAndDecode(ciDD);
+        let { data } = await ciEncrypt.getItem('ciDD');
+        let userData = await decryptAndDecode(data);
         setJWTData(userData);
     }, [ciEncrypt]);
 
     useEffect(() => {
-        localStorage.setItem('credits', jwt_data?.availablecredit);
+        if (
+            localStorage.getItem('credits') === undefined ||
+            localStorage.getItem('credits') === 'undefined'
+        ) {
+            localStorage.setItem('credits', jwt_data?.availablecredit);
+        }
         handleKey();
     }, [jwt_data?.availablecredit]);
 

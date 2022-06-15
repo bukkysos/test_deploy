@@ -16,6 +16,7 @@
     border: none;
     background-position-y: center;
     background-position-x: 96%;
+    cursor: pointer;
 }
 
 .select_dropdown_icon {

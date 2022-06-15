@@ -18,8 +18,11 @@ const Table = ({
     filterItems = [],
     isEmptyTable = false,
     getFilterDropdown = () => {},
+    handleLoadMore = () => {},
     filterButtonState = false,
-    csvFile
+    csvFile,
+    canLoadMore = false,
+    loadingTableData = false
 }) => {
     const [dropDownState, setDropDownState] = useState(false);
     const [searchShow, setSearchShow] = useState(false);
@@ -64,11 +67,10 @@ const Table = ({
                                         placeholder="Select filter"
                                         selectItems={filterItems.filterState[item]}
                                         getSelectedItem={(selectedItem) => {
-                                            setFilterParams((prevState) => ({
-                                                ...prevState,
+                                            setFilterParams({
                                                 selectedItem: selectedItem.selected,
                                                 headerItem: selectedItem.header
-                                            }));
+                                            });
                                         }}
                                     />
                                 </div>
@@ -165,7 +167,8 @@ const Table = ({
                                     <span>
                                         <>
                                             <span className="mr-2 btn_loading">
-                                                <LoadingIcon fill={'#fff'} />{' '}
+                                                <LoadingIcon fill={'#fff'} />
+                                                {''}
                                             </span>
                                             Export CSV
                                         </>
@@ -181,65 +184,80 @@ const Table = ({
 
             <div className="table-responsive component_table mb-4">
                 {!isEmptyTable ? (
-                    <table className="table table-striped mb-4">
-                        <thead>
-                            <tr>
-                                <th
-                                    className={`mobile_sticky_table_side`}
-                                    onClick={() =>
-                                        setSort((prevState) => ({
-                                            ...prevState,
-                                            headerItem: headerItems[0],
-                                            sortState: !prevState.sortState
-                                        }))
-                                    }
-                                >
-                                    {headerItems[0]} {headerItems[0] !== 'Operator' && <SortIcon />}
-                                </th>
-                                <th
-                                    onClick={
-                                        headerItems[1] === 'Credits' || headerItems[1] === 'Mobile'
-                                            ? () =>
-                                                  setSort((prevState) => ({
+                    <>
+                        <table className="table table-striped mb-4">
+                            <thead>
+                                <tr>
+                                    <th
+                                        className={`mobile_sticky_table_side`}
+                                        onClick={() =>
+                                            setSort((prevState) => ({
+                                                ...prevState,
+                                                headerItem: headerItems[0],
+                                                sortState: !prevState.sortState
+                                            }))
+                                        }
+                                    >
+                                        {headerItems[0]} {''}
+                                        {headerItems[0] !== 'Operator' && <SortIcon />}
+                                    </th>
+                                    <th
+                                        onClick={
+                                            headerItems[1] === 'Credits' ||
+                                            headerItems[1] === 'Mobile'
+                                                ? () =>
+                                                      setSort((prevState) => ({
+                                                          ...prevState,
+                                                          headerItem: headerItems[1],
+                                                          sortState: !prevState.sortState
+                                                      }))
+                                                : () => {}
+                                        }
+                                    >
+                                        {' '}
+                                        {headerItems[1]}{' '}
+                                        {headerItems[1] === 'Credits' ||
+                                        headerItems[1] === 'Mobile' ? (
+                                            <SortIcon />
+                                        ) : (
+                                            <></>
+                                        )}{' '}
+                                    </th>
+                                    <th
+                                        onClick={() =>
+                                            iconDisplay
+                                                ? setSort((prevState) => ({
                                                       ...prevState,
-                                                      headerItem: headerItems[1],
+                                                      headerItem: headerItems[2],
                                                       sortState: !prevState.sortState
                                                   }))
-                                            : () => {}
-                                    }
-                                >
-                                    {' '}
-                                    {headerItems[1]}{' '}
-                                    {headerItems[1] === 'Credits' || headerItems[1] === 'Mobile' ? (
-                                        <SortIcon />
-                                    ) : (
-                                        <></>
-                                    )}{' '}
-                                </th>
-                                <th
-                                    onClick={() =>
-                                        iconDisplay
-                                            ? setSort((prevState) => ({
-                                                  ...prevState,
-                                                  headerItem: headerItems[2],
-                                                  sortState: !prevState.sortState
-                                              }))
-                                            : () => {}
-                                    }
-                                >
-                                    {headerItems[2]} {iconDisplay ? <SortIcon /> : <></>}
-                                </th>
-                                <th>{headerItems[3]}</th>
-                                {headerItems[4] ? <th>{headerItems[4]}</th> : <></>}
-                                {headerItems[5] ? <th>{headerItems[5]}</th> : <></>}
-                            </tr>
-                        </thead>
-                        <tbody>{tableContents}</tbody>
-                    </table>
+                                                : () => {}
+                                        }
+                                    >
+                                        {headerItems[2]} {iconDisplay ? <SortIcon /> : <></>}
+                                    </th>
+                                    <th>{headerItems[3]}</th>
+                                    {headerItems[4] ? <th>{headerItems[4]}</th> : <></>}
+                                    {headerItems[5] ? <th>{headerItems[5]}</th> : <></>}
+                                </tr>
+                            </thead>
+                            <tbody>{tableContents}</tbody>
+                        </table>
+                    </>
                 ) : (
                     <EmptyTableState />
                 )}
             </div>
+            {canLoadMore ? (
+                <Button
+                    buttonText="Load More"
+                    className="load_more_button"
+                    onButtonClick={() => handleLoadMore()}
+                    loading={loadingTableData}
+                />
+            ) : (
+                <></>
+            )}
         </>
     );
 };

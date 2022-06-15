@@ -89,8 +89,6 @@ const VerificationHistory = () => {
         setContext(modalState);
     }, [modalState, setContext]);
 
-    // let logo = icons?.find((element) => element.operator.toLowerCase() === operator?.toLowerCase());
-
     const fetchVerificationHistory = (userID) => {
         setLoadingTableData(true);
         axios({
@@ -200,11 +198,10 @@ const VerificationHistory = () => {
         [responseData, searchParam]
     );
 
-    const generateVerificationSheet = () => {
+    const generateVerificationSheet = (transactionID) => {
         axios({
             method: 'get',
-            // url: `${VERIFICATION_SHEET_BASE_URL}verification/verificationSheet?txID=${transactionID}`,
-            url: `${VERIFICATION_SHEET_BASE_URL}verification/verificationSheet?txID=${`f32eaacb-d359-4a4e-8604-86d6263f8835`}`,
+            url: `${VERIFICATION_SHEET_BASE_URL}verification/verificationSheet?txID=${transactionID}`,
             headers: {
                 Authorization: `Bearer ${ciDT}`
             }

@@ -26,8 +26,11 @@
 }
 
 .filter_tab_search {
-    padding: 0px 0px 0px 0.8rem;
     width: 83%;
+}
+
+.filter_tab_search_padding {
+    padding: 0px 0px 0px 0.8rem;
 }
 
 .filter_tab_search > input {

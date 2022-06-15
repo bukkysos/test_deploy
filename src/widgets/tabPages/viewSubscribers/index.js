@@ -174,6 +174,7 @@ const ViewSubscribers = () => {
     const handleSort = useCallback(
         (sortValues) => {
             let headerItemLoweCase = sortValues?.headerItem?.toLowerCase();
+            console.log(sortValues.sortState);
             let newParam = {
                 [headerItemLoweCase]: sortValues.sortState ? 'desc' : 'asc'
             };
@@ -222,6 +223,7 @@ const ViewSubscribers = () => {
                         canLoadMore={canLoadMore}
                         handleLoadMore={() => loadMore()}
                         loadingTableData={loadMoreState}
+                        isSubscribers={false}
                         tableContents={display.map((tableRow, index) => (
                             <React.Fragment key={index}>
                                 <tr>
@@ -247,7 +249,7 @@ const ViewSubscribers = () => {
                             </React.Fragment>
                         ))}
                         showBtn={true}
-                        // iconDisplay={true}
+                        iconDisplay={true}
                         onInputChange={(val) => setSearchString(val.toLowerCase())}
                     />
                 )}

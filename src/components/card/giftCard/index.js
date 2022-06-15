@@ -146,6 +146,8 @@ const GiftCard = ({ getResponse, recipient = null }) => {
                     getResponse(response.data.success, response.data.message);
                     setBtnLoading(false);
                     localStorage.setItem('credits', credits - units);
+                    setUnits('');
+                    setUserId('');
                 })
                 .catch((error) => {
                     getResponse(error.response.data.success, error.response.data.message);

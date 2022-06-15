@@ -22,7 +22,8 @@ const Table = ({
     filterButtonState = false,
     csvFile,
     canLoadMore = false,
-    loadingTableData = false
+    loadingTableData = false,
+    isSubscribers = true
 }) => {
     const [dropDownState, setDropDownState] = useState(false);
     const [searchShow, setSearchShow] = useState(false);
@@ -42,20 +43,23 @@ const Table = ({
     return (
         <>
             <div className="d-flex filter_tab mb-4">
-                <div
-                    className="d-flex justify-content-start filter_tab_filter_method"
-                    onClick={() => setDropDownState(!dropDownState)}
-                >
-                    <span className="my-auto">
-                        <Filter />
-                    </span>
-                    <p className="p-0 my-auto">
-                        Filtered By :{' '}
-                        {filterParams?.headerItem === '' || filterParams?.headerItem === undefined
-                            ? 'Method'
-                            : filterParams.headerItem}
-                    </p>
-                </div>
+                {isSubscribers && (
+                    <div
+                        className="d-flex justify-content-start filter_tab_filter_method"
+                        onClick={() => setDropDownState(!dropDownState)}
+                    >
+                        <span className="my-auto">
+                            <Filter />
+                        </span>
+                        <p className="p-0 my-auto">
+                            Filtered By :{' '}
+                            {filterParams?.headerItem === '' ||
+                            filterParams?.headerItem === undefined
+                                ? 'Method'
+                                : filterParams.headerItem}
+                        </p>
+                    </div>
+                )}
                 {dropDownState && filterItems.filterItem ? (
                     <div className="filter_dropdown">
                         {filterItems?.filterItem?.map((item, i) => (
@@ -103,7 +107,11 @@ const Table = ({
                     <></>
                 )}
 
-                <div className="d-flex align-items-center filter_tab_search">
+                <div
+                    className={`${
+                        isSubscribers && 'filter_tab_search_padding'
+                    } d-flex align-items-center filter_tab_search`}
+                >
                     <div className="search_mobile_icon" onClick={() => setSearchShow(!searchShow)}>
                         <SearchIcon />
                     </div>

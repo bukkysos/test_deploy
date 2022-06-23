@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { SidebarProvider, StateProvider } from './appContext';
 import { Dashboard, Login } from './application/pages';
+import { Support } from './application/pages/support/Support';
 import {
     GiftSubscription,
     Home,
@@ -86,8 +87,7 @@ const AppRoute = () => {
                     <MainRoute path={'/view-profile'} exact={true} Component={ViewProfile} />
                     <MainRoute path={'/payment-response'} exact={true} Component={ResponsePage} />
                     <MainRoute path={'/test-comp'} exact={true} Component={TestComp} />
-                    {/*<MainRoute path={"/payment-response/:id"} exact={true} Component={ResponsePage} />*/}
-
+                    <MainRoute path={'/support'} exact={true} Component={Support} />
                     <Route path={'*'} render={() => <Redirect to={'/'} />} />
                 </Switch>
             </Router>

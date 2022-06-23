@@ -1,0 +1,14 @@
+.servicom_logo {
+    min-width: 8rem;
+    max-width: 13rem;
+}
+
+.text_bold {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.text_thin {
+    font-weight: 300;
+    width: 270px;
+}

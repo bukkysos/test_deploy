@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { NavContext } from '../../appContext';
 
 import {
@@ -79,13 +79,10 @@ const Sidebar = () => {
     const [headerIconDisplay, setHeaderIconDisplay] = useContext(NavContext);
 
     const history = useHistory();
-    const location = useLocation();
 
     useEffect(() => {
-        if (location.pathname !== '/support') {
-            if (ciEncrypt.getItem('ciDK') === null || ciEncrypt.getItem('ciDK') === undefined) {
-                history.push('/');
-            }
+        if (ciEncrypt.getItem('ciDK') === null || ciEncrypt.getItem('ciDK') === undefined) {
+            history.push('/');
         }
     }, [history]);
 

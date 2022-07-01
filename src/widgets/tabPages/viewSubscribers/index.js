@@ -174,7 +174,6 @@ const ViewSubscribers = () => {
     const handleSort = useCallback(
         (sortValues) => {
             let headerItemLoweCase = sortValues?.headerItem?.toLowerCase();
-            console.log(sortValues.sortState);
             let newParam = {
                 [headerItemLoweCase]: sortValues.sortState ? 'desc' : 'asc'
             };

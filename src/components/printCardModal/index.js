@@ -17,7 +17,7 @@ const PrintCardModal = ({ closeModal, userData, tableData }) => {
                             <img src={Logo} className="card_logo" alt="Nimc" />
                             <p className="text-center p-0 m-0">Verification-as-a-service</p>
                         </div>
-                        <div className="d-flex align-items-center card_holder_bottom w-100 mt-2">
+                        <div className="d-flex align-items-center justify-content-center card_holder_bottom w-100 mt-2">
                             <div className="col-5 d-flex flex-column card_holder_left p-0">
                                 <div className="card_holder_left_header mx-auto my-1">
                                     <img src={CoatOfArms} className="card_logo" alt="Nimc" />
@@ -44,7 +44,7 @@ const PrintCardModal = ({ closeModal, userData, tableData }) => {
                                             <p className="p-0 m-0">{icao}</p>
                                         </div>
                                     </div>
-                                    <div className="col-5 p-0 m-0 d-flex justify-content-center align-items-center">
+                                    <div className="col-5 p-0 m-0 d-flex justify-content-end align-items-center">
                                         <div className="card_holder_left_card_qr">
                                             <QRCode
                                                 value={transID}
@@ -87,7 +87,7 @@ const PrintCardModal = ({ closeModal, userData, tableData }) => {
                                 </div>
                             </div>
 
-                            <div className="card_holder_right">
+                            <div className="d-flex align-items-end card_holder_right">
                                 <QRCode
                                     value={transID}
                                     size={
@@ -95,9 +95,11 @@ const PrintCardModal = ({ closeModal, userData, tableData }) => {
                                             ? 60
                                             : window.screen.width > 401 && window.screen.width < 600
                                             ? 80
-                                            : window.screen.width > 601 &&
-                                              window.screen.width < 1040
+                                            : window.screen.width > 601 && window.screen.width < 870
                                             ? 120
+                                            : window.screen.width > 871 &&
+                                              window.screen.width < 1024
+                                            ? 150
                                             : window.screen.width > 1041 &&
                                               window.screen.width < 1460
                                             ? 170
@@ -180,7 +182,7 @@ const PrintCardModal = ({ closeModal, userData, tableData }) => {
                     </div>
                 </div>
 
-                <div className="d-flex justify-content-center align-items-center h-100 w-auto print_card_modal_wrapper">
+                <div className="d-flex justify-content-center align-items-center h-100 w-auto print_card_modal_wrapper py-5">
                     <div className="print_card_modal" id="cardContainer">
                         <TempSlipModal />
                     </div>

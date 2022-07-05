@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { SidebarProvider, StateProvider } from './appContext';
 import { Dashboard, Login } from './application/pages';
+import { Support } from './application/pages/support/Support';
 import {
     GiftSubscription,
     Home,
@@ -50,6 +51,9 @@ const AppRoute = () => {
                     <Route exact={true} path="/">
                         <Login />
                     </Route>
+                    <Route exact={true} path="/support">
+                        <Support />
+                    </Route>
                     <MainRoute path={'/home'} exact={true} Component={Home} />
                     <MainRoute path={'/premium-slip'} exact={true} Component={PrintPremiumSlip} />
                     <MainRoute path={'/standard-slip'} exact={true} Component={PrintStandardSlip} />
@@ -86,8 +90,6 @@ const AppRoute = () => {
                     <MainRoute path={'/view-profile'} exact={true} Component={ViewProfile} />
                     <MainRoute path={'/payment-response'} exact={true} Component={ResponsePage} />
                     <MainRoute path={'/test-comp'} exact={true} Component={TestComp} />
-                    {/*<MainRoute path={"/payment-response/:id"} exact={true} Component={ResponsePage} />*/}
-
                     <Route path={'*'} render={() => <Redirect to={'/'} />} />
                 </Switch>
             </Router>

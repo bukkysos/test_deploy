@@ -60,10 +60,10 @@ const SelectInput = ({
                                 className={`select_dropdown_item d-flex ${
                                     dropdownItem.selected === item ? 'item_active' : ''
                                 } justify-content-between pl-2`}
-                                onClick={(e) =>
+                                onClick={() =>
                                     setDropdownItem({
-                                        selected: e.target.id,
-                                        header: e.target.getAttribute('name')
+                                        selected: item,
+                                        header: inputName
                                     })
                                 }
                             >

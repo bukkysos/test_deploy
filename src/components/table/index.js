@@ -18,8 +18,12 @@ const Table = ({
     filterItems = [],
     isEmptyTable = false,
     getFilterDropdown = () => {},
+    handleLoadMore = () => {},
     filterButtonState = false,
-    csvFile
+    csvFile,
+    canLoadMore = false,
+    loadingTableData = false,
+    isSubscribers = true
 }) => {
     const [dropDownState, setDropDownState] = useState(false);
     const [searchShow, setSearchShow] = useState(false);
@@ -39,20 +43,23 @@ const Table = ({
     return (
         <>
             <div className="d-flex filter_tab mb-4">
-                <div
-                    className="d-flex justify-content-start filter_tab_filter_method"
-                    onClick={() => setDropDownState(!dropDownState)}
-                >
-                    <span className="my-auto">
-                        <Filter />
-                    </span>
-                    <p className="p-0 my-auto">
-                        Filtered By :{' '}
-                        {filterParams?.headerItem === '' || filterParams?.headerItem === undefined
-                            ? 'Method'
-                            : filterParams.headerItem}
-                    </p>
-                </div>
+                {isSubscribers && (
+                    <div
+                        className="d-flex justify-content-start filter_tab_filter_method"
+                        onClick={() => setDropDownState(!dropDownState)}
+                    >
+                        <span className="my-auto">
+                            <Filter />
+                        </span>
+                        <p className="p-0 my-auto">
+                            Filtered By :{' '}
+                            {filterParams?.headerItem === '' ||
+                            filterParams?.headerItem === undefined
+                                ? 'Method'
+                                : filterParams.headerItem}
+                        </p>
+                    </div>
+                )}
                 {dropDownState && filterItems.filterItem ? (
                     <div className="filter_dropdown">
                         {filterItems?.filterItem?.map((item, i) => (
@@ -64,11 +71,10 @@ const Table = ({
                                         placeholder="Select filter"
                                         selectItems={filterItems.filterState[item]}
                                         getSelectedItem={(selectedItem) => {
-                                            setFilterParams((prevState) => ({
-                                                ...prevState,
+                                            setFilterParams({
                                                 selectedItem: selectedItem.selected,
                                                 headerItem: selectedItem.header
-                                            }));
+                                            });
                                         }}
                                     />
                                 </div>
@@ -101,7 +107,11 @@ const Table = ({
                     <></>
                 )}
 
-                <div className="d-flex align-items-center filter_tab_search">
+                <div
+                    className={`${
+                        isSubscribers && 'filter_tab_search_padding'
+                    } d-flex align-items-center filter_tab_search`}
+                >
                     <div className="search_mobile_icon" onClick={() => setSearchShow(!searchShow)}>
                         <SearchIcon />
                     </div>
@@ -165,7 +175,8 @@ const Table = ({
                                     <span>
                                         <>
                                             <span className="mr-2 btn_loading">
-                                                <LoadingIcon fill={'#fff'} />{' '}
+                                                <LoadingIcon fill={'#fff'} />
+                                                {''}
                                             </span>
                                             Export CSV
                                         </>
@@ -181,65 +192,80 @@ const Table = ({
 
             <div className="table-responsive component_table mb-4">
                 {!isEmptyTable ? (
-                    <table className="table table-striped mb-4">
-                        <thead>
-                            <tr>
-                                <th
-                                    className={`mobile_sticky_table_side`}
-                                    onClick={() =>
-                                        setSort((prevState) => ({
-                                            ...prevState,
-                                            headerItem: headerItems[0],
-                                            sortState: !prevState.sortState
-                                        }))
-                                    }
-                                >
-                                    {headerItems[0]} {headerItems[0] !== 'Operator' && <SortIcon />}
-                                </th>
-                                <th
-                                    onClick={
-                                        headerItems[1] === 'Credits' || headerItems[1] === 'Mobile'
-                                            ? () =>
-                                                  setSort((prevState) => ({
+                    <>
+                        <table className="table table-striped mb-4">
+                            <thead>
+                                <tr>
+                                    <th
+                                        className={`mobile_sticky_table_side`}
+                                        onClick={() =>
+                                            setSort((prevState) => ({
+                                                ...prevState,
+                                                headerItem: headerItems[0],
+                                                sortState: !prevState.sortState
+                                            }))
+                                        }
+                                    >
+                                        {headerItems[0]} {''}
+                                        {headerItems[0] !== 'Operator' && <SortIcon />}
+                                    </th>
+                                    <th
+                                        onClick={
+                                            headerItems[1] === 'Credits' ||
+                                            headerItems[1] === 'Mobile'
+                                                ? () =>
+                                                      setSort((prevState) => ({
+                                                          ...prevState,
+                                                          headerItem: headerItems[1],
+                                                          sortState: !prevState.sortState
+                                                      }))
+                                                : () => {}
+                                        }
+                                    >
+                                        {' '}
+                                        {headerItems[1]}{' '}
+                                        {headerItems[1] === 'Credits' ||
+                                        headerItems[1] === 'Mobile' ? (
+                                            <SortIcon />
+                                        ) : (
+                                            <></>
+                                        )}{' '}
+                                    </th>
+                                    <th
+                                        onClick={() =>
+                                            iconDisplay
+                                                ? setSort((prevState) => ({
                                                       ...prevState,
-                                                      headerItem: headerItems[1],
+                                                      headerItem: headerItems[2],
                                                       sortState: !prevState.sortState
                                                   }))
-                                            : () => {}
-                                    }
-                                >
-                                    {' '}
-                                    {headerItems[1]}{' '}
-                                    {headerItems[1] === 'Credits' || headerItems[1] === 'Mobile' ? (
-                                        <SortIcon />
-                                    ) : (
-                                        <></>
-                                    )}{' '}
-                                </th>
-                                <th
-                                    onClick={() =>
-                                        iconDisplay
-                                            ? setSort((prevState) => ({
-                                                  ...prevState,
-                                                  headerItem: headerItems[2],
-                                                  sortState: !prevState.sortState
-                                              }))
-                                            : () => {}
-                                    }
-                                >
-                                    {headerItems[2]} {iconDisplay ? <SortIcon /> : <></>}
-                                </th>
-                                <th>{headerItems[3]}</th>
-                                {headerItems[4] ? <th>{headerItems[4]}</th> : <></>}
-                                {headerItems[5] ? <th>{headerItems[5]}</th> : <></>}
-                            </tr>
-                        </thead>
-                        <tbody>{tableContents}</tbody>
-                    </table>
+                                                : () => {}
+                                        }
+                                    >
+                                        {headerItems[2]} {iconDisplay ? <SortIcon /> : <></>}
+                                    </th>
+                                    <th>{headerItems[3]}</th>
+                                    {headerItems[4] ? <th>{headerItems[4]}</th> : <></>}
+                                    {headerItems[5] ? <th>{headerItems[5]}</th> : <></>}
+                                </tr>
+                            </thead>
+                            <tbody>{tableContents}</tbody>
+                        </table>
+                    </>
                 ) : (
                     <EmptyTableState />
                 )}
             </div>
+            {canLoadMore ? (
+                <Button
+                    buttonText="Load More"
+                    className="load_more_button"
+                    onButtonClick={() => handleLoadMore()}
+                    loading={loadingTableData}
+                />
+            ) : (
+                <></>
+            )}
         </>
     );
 };

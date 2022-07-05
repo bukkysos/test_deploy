@@ -47,6 +47,7 @@ const Dashboard = ({ children }) => {
             setCounter(countDownTime);
             clearTimeout(countDownTimer);
         }
+        return () => {};
     }, [countDown, idleState]);
 
     const resetIdleAttributes = () => {
@@ -89,6 +90,7 @@ const Dashboard = ({ children }) => {
         script.async = true;
         script.onload = () => console.log('Loaded....');
         document.body.appendChild(script);
+        return () => {};
     }, []);
 
     return (

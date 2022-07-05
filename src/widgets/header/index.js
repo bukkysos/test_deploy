@@ -22,7 +22,8 @@ const Header = () => {
     useEffect(() => {
         if (
             localStorage.getItem('credits') === undefined ||
-            localStorage.getItem('credits') === 'undefined'
+            localStorage.getItem('credits') === 'undefined' ||
+            localStorage.getItem('credits') === null
         ) {
             localStorage.setItem('credits', jwt_data?.availablecredit);
         }

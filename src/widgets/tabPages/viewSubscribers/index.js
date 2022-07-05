@@ -222,6 +222,7 @@ const ViewSubscribers = () => {
                         canLoadMore={canLoadMore}
                         handleLoadMore={() => loadMore()}
                         loadingTableData={loadMoreState}
+                        isSubscribers={false}
                         tableContents={display.map((tableRow, index) => (
                             <React.Fragment key={index}>
                                 <tr>
@@ -247,7 +248,7 @@ const ViewSubscribers = () => {
                             </React.Fragment>
                         ))}
                         showBtn={true}
-                        // iconDisplay={true}
+                        iconDisplay={true}
                         onInputChange={(val) => setSearchString(val.toLowerCase())}
                     />
                 )}

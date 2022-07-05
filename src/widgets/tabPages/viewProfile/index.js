@@ -125,7 +125,7 @@ const ViewProfile = () => {
 
         {
             leftData: ['AVAILABLE CREDITS', 'USED CREDITS'],
-            rightData: [data?.availablecredit, data?.usedcredit],
+            rightData: [localStorage.getItem('credits'), data?.usedcredit],
             primaryButtonText: 'Purchase Subscription',
             contentType: null,
             routeTo: '/purchase-plan'

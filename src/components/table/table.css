@@ -26,8 +26,11 @@
 }
 
 .filter_tab_search {
-    padding: 0px 0px 0px 0.8rem;
     width: 83%;
+}
+
+.filter_tab_search_padding {
+    padding: 0px 0px 0px 0.8rem;
 }
 
 .filter_tab_search > input {
@@ -146,7 +149,6 @@
 
 .send_credit_button {
     width: 6rem;
-    margin: 0px auto;
 }
 
 .component_table > .table-striped tbody tr:nth-of-type(2n) {

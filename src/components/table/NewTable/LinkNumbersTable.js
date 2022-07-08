@@ -110,6 +110,9 @@ export const LinkNumbersTable = ({
                                 buttonText={'Add Number'}
                                 loading={false}
                                 exportBtn={true}
+                                className={
+                                    tableContent.length === maxNumberPerUser ? 'disabled' : ''
+                                }
                                 disabled={tableContent.length === maxNumberPerUser}
                                 onButtonClick={() => showModal(true)}
                             />
@@ -132,7 +135,7 @@ export const LinkNumbersTable = ({
                                         <p className="pr-2 mr-2">{index + 1}.</p>
                                         {!content.operator ? (
                                             <img
-                                                className="operator_logo mr-2"
+                                                className="operator_logo mr-3"
                                                 src={Blank}
                                                 alt="Blank"
                                             />

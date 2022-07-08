@@ -27,7 +27,7 @@ const Button = ({
             <button
                 className={`button ${
                     exportBtn ? '' : ' mt-4 mx-auto mb-3 '
-                } ${buttonType} ${className}`}
+                } ${buttonType} ${className} ${loading || disabled ? 'disabled' : ''}`}
                 type={type}
                 onClick={(e) => onButtonClick(e)}
                 disabled={loading || disabled}

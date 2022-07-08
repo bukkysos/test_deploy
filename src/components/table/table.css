@@ -54,7 +54,7 @@
 }
 
 .filter_tab_export_button .disabled {
-    background: #94ba9c;
+    background: #a0a0a0;
 }
 
 .filter_tab_export_button .disabled:hover {

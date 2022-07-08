@@ -61,6 +61,8 @@ const PrintStandardSlip = () => {
             sn: sn,
             nin: nin
         });
+
+        console.log({ inflow });
         let shaObj = new jsSHA('SHA-512', 'TEXT');
         let shaObj2 = new jsSHA('SHA-512', 'TEXT');
         shaObj.update(inflow);

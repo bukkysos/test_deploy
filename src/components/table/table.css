@@ -53,6 +53,14 @@
     width: 6rem;
 }
 
+.filter_tab_export_button .disabled {
+    background: #94ba9c;
+}
+
+.filter_tab_export_button .disabled:hover {
+    color: #fff;
+}
+
 .filter_dropdown {
     height: auto;
     width: 12rem;

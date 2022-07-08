@@ -107,6 +107,23 @@ const ViewSubscribers = () => {
     const convertToCsv = useCallback((objArray) => {
         // JSON to CSV Converter
         var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+        var firstArrayItem = JSON.parse(objArray)[0];
+        if (firstArrayItem) {
+            var objectHeadersArray = Object.keys(firstArrayItem);
+            var turnToString = objectHeadersArray.join(',').toUpperCase();
+            // This gets and replaces all substrings in the string (turnToString) that
+            // match any of the matchObj properties
+
+            const matchObj = {
+                TS: 'TIME STAMP',
+                SN: 'SURNAME'
+            };
+            var replaceStrings = turnToString.replace(
+                /\b(?:TS|SN)\b/gi,
+                (matched) => matchObj[matched]
+            );
+            var objectHeaders = replaceStrings;
+        }
         var str = '';
 
         for (var i = 0; i < array.length; i++) {
@@ -119,7 +136,8 @@ const ViewSubscribers = () => {
             str += line + '\r\n';
         }
 
-        const csvBlob = new Blob([str], { type: 'text/csv;charset=utf-8;' });
+        const blobStr = objectHeaders + '\n' + str;
+        const csvBlob = new Blob([blobStr], { type: 'text/csv;charset=utf-8;' });
         let url;
 
         if (navigator.msSaveBlob) {

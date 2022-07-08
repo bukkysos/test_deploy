@@ -17,13 +17,13 @@ const OperatorLogos = {
     Spectranet: 'QGSJZDQO3'
 };
 
+const maxNumberPerUser = 28;
+
 export const LinkNumbersTable = ({
     showModal,
     getFilterDropdown = () => {},
     handleLoadMore = () => {},
     loadingTableData,
-    totalPageNo,
-    currentPageNo,
     isEmptyTable = false,
     canLoadMore = false,
     tableContent
@@ -45,7 +45,7 @@ export const LinkNumbersTable = ({
         <>
             <div className="numbers_display_wrapper">
                 <div className="numbers_display_container">
-                    <div className="d-flex justify-content-center numbers_filter_tab">
+                    <div className="d-flex justify-content-between numbers_filter_tab">
                         <div
                             className="d-flex justify-content-start numbers_filter_method"
                             onClick={() => setDropDownState(!dropDownState)}
@@ -110,21 +110,12 @@ export const LinkNumbersTable = ({
                                 buttonText={'Add Number'}
                                 loading={false}
                                 exportBtn={true}
+                                disabled={tableContent.length === maxNumberPerUser}
                                 onButtonClick={() => showModal(true)}
                             />
                         </div>
                     </div>
                     <div className="mb-4">
-                        <div className="px-3 numbers_display_section">
-                            {!isEmptyTable ? (
-                                <p className="mb-2">
-                                    Showing {currentPageNo} out of {totalPageNo}
-                                </p>
-                            ) : (
-                                <></>
-                            )}
-                        </div>
-
                         {isEmptyTable ? (
                             <EmptyDependentState
                                 classname="numbers_empty"
@@ -138,6 +129,7 @@ export const LinkNumbersTable = ({
                             tableContent.map((content, index) => (
                                 <React.Fragment key={index}>
                                     <div className="d-flex justify-content-start align-items-center number_strip px-3">
+                                        <p className="pr-2 mr-2">{index + 1}.</p>
                                         {!content.operator ? (
                                             <img
                                                 className="operator_logo mr-2"

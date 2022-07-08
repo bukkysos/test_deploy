@@ -7,10 +7,10 @@ import { useHistory } from 'react-router-dom';
 const DependentsCard = ({ dependents }) => {
     const history = useHistory();
 
-    const truncateWithAsteriks = (word) => {
-        let firstWordPart = word.slice(word.length - word.length, word.length - 4);
-        return word.replace(firstWordPart, '******');
-    };
+    // const truncateWithAsteriks = (word) => {
+    //     let firstWordPart = word.slice(word.length - word.length, word.length - 4);
+    //     return word.replace(firstWordPart, '******');
+    // };
 
     return (
         <>
@@ -35,13 +35,10 @@ const DependentsCard = ({ dependents }) => {
                                     />
                                 </div>
                                 <div className="dependent_info">
-                                    <p className="dependent_name p-0 m-0">{`${
+                                    <p className="dependent_name p-0 mb-1">{`${
                                         dependent?.fn ?? ''
                                     } ${dependent?.mn ?? ''} ${dependent?.sn ?? ''}`}</p>
-                                    <p className="dependent_number p-0 m-0">
-                                        {dependent.mainidnumber &&
-                                            truncateWithAsteriks(dependent.mainidnumber)}
-                                    </p>
+                                    <p className="dependent_number p-0 m-0">{dependent.userid}</p>
                                 </div>
                             </div>
                             <p className="pr-1 my-auto">

@@ -19,7 +19,8 @@ const Button = ({
     exportBtn = false,
     onButtonClick = () => {},
     loading = false,
-    className = ''
+    className = '',
+    disabled = false
 }) => {
     return (
         <>
@@ -29,7 +30,7 @@ const Button = ({
                 } ${buttonType} ${className}`}
                 type={type}
                 onClick={(e) => onButtonClick(e)}
-                disabled={loading}
+                disabled={loading || disabled}
                 style={{
                     marginTop: exportBtn ? '0px' : '3rem',
                     padding: exportBtn ? '5px 5px' : '8px 20px'

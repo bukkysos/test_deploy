@@ -108,10 +108,10 @@ const PurchaseSubscription = () => {
         return value;
     };
 
-    const purchaseSubscription = async () => {
+    const purchaseSubscription = async (paymentReference) => {
         await axios({
             method: 'get',
-            url: `${BASE_URL}credit/buySubscription?userID=${data?.userid}&txRef=SUBSCRIPTION-dddd&servicePlan=Individual`,
+            url: `${BASE_URL}credit/buySubscription?userID=${data?.userid}&txRef=${paymentReference}&servicePlan=Individual`,
             headers: {
                 Authorization: `Bearer ${ciDT}`
             }

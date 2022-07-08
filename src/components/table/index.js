@@ -161,9 +161,11 @@ const Table = ({
                             />
                         ) : (
                             <a
-                                href={csvFile}
-                                className="button mt-4 mx-auto mb-3 secondary"
-                                download="Data"
+                                href={!isEmptyTable ? csvFile : null}
+                                className={`button mt-4 mx-auto mb-3 ${
+                                    !isEmptyTable ? 'secondary' : 'disabled'
+                                }`}
+                                download=""
                                 target="_blank"
                                 rel="noreferrer"
                                 style={{

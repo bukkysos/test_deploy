@@ -1,6 +1,4 @@
-.button,
-.button:disabled,
-.button[disabled] {
+.button {
     width: 100%;
     background-color: #131321;
     color: #ffffff;
@@ -12,6 +10,11 @@
     text-align: center;
     margin-top: 3rem;
     white-space: nowrap;
+}
+
+.button .disabled {
+    background-color: #a0a0a0 !important;
+    color: #ffffff;
 }
 
 .primary {
@@ -53,3 +56,4 @@ button > span:first-child {
 .btn_loading > svg {
     animation: rotation 1s infinite linear;
 }
+

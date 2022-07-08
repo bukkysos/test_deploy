@@ -50,6 +50,7 @@ const MyDependents = () => {
                         // console.error(error, 'error');
                         setLoading(false);
                         setResponseData([]);
+                        setEmptyState(true);
                     });
             }
             return true;
@@ -78,14 +79,12 @@ const MyDependents = () => {
             </p>
 
             <div className="col-12 d-flex justify-content-center px-4 my_dependents">
-                {loading ? (
-                    <LoadingIcon fill={'#000'} className="loader" />
-                ) : emptyState ? (
+                {loading && <LoadingIcon fill={'#000'} className="loader" />}
+                {!loading && !emptyState && <DependentsCard dependents={responseData} />}
+                {emptyState && (
                     <Card>
                         <EmptyDependentState />
                     </Card>
-                ) : (
-                    <DependentsCard dependents={responseData} />
                 )}
             </div>
         </>

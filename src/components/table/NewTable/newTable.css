@@ -1,5 +1,5 @@
 .numbers_display_wrapper {
-    height: 60vh;
+    max-height: 60vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -14,9 +14,9 @@
 }
 
 .numbers_filter_tab {
-    max-width: 380px;
-    min-width: 280px;
-    padding: 0.6rem 0.6rem;
+    max-width: 410px;
+    min-width: 380px;
+    padding: 0.6rem 0.8rem;
     background: #fff;
     position: sticky;
     top: -2px;
@@ -56,13 +56,13 @@
 
 .number_strip {
     padding: .85rem 0px;
-    margin-bottom: 1rem;
+    margin-bottom: .3rem;
     border-bottom: 1px solid #E9E9E9;
 }
 
 .number_strip:last-of-type {
     border-bottom: none;
-    padding-bottom: 2.5rem;
+    padding-bottom: 0rem;
 }
 
 .operator_logo {
@@ -71,7 +71,7 @@
 
 .number_strip p {
     margin: 0;
-    font-size: 0.65rem;
+    font-size: 0.8rem;
 }
 
 .number_strip p:last-of-type {

@@ -40,7 +40,6 @@ const MyDependents = () => {
                     .then((response) => {
                         setLoading(false);
                         if (response.data.data.length) {
-                            console.log(response);
                             setEmptyState(false);
                             setResponseData(response.data.data);
                         } else {

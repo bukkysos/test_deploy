@@ -129,7 +129,7 @@ const PrintStandardSlip = () => {
             });
     };
 
-    const saveSlipForDownload = (userID) => {
+    const saveSlipForDownload = (userid, paymentReference) => {
         axios({
             method: 'post',
             url: `${BASE_URL}nimcSlip/CN`,
@@ -137,13 +137,32 @@ const PrintStandardSlip = () => {
                 Authorization: `Bearer ${ciDT}`
             },
             data: {
-                userID: userID,
+                userID: userid,
                 service: 1
             }
         })
-            .then(() => {
-                // need to rethink what happens when response is false due payment
-                //record previously existing
+            .then((response) => {
+                if (response.data.success) {
+                    localStorage.setItem(
+                        'paymentResponse',
+                        JSON.stringify({
+                            txRef: paymentReference,
+                            service: 1,
+                            h: data?.h,
+                            status: true
+                        })
+                    );
+                    setLoading(false);
+                    setTimeout(() => {
+                        history.push(`/payment-response`);
+                    }, 1000);
+                } else {
+                    setErrorHandler({
+                        status: true,
+                        message: response.data.message
+                    });
+                }
+                return setLoading(false);
             })
             .catch((error) => {
                 setErrorHandler({
@@ -204,7 +223,6 @@ const PrintStandardSlip = () => {
             // card charged successfully, get reference here
             if (response) {
                 const paymentReference = generatePaymentReference(response.transactionId);
-                saveSlipForDownload(user);
                 createPaymentLog(paymentReference);
             } else {
                 setErrorHandler({
@@ -220,7 +238,7 @@ const PrintStandardSlip = () => {
                 method: 'post',
                 url: `${BASE_URL}nimcSlip/paymentLog`,
                 data: {
-                    userID: data.userID,
+                    userID: data.userid,
                     txRef: paymentReference,
                     rrr: rrr,
                     service: 1
@@ -231,20 +249,8 @@ const PrintStandardSlip = () => {
             })
                 .then((response) => {
                     if (response.data.success === true) {
+                        saveSlipForDownload(user, paymentReference);
                         setLoading(false);
-                        localStorage.setItem(
-                            'paymentResponse',
-                            JSON.stringify({
-                                txRef: paymentReference,
-                                service: 1,
-                                h: data.h,
-                                status: true
-                            })
-                        );
-                        setLoading(false);
-                        setTimeout(() => {
-                            history.push(`/payment-response`);
-                        }, 1000);
                     } else {
                         setErrorHandler({
                             status: true,

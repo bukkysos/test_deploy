@@ -11,6 +11,7 @@ import { LinkNumbersTable } from '../../../components/table/NewTable/LinkNumbers
 
 let otpDurationTimer;
 const otpDuration = 60;
+const maxNumberPerUser = 28;
 
 const LinkMobileNumber = () => {
     const [modal, setModal] = useState(false);
@@ -46,7 +47,7 @@ const LinkMobileNumber = () => {
             generateUrl({
                 ...payload,
                 ...sortParams,
-                noOfRequests: 3
+                noOfRequests: maxNumberPerUser
             }),
         [sortParams, payload]
     );
@@ -357,7 +358,7 @@ const LinkMobileNumber = () => {
                             filterButtonState={modal}
                             isEmptyTable={IsEmptyTable}
                             sortData={(data) => setSortValues(data)}
-                            canLoadMore={canLoadMore}
+                            canLoadMore={false}
                             getFilterDropdown={(selectedItem) =>
                                 filterData(selectedItem.selectedItem)
                             }

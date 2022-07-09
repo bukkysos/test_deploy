@@ -19,17 +19,18 @@ const Button = ({
     exportBtn = false,
     onButtonClick = () => {},
     loading = false,
-    className = ''
+    className = '',
+    disabled = false
 }) => {
     return (
         <>
             <button
                 className={`button ${
                     exportBtn ? '' : ' mt-4 mx-auto mb-3 '
-                } ${buttonType} ${className}`}
+                } ${buttonType} ${className} ${loading || disabled ? 'disabled' : ''}`}
                 type={type}
                 onClick={(e) => onButtonClick(e)}
-                disabled={loading}
+                disabled={loading || disabled}
                 style={{
                     marginTop: exportBtn ? '0px' : '3rem',
                     padding: exportBtn ? '5px 5px' : '8px 20px'

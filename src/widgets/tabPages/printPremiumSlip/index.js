@@ -128,21 +128,38 @@ const PrintPremiumSlip = () => {
             });
     };
 
-    const saveSlipForDownload = (userID) => {
+    const saveSlipForDownload = (userid, paymentReference) => {
+        const slipData = {
+            userID: userid,
+            service: 2
+        };
         axios({
             method: 'post',
             url: `${BASE_URL}nimcSlip/CN`,
             headers: {
                 Authorization: `Bearer ${ciDT}`
             },
-            data: {
-                userID: userID,
-                service: 2
-            }
+            data: slipData
         })
-            .then(() => {
-                // need to rethink what happens when response is false due payment
-                //record previously existing
+            .then((response) => {
+                if (response.data.success) {
+                    localStorage.setItem(
+                        'paymentResponse',
+                        JSON.stringify({
+                            txRef: paymentReference,
+                            service: 2,
+                            h: data?.h,
+                            status: true,
+                            action: 'success'
+                        })
+                    );
+                    history.push(`/payment-response`);
+                } else {
+                    setErrorHandler({
+                        status: true,
+                        message: response.data.message
+                    });
+                }
             })
             .catch((error) => {
                 setErrorHandler({
@@ -182,7 +199,7 @@ const PrintPremiumSlip = () => {
                 setModal(false);
                 setErrorHandler({
                     status: true,
-                    message: error.response.message
+                    message: error?.response?.message
                 });
                 console.log({ error });
                 setLoading(false);
@@ -203,7 +220,6 @@ const PrintPremiumSlip = () => {
             // card charged successfully, get reference here
             if (response) {
                 const paymentReference = generatePaymentReference(response.transactionId);
-                saveSlipForDownload(user);
                 createPaymentLog(paymentReference);
             } else {
                 setErrorHandler({
@@ -216,15 +232,16 @@ const PrintPremiumSlip = () => {
 
         const createPaymentLog = (paymentReference) => {
             setModal(true);
+            const logData = {
+                userID: data.userid,
+                txRef: paymentReference,
+                rrr: rrr,
+                service: 2
+            };
             axios({
                 method: 'post',
                 url: `${BASE_URL}nimcSlip/paymentLog`,
-                data: {
-                    userID: data.userID,
-                    txRef: paymentReference,
-                    rrr: rrr,
-                    service: 2
-                },
+                data: logData,
                 headers: {
                     Authorization: `Bearer ${ciDT}`
                 }
@@ -232,17 +249,7 @@ const PrintPremiumSlip = () => {
                 .then((response) => {
                     setModal(false);
                     if (response.data.success) {
-                        localStorage.setItem(
-                            'paymentResponse',
-                            JSON.stringify({
-                                txRef: paymentReference,
-                                service: 2,
-                                h: data?.h,
-                                status: true,
-                                action: 'success'
-                            })
-                        );
-                        history.push(`/payment-response`);
+                        saveSlipForDownload(user, paymentReference);
                     } else {
                         setErrorHandler({
                             status: true,

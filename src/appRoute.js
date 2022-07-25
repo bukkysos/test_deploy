@@ -19,6 +19,7 @@ import {
 } from './widgets';
 import ResponsePage from './widgets/tabPages/responsePage';
 import { TestComp } from './widgets/tabPages/testComp';
+import { ValidateRRR } from './widgets/tabPages/validateRRR';
 // import { OrderManagement, Login, ProductsUpload, VehicleLookup, Admin, MainLayout, OrderOverview } from './pages';
 
 const AppRoute = () => {
@@ -67,14 +68,13 @@ const AppRoute = () => {
                         exact={true}
                         Component={SubscriptionHistory}
                     />
-
+                    <MainRoute path={'/validate-rrr'} exact={true} Component={ValidateRRR} />
                     <MainRoute path={'/gift-credits'} exact={true} Component={GiftSubscription} />
                     <MainRoute
                         path={'/view-subscribers'}
                         exact={true}
                         Component={ViewSubscribers}
                     />
-
                     <MainRoute path={'/my-dependents'} exact={true} Component={MyDependents} />
                     <MainRoute
                         path={'/my-dependents/single/:id'}

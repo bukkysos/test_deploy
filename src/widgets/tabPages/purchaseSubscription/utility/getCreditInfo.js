@@ -16,7 +16,7 @@ export const getCreditInfo = async (userid, ciDT) => {
                 }
             })
             .catch((error) => {
-                console.log(error, 'gteCredInfo');
+                console.log(error);
             });
     }
 };

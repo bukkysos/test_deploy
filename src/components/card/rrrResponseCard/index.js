@@ -1,19 +1,22 @@
 import React from 'react';
-import { Card, CheckPaymentCard } from '../card';
-import { Button } from '../../button';
-import { useHistory } from 'react-router-dom';
-import { Error, LoadingIcon, Reload, SuccessCheck, SuccessCircle } from '../../../assets';
+import { Card } from '../card';
+import { Error, LoadingIcon, Print, SuccessCheck, SuccessCircle } from '../../../assets';
 
-const ResponseCard = ({ action, status = false, serviceType = 1, loading, onclick }) => {
-    const history = useHistory();
+const RRRResponseCard = ({
+    action,
+    status = false,
+    serviceType = 1,
+    loading,
+    onclick,
+    errorText
+}) => {
     let cardHeader = 'Successful!';
     if (action === 'print') {
         cardHeader = 'Payment Found!';
-    } else if (action === 'failed') {
-        cardHeader = 'Payment Failed!';
     } else if (action === 'pending') {
-        cardHeader = 'No Payment Found!';
+        cardHeader = 'Validation Failed!';
     }
+
     return (
         <>
             <Card>
@@ -75,11 +78,7 @@ const ResponseCard = ({ action, status = false, serviceType = 1, loading, onclic
                         could not be completed successfully.
                     </p>
                 ) : action === 'pending' ? (
-                    <p className={'error_info description mx-auto'}>
-                        There is no record of payment found.
-                        <br />
-                        Please click the button below to pay
-                    </p>
+                    <p className={'error_info description mx-auto'}>{errorText}</p>
                 ) : (
                     <p className={'success_info description mx-auto'}>
                         Your Remita payment of{' '}
@@ -92,21 +91,7 @@ const ResponseCard = ({ action, status = false, serviceType = 1, loading, onclic
                     </p>
                 )}
 
-                {!status ? (
-                    <div className="success_button mx-auto">
-                        <Button
-                            className="response_button"
-                            icon={
-                                <span className="mr-2">
-                                    <Reload />
-                                </span>
-                            }
-                            buttonType="default"
-                            buttonText={'Try Again'}
-                            onButtonClick={() => history.goBack()}
-                        />
-                    </div>
-                ) : (
+                {status ? (
                     <div className="success_button mx-auto">
                         <button
                             type="button"
@@ -125,37 +110,22 @@ const ResponseCard = ({ action, status = false, serviceType = 1, loading, onclic
                                         </>
                                     </span>
                                 ) : (
-                                    'Download NIN Slip'
+                                    <>
+                                        <span className="mr-2">
+                                            <Print stroke={'#fff'} />
+                                        </span>
+                                        {'Click Here to Download'}
+                                    </>
                                 )}
                             </span>
                         </button>
                     </div>
+                ) : (
+                    <></>
                 )}
             </Card>
-            <ResponseCardButton onclick={() => history.push('/validate-rrr')} />
         </>
     );
 };
 
-export { ResponseCard };
-
-export const ResponseCardButton = ({ onclick }) => {
-    return (
-        <>
-            <CheckPaymentCard>
-                <p>Already paid offline?</p>
-                <div className="check_payment_button">
-                    <button
-                        type="button"
-                        className="button mt-1 mx-auto mb-1"
-                        onClick={(e) => onclick(e)}
-                    >
-                        <span>
-                            <span>{'Validate RRR'}</span>
-                        </span>
-                    </button>
-                </div>
-            </CheckPaymentCard>
-        </>
-    );
-};
+export { RRRResponseCard };

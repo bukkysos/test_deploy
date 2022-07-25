@@ -13,7 +13,8 @@ import {
     SubscriptionHistory,
     VerificationHistory,
     ViewSubscription,
-    Logo
+    Logo,
+    ValidateRRRIcon
 } from '../../assets';
 import { MenuItem } from '../../components/menuItem';
 import { ciEncrypt } from '../../config/utils/red';
@@ -33,16 +34,11 @@ const Sidebar = () => {
         }
     ];
 
-    const subscriptionLinks = [
+    const servicePlanLinks = [
         {
             linkName: 'Purchase Service Plan',
             linkSlug: 'purchase-plan',
             icon: <Purchase />
-        },
-        {
-            linkName: 'Transaction History',
-            linkSlug: 'transaction-history',
-            icon: <SubscriptionHistory />
         },
         {
             linkName: 'Gift Credits',
@@ -56,16 +52,29 @@ const Sidebar = () => {
         }
     ];
 
-    const accountLinks = [
+    const transactionsLinks = [
         {
-            linkName: 'My Dependents',
-            linkSlug: 'my-dependents',
-            icon: <MyDependents />
+            linkName: 'Validate RRR',
+            linkSlug: 'validate-rrr',
+            icon: <ValidateRRRIcon />
+        },
+        {
+            linkName: 'Transaction History',
+            linkSlug: 'transaction-history',
+            icon: <SubscriptionHistory />
         },
         {
             linkName: 'Verification History',
             linkSlug: 'verification-history',
             icon: <VerificationHistory />
+        }
+    ];
+
+    const accountLinks = [
+        {
+            linkName: 'My Dependents',
+            linkSlug: 'my-dependents',
+            icon: <MyDependents />
         },
         {
             linkName: 'Link Mobile Number',
@@ -126,9 +135,26 @@ const Sidebar = () => {
                     </React.Fragment>
                 ))}
 
-                <p className="mt-3 mb-2 sidebar_caption">SUBSCRIPTIONS</p>
+                <p className="mt-3 mb-2 sidebar_caption">SERVICE PLAN</p>
 
-                {subscriptionLinks.map((link, index) => (
+                {servicePlanLinks.map((link, index) => (
+                    <React.Fragment key={index}>
+                        <Link to={`/${link.linkSlug}`}>
+                            <MenuItem
+                                link={link}
+                                id={`${link.linkSlug}`}
+                                onclick={() => {
+                                    setActive(link.linkSlug);
+                                }}
+                                active={active}
+                            />
+                        </Link>
+                    </React.Fragment>
+                ))}
+
+                <p className="mt-3 mb-2 sidebar_caption">TRANSACTIONS</p>
+
+                {transactionsLinks.map((link, index) => (
                     <React.Fragment key={index}>
                         <Link to={`/${link.linkSlug}`}>
                             <MenuItem

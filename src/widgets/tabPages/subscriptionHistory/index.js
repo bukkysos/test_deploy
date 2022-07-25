@@ -14,7 +14,7 @@ const filterItems = {
     }
 };
 
-const searchParam = ['credits', 'subscriptionPlan', 'sid', 'credits'];
+const searchParam = ['amount', 'subscriptionPlan', 'sid', 'credits'];
 let timeout;
 const SubscriptionHistory = () => {
     const [modalState, setModal] = useState(false);
@@ -217,7 +217,7 @@ const SubscriptionHistory = () => {
                     </div>
                 ) : (
                     <Table
-                        headerItems={['Timestamp', 'Credits', 'Fund Method', 'User ID']}
+                        headerItems={['Timestamp', 'Amount', 'Web Service', 'RRR']}
                         filterItems={filterItems}
                         isEmptyTable={IsEmptyTable}
                         csvFile={csv}

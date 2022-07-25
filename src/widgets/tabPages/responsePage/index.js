@@ -98,7 +98,7 @@ const ResponsePage = () => {
                     Nigeria, and is backed by law.
                 </p>
 
-                <div className="col-12 print_standard_slip d-flex justify-content-center px-4">
+                <div className="col-12 print_standard_slip d-flex justify-content-center flex-column align-items-center px-4">
                     <ResponseCard
                         action={action}
                         status={status}

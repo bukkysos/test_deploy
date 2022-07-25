@@ -201,7 +201,6 @@ const PrintPremiumSlip = () => {
                     status: true,
                     message: error?.response?.message
                 });
-                console.log({ error });
                 setLoading(false);
             });
     };

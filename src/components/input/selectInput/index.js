@@ -9,7 +9,11 @@ const SelectInput = ({
     getSelectedItem = () => {},
     label = null,
     selectItems,
-    profileSelect = false
+    validateRRRSelect = false,
+    profileSelect = false,
+    error = false,
+    errorText = '',
+    onblur = () => {}
 }) => {
     const [dropdownState, setDropdownState] = useState(false);
     const [dropdownItem, setDropdownItem] = useState({});
@@ -41,12 +45,31 @@ const SelectInput = ({
                 autoComplete="off"
                 onFocus={() => setDropdownState(true)}
                 // onBlur={() => setDropdownState(false)}
+                onBlur={() => onblur()}
                 value={dropdownItem.selected || ''}
                 readOnly
             />
+            {error ? (
+                <p className={`text-danger error_text p-0 m-0`}>
+                    <em>
+                        <small>{errorText}</small>
+                    </em>
+                </p>
+            ) : (
+                <></>
+            )}
             <span
-                className={`${profileSelect ? 'profile_select_icon' : 'select_dropdown_icon'}`}
-                onClick={() => setDropdownState(!dropdownState)}
+                className={`${
+                    profileSelect
+                        ? 'profile_select_icon'
+                        : validateRRRSelect
+                        ? 'validate-rrr-dropdown-icon'
+                        : 'select_dropdown_icon'
+                }`}
+                onClick={() => {
+                    setDropdownState(!dropdownState);
+                    onblur();
+                }}
             >
                 <DownArrow />
             </span>

@@ -37,6 +37,7 @@ import { ReactComponent as Hamburger } from './hambugerMenu.svg';
 import { ReactComponent as CloseIcon } from './closeIcon.svg';
 import { ReactComponent as EmptyDependentIcon } from './dependentsEmpty.svg';
 import { ReactComponent as EmptyTableIcon } from './tableEmpty.svg';
+import { ReactComponent as ValidateRRRIcon } from './validateRRR.svg';
 
 export {
     HomeIcon,
@@ -77,5 +78,6 @@ export {
     Hamburger,
     CloseIcon,
     EmptyDependentIcon,
-    EmptyTableIcon
+    EmptyTableIcon,
+    ValidateRRRIcon
 };

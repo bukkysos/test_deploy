@@ -56,7 +56,6 @@ export const TestComp = () => {
                 The table below shows records of all the mobile numbers linked to your NIN profile.
             </p>
             <div className="col-12 mt-5 page_table">
-                {/* <LinkNumbersTable /> */}
                 <NewTable
                     responseData={responseData}
                     showModal={showModal}

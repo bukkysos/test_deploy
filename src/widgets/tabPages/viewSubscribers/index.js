@@ -217,7 +217,6 @@ const ViewSubscribers = () => {
 
     return (
         <>
-            {/* <div className={`${modalState ? "blur" : ""}`}> */}
             <h3 className="tab_page_title mx-auto">View Subscribers</h3>
             <p className="mx-auto tab_page_subtitle mb-5">
                 The table below shows the records of all the users you have shared your credits
@@ -280,7 +279,6 @@ const ViewSubscribers = () => {
                     <></>
                 )}
             </div>
-            {/* </div> */}
         </>
     );
 };

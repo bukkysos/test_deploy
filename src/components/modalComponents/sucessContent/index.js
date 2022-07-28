@@ -35,10 +35,6 @@ const SuccessContent = ({ responseType, responseTexts }) => {
             >
                 {responseTexts}
             </p>
-
-            {/* <div className="success_button mx-auto">
-                <Button icon={responseType === "error" ? <Reload /> : <Print height={"1rem"} width={"1rem"} />} buttonType="default" buttonText={responseType === "error" ? "Try Again" :"Print NIN Slip"} onButtonClick={() => btnAction()} />
-            </div> */}
         </>
     );
 };

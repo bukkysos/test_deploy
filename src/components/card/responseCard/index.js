@@ -50,7 +50,6 @@ const ResponseCard = ({ action, status = false, serviceType = 1, loading, onclic
                         </span>
                     )}
                 </div>
-                {/* <p className={`${responseType === "success" ? "success" : "modal_error"} message mx-auto`}>{responseType === "error" ? "Failed!" : "Successful!"}</p> */}
                 <p className={` ${status ? 'success' : 'text-danger'} message mx-auto`}>
                     {cardHeader}
                 </p>

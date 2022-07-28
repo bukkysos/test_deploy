@@ -149,7 +149,6 @@ class TestModal extends React.Component {
 
                 {this.state.loading ? (
                     <Col md="12" className="center-loading">
-                        {/* <LoadingMd text="Getting document..." /> */}
                         <p>Getting Document</p>
                     </Col>
                 ) : (
@@ -216,20 +215,12 @@ class TestModal extends React.Component {
                                         <p className="title">GIVEN NAME(S)</p>
                                         <p className="first-name">
                                             Emeka John
-                                            {/* {this.state.doc.fn}
-                          {this.state.doc.mn ? `, ${this.state.doc.mn}` : null} */}
                                         </p>
                                         <p className="break"> </p>
-                                        {/*<p>MIDDLENAME</p>*/}
                                         <p className="middle-name"></p>
                                     </div>
 
                                     <div className="qrcode">
-                                        {/* <QRCode
-                          size={85}
-                          className="qr-image"
-                          value={this.state.qrcode}
-                        /> */}
                                     </div>
 
                                     <div className="extra-data">

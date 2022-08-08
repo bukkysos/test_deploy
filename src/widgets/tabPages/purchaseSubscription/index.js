@@ -67,7 +67,7 @@ const PurchaseSubscription = () => {
             // card charged successfully, get reference here
             if (response) {
                 const paymentReference = generatePaymentReference(response.transactionId);
-                purchaseSubscription(paymentReference);
+                purchaseSubscription(rrr);
             }
         };
 
@@ -108,10 +108,10 @@ const PurchaseSubscription = () => {
         return value;
     };
 
-    const purchaseSubscription = async (paymentReference) => {
+    const purchaseSubscription = async (rrr) => {
         await axios({
             method: 'get',
-            url: `${BASE_URL}credit/buySubscription?userID=${data?.userid}&txRef=${paymentReference}&servicePlan=Individual`,
+            url: `${BASE_URL}credit/buySubscription?userID=${data?.userid}&RRR=${rrr}&servicePlan=Individual`,
             headers: {
                 Authorization: `Bearer ${ciDT}`
             }

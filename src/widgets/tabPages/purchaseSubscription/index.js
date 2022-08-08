@@ -66,7 +66,6 @@ const PurchaseSubscription = () => {
         const onPaySuccess = (response) => {
             // card charged successfully, get reference here
             if (response) {
-                const paymentReference = generatePaymentReference(response.transactionId);
                 purchaseSubscription(rrr);
             }
         };
@@ -101,11 +100,6 @@ const PurchaseSubscription = () => {
         });
 
         remitaPaymentEngine.showPaymentWidget();
-    };
-
-    const generatePaymentReference = (transactionId) => {
-        const value = `SUBSCRIPTION-${transactionId}`;
-        return value;
     };
 
     const purchaseSubscription = async (rrr) => {

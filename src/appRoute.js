@@ -89,6 +89,11 @@ const AppRoute = () => {
                     <MainRoute path={'/link-number'} exact={true} Component={LinkMobileNumber} />
                     <MainRoute path={'/view-profile'} exact={true} Component={ViewProfile} />
                     <MainRoute path={'/payment-response'} exact={true} Component={ResponsePage} />
+                    <MainRoute
+                        path={'/payment-response/:id'}
+                        exact={true}
+                        Component={ResponsePage}
+                    />
                     <MainRoute path={'/test-comp'} exact={true} Component={TestComp} />
                     <Route path={'*'} render={() => <Redirect to={'/'} />} />
                 </Switch>

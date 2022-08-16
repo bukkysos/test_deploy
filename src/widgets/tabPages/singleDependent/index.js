@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import {
     AppContext,
@@ -43,6 +43,8 @@ const SingleDependent = () => {
     const [standardLoading, setStandardLoading] = useState(false);
     const [profileModal, setProfileModal] = useState(false);
     const [selectedState, setSelectedSate] = useState('');
+
+    const cardTypeRef = useRef(null);
     const { id } = useParams();
 
     const history = useHistory();
@@ -189,7 +191,7 @@ const SingleDependent = () => {
     const [paymentError, setPaymentError] = useState('');
 
     const remitaPayload = {
-        user: responseData?.userid,
+        user: data?.userid,
         reference: '0000',
         payersName: `${responseData?.fn} ${responseData?.sn}`,
         plan: '',
@@ -211,7 +213,45 @@ const SingleDependent = () => {
         script.onload = () => document.body.appendChild(script);
     }, []);
 
-    // Hit this endpoint with phone number to get OTP
+    const saveSlipForDownload = (userid, paymentReference) => {
+        const slipData = {
+            userID: userid,
+            service: cardTypeRef.current === 'Standard' ? 1 : 2
+        };
+        axios({
+            method: 'post',
+            url: `${BASE_URL}nimcSlip/CN`,
+            headers: {
+                Authorization: `Bearer ${ciDT}`
+            },
+            data: slipData
+        })
+            .then((response) => {
+                if (response.data.success) {
+                    setProfileBtnLoading(false);
+                    localStorage.setItem(
+                        'paymentResponse',
+                        JSON.stringify({
+                            txRef: paymentReference,
+                            service: cardTypeRef.current === 'Standard' ? 1 : 2,
+                            h: responseData.ninHash,
+                            status: true,
+                            action: 'success'
+                        })
+                    );
+                    history.push(`/payment-response/${responseData.userid}`, {
+                        dependentData: responseData
+                    });
+                    setNoticeModal(false);
+                } else {
+                    setVerificationError(error);
+                }
+            })
+            .catch((error) => {
+                setVerificationError(error);
+                return setProfileBtnLoading(false);
+            });
+    };
 
     // Hit this endpoint with OTP to add number
 
@@ -240,7 +280,7 @@ const SingleDependent = () => {
                     method: 'post',
                     url: `${BASE_URL}nimcSlip/paymentLog`,
                     data: {
-                        userID: data?.userID,
+                        userID: responseData?.userid,
                         txRef: paymentReference,
                         rrr: rrr,
                         service: cardType === 'Standard' ? 1 : 2
@@ -252,20 +292,7 @@ const SingleDependent = () => {
                     .then((response) => {
                         if (response.data.success === true) {
                             // showPrintModal(true);
-                            setProfileBtnLoading(false);
-                            localStorage.setItem(
-                                'paymentResponse',
-                                JSON.stringify({
-                                    txRef: paymentReference,
-                                    service: cardType === 'Standard' ? 1 : 2,
-                                    h: responseData.ninHash,
-                                    status: true
-                                })
-                            );
-                            setTimeout(() => {
-                                history.push(`/payment-response`);
-                            }, 1000);
-                            setNoticeModal(false);
+                            saveSlipForDownload(user, paymentReference);
                         } else {
                             setVerificationError(error);
                             setProfileBtnLoading(false);
@@ -279,8 +306,8 @@ const SingleDependent = () => {
 
             const remitaPaymentEngine = window.RmPaymentEngine.init({
                 key: key,
-                firstName: `${data.fn}`,
-                lastName: `${data.sn}`,
+                firstName: `${responseData?.fn}`,
+                lastName: `${responseData?.sn}`,
                 narration: `${cardType} NIN slip`,
                 amount: amt,
                 transactionId: '',
@@ -374,9 +401,6 @@ const SingleDependent = () => {
         if (cardType !== '') {
             ninSlip(cardType);
         }
-        return () => {
-            setCardType('');
-        };
     }, [cardType, ninSlip]);
 
     const generatePaymentReference = (transactionId) => {
@@ -433,6 +457,7 @@ const SingleDependent = () => {
                                 disabled={premiumLoading}
                                 onclick={() => {
                                     setCardType('Premium');
+                                    cardTypeRef.current = 'Premium';
                                 }}
                             />
                             <HomeCard
@@ -447,6 +472,7 @@ const SingleDependent = () => {
                                 disabled={standardLoading}
                                 onclick={() => {
                                     setCardType('Standard');
+                                    cardTypeRef.current = 'Standard';
                                 }}
                             />
                         </div>
@@ -565,7 +591,8 @@ const SingleDependent = () => {
             {verificationError !== null ? (
                 <Modal
                     onclick={() => {
-                        verificationError(null);
+                        setVerificationError(null);
+                        // verificationError(null);
                         setProfileBtnLoading(false);
                     }}
                     content={

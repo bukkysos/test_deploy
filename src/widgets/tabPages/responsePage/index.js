@@ -2,7 +2,7 @@ import axios from 'axios';
 import { BASE_URL } from '../../../config';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ResponseCard } from '../../../components';
-// import { useHistory, useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { Modal, SuccessContent } from '../../../components';
 import jsSHA from 'jssha';
 import { hex_rmd160 } from '../../../config/hex-ripe';
@@ -10,11 +10,12 @@ import { ciEncrypt, decryptAndDecode } from '../../../config/utils/red';
 
 const ResponsePage = () => {
     let message = useRef('An Error occured! Please try again!');
-    //   const history = useHistory();
-    //   const { id } = useParams();
+    const history = useHistory();
+    const { id } = useParams();
     const [loading, setLoading] = useState(false);
     const [errorHandler, setErrorHandler] = useState(false);
     const [jwt_data, setData] = useState({});
+    const [dependentData, setDependentData] = useState({});
 
     const paymentResponse = JSON.parse(localStorage.getItem('paymentResponse'));
     const { service, status, h, action } = paymentResponse;
@@ -26,6 +27,16 @@ const ResponsePage = () => {
         let userData = await decryptAndDecode(data);
         setData(userData);
     }, [ciEncrypt]);
+
+    const getUserIdFromHistoryState = useCallback(() => {
+        if (history.location.state !== undefined) {
+            setDependentData(history?.location?.state?.dependentData);
+        }
+    }, [history.location.state]);
+
+    useEffect(() => {
+        getUserIdFromHistoryState();
+    }, [getUserIdFromHistoryState]);
 
     useEffect(() => {
         handleKey();
@@ -49,9 +60,9 @@ const ResponsePage = () => {
 
     let download = () => {
         if (jwt_data) {
-            let url = `https://slipserver1.nimc.gov.ng/ijebu?h=${generateHash(jwt_data)}&p=1&type=${
-                service === 1 ? 'ninslip' : 'pns'
-            }`;
+            let url = `https://slipserver1.nimc.gov.ng/ijebu?h=${
+                dependentData.fn ? generateHash(dependentData) : generateHash(jwt_data)
+            }&p=1&type=${service === 1 ? 'ninslip' : 'pns'}`;
             var element = document.createElement('a');
             element.setAttribute('href', url);
             element.setAttribute('download', `${h}.pdf`);
@@ -65,7 +76,7 @@ const ResponsePage = () => {
         setLoading(true);
         axios({
             method: 'get',
-            url: `${BASE_URL}nimcSlip/download?userID=${jwt_data.userid}`,
+            url: `${BASE_URL}nimcSlip/download?userID=${id ? id : jwt_data.userid}`,
             headers: {
                 Authorization: `Bearer ${ciDT}`
             }
@@ -74,6 +85,7 @@ const ResponsePage = () => {
                 if (response.data.success) {
                     setLoading(false);
                     download();
+                    localStorage.removeItem('paymentResponse');
                 } else {
                     message.current = response.data.message;
                     setLoading(false);

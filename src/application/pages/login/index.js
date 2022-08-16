@@ -31,7 +31,6 @@ const Login = () => {
     const sliderImages = [SliderImage_1, SliderImage_2, SliderImage_3];
 
     const history = useHistory();
-    // const jwt_code = localStorage?.getItem('data');
     const jwt_code = ciEncrypt.getItem('ciDK');
 
     useEffect(() => {
@@ -210,7 +209,7 @@ const Login = () => {
                                         className="login_otp py-1 my-2"
                                         onClick={() => setModal(true)}
                                     >
-                                        Where can I find my OTP?
+                                        Where do I find my OTP?
                                     </p>
                                     <div className="login_button">
                                         <Button

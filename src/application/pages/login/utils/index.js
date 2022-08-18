@@ -1,16 +1,16 @@
 import axios from 'axios';
 import { encryptAndSaveKey } from '../../../../config/utils/red';
 
-const CIK = process.env.REACT_APP_DECRYPT_KEY_URL;
+// const CIK = process.env.REACT_APP_DECRYPT_KEY_URL;
 
 export const fetchKey = (token, data) => {
     axios({
         method: 'get',
         // test
-        // url: `http://164.92.179.237:7074/api/v1/enterprise/getUserKeyPair`,
+        url: `http://164.92.179.237:7074/api/v1/enterprise/getUserKeyPair`,
 
         // Live
-        url: `${CIK}`,
+        // url: `${CIK}`,
         headers: {
             'api-key': 'KaGOQemGcrfByteWzBHxV0Dnmoamjyt87rt87*R*^r&%##jkhn5'
         }

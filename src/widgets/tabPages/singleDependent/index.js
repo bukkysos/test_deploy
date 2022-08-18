@@ -43,7 +43,11 @@ const SingleDependent = () => {
     const [standardLoading, setStandardLoading] = useState(false);
     const [profileModal, setProfileModal] = useState(false);
     const [selectedState, setSelectedSate] = useState('');
-
+    // const [checkLoading, setCheckLoading] = useState(false);
+    // const [checkErrorHandler, setCheckErrorHandler] = useState({
+    //     status: false,
+    //     message: ''
+    // });
     const cardTypeRef = useRef(null);
     const { id } = useParams();
 
@@ -212,6 +216,63 @@ const SingleDependent = () => {
         script.async = true;
         script.onload = () => document.body.appendChild(script);
     }, []);
+
+    // const checkPaymentStatus = (userid, serviceNumber) => {
+    //     setCheckLoading(true);
+    //     console.log(checkLoading, responseData.userid);
+    //     axios({
+    //         method: 'get',
+    //         url: `${BASE_URL}nimcSlip/download?userID=${userid}`,
+    //         headers: {
+    //             Authorization: `Bearer ${ciDT}`
+    //         }
+    //     })
+    //         .then((response) => {
+    //             console.log(response, responseData);
+    //             if (response.data.success) {
+    //                 localStorage.setItem(
+    //                     'paymentResponse',
+    //                     JSON.stringify({
+    //                         txRef: '',
+    //                         service: serviceNumber,
+    //                         status: true,
+    //                         action: 'print',
+    //                         h: responseData?.ninHash
+    //                     })
+    //                 );
+    //             } else {
+    //                 localStorage.setItem(
+    //                     'paymentResponse',
+    //                     JSON.stringify({
+    //                         txRef: '',
+    //                         service: 3,
+    //                         status: false,
+    //                         action: 'pending'
+    //                     })
+    //                 );
+    //             }
+    //             setCheckLoading(false);
+    //             return history.push(`/payment-response/${responseData.userid}`, {
+    //                 dependentData: responseData
+    //             });
+    //         })
+    //         .catch((error) => {
+    //             setCheckErrorHandler({
+    //                 status: true,
+    //                 message: error.response.message
+    //             });
+    //             console.log(checkErrorHandler);
+    //             return setCheckLoading(false);
+    //         });
+    // };
+
+    // useEffect(() => {
+    //     checkPaymentStatus(responseData.userid, 2);
+    // }, [responseData]);
+
+    useEffect(() => {
+        console.log(responseData);
+    }, [responseData.userid]);
 
     const saveSlipForDownload = (userid, paymentReference) => {
         const slipData = {
